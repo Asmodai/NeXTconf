@@ -3,3 +3,15 @@
 
 # Project
 version.h
+.freeze
+.yeah.I.read.it
+
+# Compile noise
+.lastBuildTime
+i386_obj/
+Parse.output
+
+# Local makefiles
+Makefile
+Makefile.postamble
+Makefile.preamble
