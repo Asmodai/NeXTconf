@@ -134,7 +134,7 @@ codename_match(const platform_t *platform)
   }
 
   /* Attempt to allocate buffer for the line. */
-  line = (char *)malloc(DETECT_MAX_LINE *sizeof *line);
+  line = (char *)malloc(DETECT_MAX_LINE * sizeof *line);
   if (!line) {
     perror("Out of memory");
     exit(EXIT_FAILURE);
