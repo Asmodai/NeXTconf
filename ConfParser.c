@@ -40,7 +40,7 @@
 #include <string.h>
 
 #include "ConfParser.h"
-#include "utils.h"
+#include "Utils.h"
 
 #define MAX_NAME 50
 
@@ -52,7 +52,7 @@ static
 char *
 find_char_or_comment(const char *s, char c)
 {
-  BOOL ws = false;
+  BOOL ws = NO;
 
   while (*s && *s != c && !(ws && *s == '#')) {
     ws = (BOOL)isspace((unsigned char)(*s));
