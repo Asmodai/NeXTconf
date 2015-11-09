@@ -3,8 +3,8 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 05:00:48 asmodai>
- * Revision:   4
+ * Time-stamp: <15/11/09 05:57:16 asmodai>
+ * Revision:   5
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -71,9 +71,12 @@
 /*
  * Function prototypes.
  */
-void debug_print(size_t, const char *, ...);
-BOOL file_exists(const char *);
-BOOL directory_exists(const char *);
+char *rstrip(char *);
+char *strip(char *);
+char *lskip(const char *);
+void  debug_print(size_t, const char *, ...);
+BOOL  file_exists(const char *);
+BOOL  directory_exists(const char *);
 
 #endif /* !_UTILS_H_ */
 

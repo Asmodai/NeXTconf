@@ -3,8 +3,8 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 05:01:49 asmodai>
- * Revision:   2
+ * Time-stamp: <15/11/09 05:58:18 asmodai>
+ * Revision:   4
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -40,6 +40,7 @@
 #include <libc.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include <sys/types.h>
 #include <sys/param.h>
@@ -66,6 +67,54 @@ debug_print(size_t indent, const char *fmt, ...)
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
   va_end(ap);
+}
+
+/**
+ * Strip trailing characters from a string.
+ */
+char *
+rstrip(char *s)
+{
+  char *p = s + strlen(s);
+
+  while (p > s && isspace((unsigned char)(*--p))) {
+    *p = '\0';
+  }
+
+  return s;
+}
+
+/**
+ * Strip all spaces from a string.
+ */
+char *
+strip(char *s)
+{
+  char *p = NULL;
+  char *q = NULL;
+
+  for (p = q = s; *p; p++) {
+    if (!isspace((unsigned char)*p)) {
+      *q++ = *p;
+    }
+  }
+
+  *q = '\0';
+
+  return s;
+}
+
+/**
+ * Skip all leading whitespace in a string.
+ */
+char *
+lskip(const char *s)
+{
+  while (*s && isspace((unsigned char)(*s))) {
+    s++;
+  }
+
+  return (char *)s;
 }
 
 /**
