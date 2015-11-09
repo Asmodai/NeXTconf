@@ -1,5 +1,5 @@
 /*
- * Main.m  --- Some title
+ * Main.m  --- The Glue.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
