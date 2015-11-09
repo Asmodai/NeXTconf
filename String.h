@@ -59,10 +59,10 @@
 # import <objc/zone.h>
 
 #define  NX_MALLOC( VAR, TYPE, NUM )                            \
-  ((VAR) = (TYPE *) malloc((unsigned)(NUM)*sizeof(TYPE)))
+  ((VAR) = (TYPE *)malloc((unsigned)(NUM) * sizeof(TYPE)))
 
 #define  NX_REALLOC( VAR, TYPE, NUM )                           \
-  ((VAR) = (TYPE *) realloc((VAR), (unsigned)(NUM)*sizeof(TYPE)))
+  ((VAR) = (TYPE *)realloc((VAR), (unsigned)(NUM) * sizeof(TYPE)))
 
 #define  NX_FREE( PTR ) free((PTR))
 
