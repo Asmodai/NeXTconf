@@ -8,10 +8,21 @@ version.h
 
 # Compile noise
 .lastBuildTime
+.lastBuildTime.*
 i386_obj/
+dynamic_obj/
 Parse.output
+objects-optimized/
 
 # Local makefiles
 Makefile
 Makefile.postamble
 Makefile.preamble
+
+# Binaries
+nextconf
+nextconf.*
+
+# NFS
+.nfs*
+.saves*
