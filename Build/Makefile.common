@@ -1,0 +1,54 @@
+#
+# Common makefile
+#
+
+NAME = nextconf
+
+PROJECTVERSION = 0.1
+PROJECT_TYPE = Tool
+LANGUAGE = English
+
+HFILES = Architecture.h \
+	 Lexer.h        \
+	 List+Debug.h   \
+	 Manager.h      \
+	 Number.h       \
+	 Object+Debug.h \
+	 Parse.h        \
+	 Platform.h     \
+	 Pointer.h      \
+	 Property.h     \
+	 Stack.h        \
+	 String.h       \
+	 Symbol.h       \
+	 SymbolTable.h  \
+	 SyntaxTree.h   \
+	 Utils.h        \
+	 Version.h      \
+	 snprintf.h     \
+	 version.h
+
+CFILES = Utils.c   \
+	 snprintf.c
+
+CLASSES = Architecture.m \
+	  Lexer.m        \
+	  List+Debug.m   \
+	  Main.m         \
+	  Manager.m      \
+	  Number.m       \
+	  Object+Debug.m \
+	  Parse.m        \
+	  Platform.m     \
+	  Pointer.m      \
+	  Property.m     \
+	  Stack.m        \
+	  String.m       \
+	  Symbol.m       \
+	  SymbolTable.m  \
+	  SyntaxTree.m   \
+	  Version.m
+
+OTHERSRCS = Makefile.preamble Makefile Makefile.postamble
+
+-include Build/NeXTconf.version

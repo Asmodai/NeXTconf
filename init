@@ -1,0 +1,66 @@
+#!/bin/sh
+
+PLATFORM=
+
+usage() {
+    echo "Usage: $0 <platform>"
+    echo ""
+    echo "Where platform is one of:"
+    echo "   nextstep     - Build for NEXTSTEP."
+    echo "   openstep     - Build for OPENSTEP."
+    echo "   wof          - Build for OPENSTEP with WOF."
+    echo "   rhapsody     - Build for Rhapsody."
+}
+
+copy_makefiles()
+{
+    if [ -z ${PLATFORM} ]
+    then
+	echo "No platform.  Cannot copy makefiles."
+	exit 3
+    fi
+
+    rm Makefile* 2>/dev/null
+    ln -s Build/${PLATFORM}/Makefile* . 2>/dev/null
+
+    echo "Done."
+}
+
+process() {
+    echo "****************** NeXTconf Initialisation ******************"
+    echo "* Building for ${PLATFORM}"
+    echo "*"
+
+    echo -n "* Copying makefiles... "
+    copy_makefiles
+
+    echo "*"
+    echo "* Ready."
+    echo "*************************************************************"
+
+    # Yeah, I know.  But seriously, read this.
+    if [ ! -f .yeah.I.read.it ]
+    then
+        open -o INSTALL.rtf
+    fi
+}
+
+if [ $# -lt 1 ]
+then
+    usage
+    exit 1
+fi
+
+
+case $1 in
+  nextstep) PLATFORM="NEXTSTEP"             ;;
+  openstep) PLATFORM="OPENSTEP"             ;;
+  rhapsody) PLATFORM="Rhapsody"             ;;
+  wof)      PLATFORM="WOF"                  ;;
+  *)        echo "Unknown platform \"$1\""
+            usage
+	    exit 2
+	    ;;
+esac
+
+process
