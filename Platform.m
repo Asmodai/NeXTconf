@@ -3,8 +3,8 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 07:20:31 asmodai>
- * Revision:   6
+ * Time-stamp: <15/11/09 11:35:10 asmodai>
+ * Revision:   7
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -124,7 +124,6 @@ static
 BOOL
 codename_match(const platform_t *platform)
 {
-  BOOL  rval = NO;
   char *line = NULL;
   FILE *file = NULL;
 
@@ -171,11 +170,11 @@ codename_match(const platform_t *platform)
                 strlen(platform->codename)) == 0)
     {
       /* All good */
-      rval = YES;
+      return YES;
     }
   }
 
-  return rval;
+  return NO;
 }
 
 /*
