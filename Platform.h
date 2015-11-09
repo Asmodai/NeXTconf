@@ -1,10 +1,10 @@
 /*
- * Platform.h  --- Some title
+ * Platform.h  --- Platform detection.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/08 23:40:16 asmodai>
- * Revision:   4
+ * Time-stamp: <15/11/09 07:20:23 asmodai>
+ * Revision:   5
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

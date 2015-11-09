@@ -1,10 +1,10 @@
 /*
- * snprintf.h  --- Some title
+ * snprintf.h  --- Portable `snprintf'.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/10/30 02:22:55 asmodai>
- * Revision:   6
+ * Time-stamp: <15/11/09 07:21:17 asmodai>
+ * Revision:   7
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

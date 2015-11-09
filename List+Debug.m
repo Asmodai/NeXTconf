@@ -1,10 +1,10 @@
 /*
- * List+Debug.m  --- Some title
+ * List+Debug.m  --- List debugging category implementation.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 01:16:38 asmodai>
- * Revision:   3
+ * Time-stamp: <15/11/09 07:22:11 asmodai>
+ * Revision:   4
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

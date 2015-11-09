@@ -1,10 +1,10 @@
 /*
- * Architecture.h  --- Some title
+ * Architecture.h  --- Architecture detection.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 05:06:47 asmodai>
- * Revision:   6
+ * Time-stamp: <15/11/09 07:22:22 asmodai>
+ * Revision:   7
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

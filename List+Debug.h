@@ -1,10 +1,10 @@
 /*
- * List+Debug.h  --- Some title
+ * List+Debug.h  --- List debugging category.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 01:08:54 asmodai>
- * Revision:   1
+ * Time-stamp: <15/11/09 07:22:02 asmodai>
+ * Revision:   2
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

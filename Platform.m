@@ -1,10 +1,10 @@
 /*
- * Platform.m  --- Some title
+ * Platform.m  --- Platform detection implementation.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 01:28:11 asmodai>
- * Revision:   5
+ * Time-stamp: <15/11/09 07:20:31 asmodai>
+ * Revision:   6
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

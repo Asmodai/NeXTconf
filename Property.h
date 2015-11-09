@@ -1,10 +1,10 @@
 /*
- * Property.h  --- Some title
+ * Property.h  --- Property base class.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/08 06:25:41 asmodai>
- * Revision:   1
+ * Time-stamp: <15/11/09 07:20:44 asmodai>
+ * Revision:   2
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

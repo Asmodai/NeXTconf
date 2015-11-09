@@ -1,10 +1,10 @@
 /*
- * Manager.m  --- Some title
+ * Manager.m  --- Instance manager implementation.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 01:33:07 asmodai>
- * Revision:   10
+ * Time-stamp: <15/11/09 07:21:45 asmodai>
+ * Revision:   11
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

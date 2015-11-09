@@ -1,10 +1,10 @@
 /*
- * Manager.h  --- Some title
+ * Manager.h  --- Instance manager.
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 01:27:05 asmodai>
- * Revision:   4
+ * Time-stamp: <15/11/09 07:21:40 asmodai>
+ * Revision:   5
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
