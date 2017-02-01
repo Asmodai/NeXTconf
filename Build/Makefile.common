@@ -23,6 +23,7 @@ HFILES = Architecture.h \
 	 Symbol.h       \
 	 SymbolTable.h  \
 	 SyntaxTree.h   \
+	 Interp.h       \
 	 Utils.h        \
 	 Version.h      \
 	 snprintf.h     \
@@ -47,6 +48,7 @@ CLASSES = Architecture.m \
 	  Symbol.m       \
 	  SymbolTable.m  \
 	  SyntaxTree.m   \
+	  Interp.m       \
 	  Version.m
 
 OTHERSRCS = Makefile.preamble Makefile Makefile.postamble

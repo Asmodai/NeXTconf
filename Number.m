@@ -3,9 +3,6 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 02:19:05 asmodai>
- * Revision:   11
- *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
  * Created:    Tue,  3 Nov 2015 05:22:45 +0000 (GMT)

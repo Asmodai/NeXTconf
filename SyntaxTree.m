@@ -3,9 +3,6 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 02:02:12 asmodai>
- * Revision:   13
- *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
  * Created:    Wed,  4 Nov 2015 05:02:56 +0000 (GMT)
@@ -40,6 +37,7 @@
 
 #import "SyntaxTree.h"
 #import "Utils.h"
+#import "Interp.h"
 
 /*
  * Default maximum number of children.
@@ -285,6 +283,11 @@ const int children_per_node[] = {
                              andChild1:[self childAtIndex:child]]];
 
   return YES;
+}
+
+- (void)interpret
+{
+  interpret(self);
 }
 
 /*

@@ -3,9 +3,6 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/08 23:52:11 asmodai>
- * Revision:   9
- *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
  * Created:    Sat,  7 Nov 2015 04:24:24 +0000 (GMT)
@@ -139,12 +136,18 @@ main(int argc, char **argv)
   [root_symtab printDebug:"Symbols"];
   putchar('\n');
 
-  [root_syntree printDebug:"Parsed tokens"];
-  putchar('\n');
+  //  [root_syntree printDebug:"Parsed tokens"];
+  //putchar('\n');
+
+  printf("\n\n\n");
+  [root_syntree interpret];
+
 
   printf("\n\n");
+  //[[Manager sharedInstance] printDebug:"Object manager"];
 
-  [[Manager sharedInstance] printDebug:"Object manager"];
+  [root_symtab printDebug:"Symbols"];
+  putchar('\n');
 
   return errors ? 1 : 0;
 }

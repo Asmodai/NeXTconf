@@ -3,9 +3,6 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 02:00:55 asmodai>
- * Revision:   6
- *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
  * Created:    Wed,  4 Nov 2015 04:41:44 +0000 (GMT)
@@ -114,6 +111,11 @@ typedef enum {
 - (void)setChildAtIndex:(int)index
                      to:(SyntaxTree *)child;
 - (SyntaxTree *)childAtIndex:(int)index;
+
+/*
+ * Interpretation.
+ */
+- (void)interpret;
 
 /*
  * Utilities.

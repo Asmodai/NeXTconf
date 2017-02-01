@@ -3,9 +3,6 @@
  *
  * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
  *
- * Time-stamp: <15/11/09 02:58:24 asmodai>
- * Revision:   17
- *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
  * Created:    Sat,  7 Nov 2015 07:09:14 +0000 (GMT)
@@ -263,7 +260,7 @@ integer
 method_call
    : OPEN_METH identifier identifier CLOSE_METH {
        /*$$ = CTREE2(MethodCall, $2, $3); */
-       $$ = CTREE(MethodCall);
+       $$ = CTREE1(MethodCall, $2);
      }
    ;
 
