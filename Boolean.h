@@ -1,11 +1,11 @@
 /*
- * Manager.h  --- Instance manager.
+ * Boolean.h  --- Some title
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Sun,  8 Nov 2015 05:47:57 +0000 (GMT)
+ * Created:    Thu,  2 Feb 2017 15:28:35 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -33,70 +33,50 @@
 
 #import <objc/Object.h>
 #import "Object+Debug.h"
-#import <objc/HashTable.h>
-#import <objc/List.h>
 
 #import "String.h"
 
-#define MANAGER_ADD_METHOD(__m)                      \
-  [[Manager sharedInstance]                          \
-     addMethod:[[String alloc] initWithString:(__m)] \
-      forClass:[self class]]
-
-@interface Manager : Object
+@interface Boolean : Object
 {
-  HashTable *_instances;        /* Hash of instances. */
-  HashTable *_methods;          /* Hash of method calls. */
+  BOOL _value;
 }
-
-/*
- * Singleton methods.
- */
-+ (id)sharedInstance;
 
 /*
  * Initialisation.
  */
 - (id)init;
-- (id)_initFromShared_;
+- (id)initWithBool:(BOOL)value;
+- (id)initWithInt:(int)value;
 
 /*
- * Class instances.
+ * Destruction.
  */
-- (void)addInstance:(id)anObject;
-- (void)removeInstance:(id)anObject;
+- (id)free;
 
 /*
- * Methods.
+ * Accessor methods.
  */
-- (void)addMethod:(String *)aMethod
-         forClass:(id)aClass;
-
-- (void)removeMethod:(String *)aMethod
-            forClass:(id)aClass;
+- (BOOL)boolValue;
+- (const char *)stringValue;
+- (int)intValue;
+- (void)setValueFromBool:(BOOL)aValue;
+- (void)setValueFromString:(const char *)aString;
+- (void)setValueFromInt:(int)aValue;
 
 /*
- * Predicates.
+ * Comparison methods.
  */
-- (BOOL)haveInstanceOf:(String *)aClass;
-- (BOOL)haveMethod:(String *)aString
-          forClass:(String *)aClass;
+- (BOOL)isEqual:(id)anObject;
 
-/*
- * Finding.
- */
-- (id)findInstance:(String *)aClass;
+@end                            /* Boolean */
 
-@end /* Manager */
-
-@interface Manager (Debug)
+@interface Boolean (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Manager (Debug) */
+@end                            /* Boolean (Debug) */
 
-
-/* Manager.h ends here */
+/* Boolean.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

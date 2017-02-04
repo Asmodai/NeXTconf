@@ -13,10 +13,12 @@ HFILES = Architecture.h \
 	 List+Debug.h   \
 	 Manager.h      \
 	 Number.h       \
+	 Boolean.h      \
 	 Object+Debug.h \
 	 Parse.h        \
 	 Platform.h     \
 	 Pointer.h      \
+	 Selector.h     \
 	 Property.h     \
 	 Stack.h        \
 	 String.h       \
@@ -24,6 +26,7 @@ HFILES = Architecture.h \
 	 SymbolTable.h  \
 	 SyntaxTree.h   \
 	 Interp.h       \
+	 VirtMachine.h  \
 	 Utils.h        \
 	 Version.h      \
 	 snprintf.h     \
@@ -38,10 +41,12 @@ CLASSES = Architecture.m \
 	  Main.m         \
 	  Manager.m      \
 	  Number.m       \
+	  Boolean.m      \
 	  Object+Debug.m \
 	  Parse.m        \
 	  Platform.m     \
 	  Pointer.m      \
+	  Selector.m     \
 	  Property.m     \
 	  Stack.m        \
 	  String.m       \
@@ -49,6 +54,7 @@ CLASSES = Architecture.m \
 	  SymbolTable.m  \
 	  SyntaxTree.m   \
 	  Interp.m       \
+	  VirtMachine.m  \
 	  Version.m
 
 OTHERSRCS = Makefile.preamble Makefile Makefile.postamble

@@ -52,6 +52,7 @@ typedef enum {
   IdentExpr,                    // Identifier expression.
   IntegerExpr,                  // Integer constant expression.
   StringExpr,                   // String constant expression.
+  BooleanExpr,                  // Boolean constant expression.
   CoerceToString,               // Coerce a boolean to a string.
   MethodCall                    // Method call.
 } STNodeType;
@@ -111,11 +112,6 @@ typedef enum {
 - (void)setChildAtIndex:(int)index
                      to:(SyntaxTree *)child;
 - (SyntaxTree *)childAtIndex:(int)index;
-
-/*
- * Interpretation.
- */
-- (void)interpret;
 
 /*
  * Utilities.

@@ -35,6 +35,7 @@
 #import "Object+Debug.h"
 
 #import "Number.h"
+#import "Boolean.h"
 #import "String.h"
 #import "Pointer.h"
 
@@ -42,6 +43,7 @@ typedef enum {
   SymbolNil,                    // Nil symbol.
   SymbolString,                 // String.
   SymbolNumber,                 // Number.
+  SymbolBoolean,                // Boolean.
   SymbolPointer,                // Pointer.
   SymbolSelector,               // Selector.
   SymbolObject,                 // Object.
@@ -60,6 +62,13 @@ typedef enum {
   SymbolType  _type;            // Data type.
   BOOL        _readOnly;        // Read only?
 }
+
+/*
+ * Class methods.
+ */
++ (Symbol *)newFromString:(String *)aString;
++ (Symbol *)newFromNumber:(Number *)aString;
++ (Symbol *)newFromBoolean:(Boolean *)aString;
 
 /*
  * Initialisation.

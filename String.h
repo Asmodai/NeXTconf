@@ -164,6 +164,39 @@ caseSensitive:(BOOL)sense;
 - (id)toUpper;
 
 /*
+ * Fields.
+ */
+- (id)left:(size_t)count
+  fromZone:(NXZone *)zone;
+- (id)right:(size_t)count
+   fromZone:(NXZone *)zone;
+- (id)left:(size_t)count;
+- (id)right:(size_t)count;
+
+/*
+ * Insertion.
+ */
+- (id)cat:(const char *)aString;
+- (id)cat:(const char *)aString
+   length:(size_t)n;
+- (id)cat:(const char *)aString
+   length:(size_t)n
+ fromZone:(NXZone *)zone;
+- (id)concatenate:(id)strings, ...;
+- (id)insert:(const char *)aString
+          at:(size_t)index;
+- (id)insert:(const char *)aString;
+- (id)insertString:(id)sender;
+- (id)insertString:(id)sender
+                at:(size_t)index;
+- (id)insertFromFormat:(const char *)format, ...;
+- (id)insertAt:(size_t)index
+    fromFormat:(const char *)format, ...;
+- (id)insertAt:(size_t)index
+    fromFormat:(const char *)format
+     arguments:(va_list)args;
+
+/*
  * Hash methods.
  */
 - (unsigned int)hash;

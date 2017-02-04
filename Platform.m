@@ -298,11 +298,11 @@ get_os_version(void)
     if (platform) {
       _product  = [[String alloc] initWithString:platform->name];
       _platform = [[String alloc] initWithString:platform->platform];
-      _OpenStep = platform->isOpenStep;
+      _OpenStep = [[Boolean alloc] initWithBool:platform->isOpenStep];
     } else {
       _product  = [[String alloc] initWithString:"Unknown"];
       _platform = [[String alloc] initWithString:"Unknown"];
-      _OpenStep = NO;
+      _OpenStep = [[Boolean alloc] initWithBool:NO];
     }
 
     MANAGER_ADD_METHOD("majorVersion");
@@ -383,7 +383,7 @@ get_os_version(void)
 /*
  * Is the platform an implementation of the OpenStep specification?
  */
-- (BOOL)isOpenStep
+- (Boolean *)isOpenStep
 {
   return _OpenStep;
 }
@@ -419,7 +419,7 @@ get_os_version(void)
 
   debug_print(indent,
               "OpenStep = %s\n",
-              bool2string(_OpenStep));
+              [_OpenStep stringValue]);
 }
 
 @end /* Platform (Debug) */

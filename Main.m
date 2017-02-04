@@ -41,6 +41,8 @@
 #import "Symbol.h"
 #import "SymbolTable.h"
 #import "SyntaxTree.h"
+#import "Interp.h"
+#import "VirtMachine.h"
 
 #import "Lexer.h"
 #import "Parse.h"
@@ -110,15 +112,17 @@ strdup(const char *str)
 int
 main(int argc, char **argv)
 {
-  //Instruction *code = nil;
-  Platform     *plat = nil;
-  Architecture *arch = nil;
+  IntInstr       *code = nil;
+  Platform       *plat = nil;
+  Architecture   *arch = nil;
+  VirtualMachine *vm   = nil;
 
   root_symtab  = [[SymbolTable alloc] init];
   root_syntree = [[SyntaxTree alloc] init];
   
   plat = [[Platform alloc] init];
   arch = [[Architecture alloc] init];
+  vm   = [[VirtualMachine alloc] init];
 
   yyin = NULL;
 
@@ -131,23 +135,34 @@ main(int argc, char **argv)
   }
 
   yyparse();
-  error_summary();
+  //error_summary();
 
-  [root_symtab printDebug:"Symbols"];
-  putchar('\n');
-
-  //  [root_syntree printDebug:"Parsed tokens"];
+  //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  printf("\n\n\n");
-  [root_syntree interpret];
+  //[root_syntree printDebug:"Parsed tokens"];
+  //putchar('\n');
 
+  //printf("\n\n\n");
+  code = [IntInstr generate:root_syntree];
+  [code number:1];
+  [code printDebug:"Intermediate code"];
+  //printf("\n");
 
+  [vm reset];
+  [vm read:code];
+  [vm execute];
+
+  /*
   printf("\n\n");
-  //[[Manager sharedInstance] printDebug:"Object manager"];
+  [[Manager sharedInstance] printDebug:"Object manager"];
+  */
 
+  /*
+  printf("\n\n");
   [root_symtab printDebug:"Symbols"];
   putchar('\n');
+  */
 
   return errors ? 1 : 0;
 }

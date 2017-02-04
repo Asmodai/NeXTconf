@@ -59,6 +59,7 @@ const char *node_types[] = {
   "Identifier",
   "Integer constant",
   "String constant",
+  "Boolean constant",
   "Coercion to string",
   "Method call"
 };
@@ -77,7 +78,7 @@ const int children_per_node[] = {
   1,                            // PRINT statement
   2,                            // IF..THEN statement
   3,                            // IF..THEN..ELSE statement
-  3,                            // FOR..IN statement
+  2,                            // FOR..IN statement
   0,                            // Error statement
   2,                            // Equals
   1,                            // Assign
@@ -85,8 +86,9 @@ const int children_per_node[] = {
   0,                            // Identifier
   0,                            // Integer constant
   0,                            // String constant
+  0,                            // Boolean constant
   1,                            // Coerce to string
-  0                             // Method call
+  2                             // Method call
 };
 
 @implementation SyntaxTree
@@ -156,6 +158,8 @@ const int children_per_node[] = {
     [_children insertObject:child1 at:0];
     [_children insertObject:child2 at:1];
     [_children insertObject:child3 at:2];
+
+    [self checkSyntax];
   }
 
   return self;
@@ -285,11 +289,6 @@ const int children_per_node[] = {
   return YES;
 }
 
-- (void)interpret
-{
-  interpret(self);
-}
-
 /*
  * Check the syntax for this node.
  */
@@ -326,11 +325,16 @@ const int children_per_node[] = {
       _retType = ReturnNumber;
       break;
 
+    case BooleanExpr:
+      _retType = ReturnBool;
+      break;
+
     case CoerceToString:
       _retType = ReturnString;
       break;
 
     case MethodCall:
+      _retType = ReturnString;
       break;
   }
 
@@ -339,30 +343,26 @@ const int children_per_node[] = {
     case IfThenStmt:
     case IfThenElseStmt:
       if ([[_children objectAt:0] returnType] != ReturnBool) {
-        fprintf(stderr, "if: Condition should be boolean.");
+        fprintf(stderr, "if: Condition should be boolean.\n");
       }
       break;
 
+      /*
     case EqualExpr:
       if ([[_children objectAt:0] returnType] !=
           [[_children objectAt:1] returnType])
       {
-        fprintf(stderr, "==: Different types.");
+        fprintf(stderr, "==: Different types.\n");
       }
       break;
+      */
 
     case ConcatExpr:
       if (![self coerceToString:0]) {
-        fprintf(stderr, "+: Cannot coerce first argument to string.");
+        fprintf(stderr, "+: Cannot coerce first argument to string.\n");
       }
       if (![self coerceToString:1]) {
-        fprintf(stderr, "+: Cannot coerce second argument to string.");
-      }
-      break;
-
-    case AssignExpr:
-      if (![self coerceToString:0]) {
-        fprintf(stderr, "=: Cannot coerce to string.");
+        fprintf(stderr, "+: Cannot coerce second argument to string.\n");
       }
       break;
 

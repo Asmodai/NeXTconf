@@ -575,6 +575,292 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
+- (id)left:(size_t)count
+  fromZone:(NXZone *)zone
+{
+  char smash = 0;
+  id   nstr  = nil;
+
+  if ((count < 0) || (!_buffer)) {
+    return nil;
+  }
+
+  if (count == 0) {
+    return [String new];
+  }
+
+  if (count >= _length) {
+    return [self copyFromZone:zone];
+  }
+
+  nstr           = [[[self class] allocFromZone:zone] init];
+  smash          = _buffer[count];
+  _buffer[count] = '\0';
+  [nstr setStringValue:_buffer fromZone:zone];
+  _buffer[count] = smash;
+
+  return nstr;
+}
+
+- (id)right:(size_t)count
+   fromZone:(NXZone *)zone
+{
+  id nstr = nil;
+
+  if ((count < 0) || (!_buffer)) {
+    return nil;
+  }
+
+  if (count == 0) {
+    return [String new];
+  }
+
+  if (count >= _length) {
+    return [self copyFromZone:zone];
+  }
+
+  nstr = [[[self class] allocFromZone:zone] init];
+  [nstr setStringValue:&_buffer[_length - count] fromZone:zone];
+
+  return nstr;
+}
+
+- (id)left:(size_t)count
+{
+  return [self left:count fromZone:[self zone]];
+}
+
+- (id)right:(size_t)count
+{
+  return [self right:count fromZone:[self zone]];
+}
+
+/*
+ * Concatenate a string.
+ */
+- (id)cat:(const char *)aString
+{
+  if (!aString) {
+    return nil;
+  }
+
+  return [self cat:aString
+            length:strlen(aString)
+          fromZone:[self zone]];
+}
+
+/*
+ * Concatenate a string of a given length.
+ */
+- (id)cat:(const char *)aString
+   length:(size_t)n
+{
+  return [self cat:aString
+            length:n
+          fromZone:[self zone]];
+}
+
+
+/*
+ * Concatenate a string of a given length from a given memory zone.
+ */
+- (id)cat:(const char *)aString
+   length:(size_t)n
+ fromZone:(NXZone *)zone
+{
+  char   *nBuf  = NULL;
+  size_t  nSize = 0;
+
+  if (!(aString || _buffer)) {
+    return nil;
+  }
+
+  if (!_buffer) {
+    char *tBuf = (char *)NXZoneMalloc(zone, n + 1);
+
+    if (!tBuf) {
+      return nil;
+    }
+
+    strncpy(tBuf, aString, n);
+    tBuf[n] = '\0';
+    
+    [self setStringValue:tBuf fromZone:zone];
+    free(tBuf);
+    
+    return self;
+  }
+
+  if (!aString) {
+    return self;
+  }
+ 
+  if (n > strlen(aString)) {
+    n = strlen(aString);
+  }
+
+  nSize = _length + n + 1;
+  if (nSize > _capacity) {
+    nBuf    = (char *)NXZoneMalloc(zone, nSize);
+    _capacity = nSize;
+    nBuf[0] = '\0';
+
+    strcat(nBuf, _buffer);
+    strncat(nBuf, aString, n);
+    free(_buffer);
+    _buffer = nBuf;
+  } else {
+    strncat(_buffer, aString, n);
+  }
+
+  _length = strlen(_buffer);
+
+  return self;
+}
+
+/*
+ * Concatenate a list of strings.
+ */
+- (id)concatenate:(id)strings, ...
+{
+  id      aString;
+  va_list ptr;
+
+  va_start(ptr, strings);
+  aString = strings;
+  while (aString) {
+    if ([aString respondsTo:@selector(stringValue)]) {
+      const char *sptr = [aString stringValue];
+      [self cat:sptr
+         length:([aString respondsTo:@selector(length)]
+                 ? [aString length]
+                 : strlen(sptr))
+       fromZone:[self zone]];
+    }
+    aString = va_arg(ptr, id);
+  }
+  va_end(ptr);
+
+  return self;
+}
+
+/*
+ * Insert a string at a given position.
+ */
+- (id)insert:(const char *)aString
+          at:(size_t)index
+{
+  id t1 = nil;
+  id t2 = nil;
+
+  if ((aString == NULL) || (strlen(aString) <= 0)) {
+    return self;
+  }
+
+  if (index < 0) {
+    index = 0;
+  }
+
+  if (index >= _length) {
+    return [self cat:aString];
+  }
+
+  t1 = [self left:index];
+  if (!t1) {
+    t1 = [[[self class] alloc] init];
+  }
+
+  t2 = [self right:_length - index];
+  [[t1 cat:aString] concatenate:t2];
+  [self setStringValue:[t1 stringValue]];
+
+  [t1 free];
+  [t2 free];
+
+  return self;
+}
+
+/*
+ * Insert a stringable thing at a given position.
+ */
+- (id)insertString:(id)sender
+                at:(size_t)index
+{
+  if (![sender respondsTo:@selector(stringValue)]) {
+    return self;
+  }
+
+  return [self insert:[sender stringValue] at:index];
+}
+
+/*
+ * Insert a string.
+ */
+- (id)insert:(const char *)aString
+{
+  return [self insert:aString at:0];
+}
+
+/*
+ * Insert a stringable thing.
+ */
+- (id)insertString:(id)sender
+{
+  return [self insertString:sender at:0];
+}
+
+/*
+ * Insert a string with a format specifier.
+ */
+- (id)insertFromFormat:(const char *)format, ...
+{
+  va_list args;
+
+  va_start(args, format);
+  [self insertAt:0
+     fromFormat:format
+      arguments:args];
+  va_end(args);
+
+  return self;
+}
+
+/*
+ * Insert a string at a given position using varargs.
+ */
+- (id)insertAt:(size_t)index
+    fromFormat:(const char *)format, ...
+{
+  va_list args;
+
+  va_start(args, format);
+  [self insertAt:index
+      fromFormat:format
+       arguments:args];
+  va_end(args);
+
+  return self;
+}
+
+/*
+ * Insert a string at a position with computed varargs.
+ */
+- (id)insertAt:(size_t)index
+    fromFormat:(const char *)format
+     arguments:(va_list)args
+{
+  char *buf = NULL;
+
+  buf = (char *)NXZoneMalloc([self zone], 1024);
+
+  vsnprintf(buf, 1024, format, args);
+
+  [self insert:buf at:index];
+  NX_FREE(buf);
+
+  return self;
+}
+
 @end /* String */
 
 @implementation String (Debug)

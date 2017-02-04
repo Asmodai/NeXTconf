@@ -35,7 +35,9 @@
 #import <sys/types.h>
 
 #import "Symbol.h"
+#import "Selector.h"
 #import "SymbolTable.h"
+#import "Manager.h"
 #import "SyntaxTree.h"
 #import "Lexer.h"
 
@@ -45,7 +47,7 @@ extern SyntaxTree  *root_syntree;
 void        errorf(char *fmt, ...);
 void        yyerror(char *msg);
 const char *make_symbol_name(void);
-const char *make_integer_name(void);
+const char *make_immediate_name(void);
 
 /* We want debugging. */
 #define YYDEBUG 1
@@ -57,6 +59,12 @@ const char *make_integer_name(void);
  * Insert a number into the root symbol table.
  */
 #define IINT(__a)                   \
+  [root_symtab insertSymbol:(__a)]
+
+/*
+ * Insert a boolean into the root symbol table.
+ */
+#define IBOOL(__a)                  \
   [root_symtab insertSymbol:(__a)]
 
 /*
@@ -74,10 +82,18 @@ const char *make_integer_name(void);
 /*
  * Create an integer symbol.
  */
-#define CINT(__a)                                  \
-  [[Symbol alloc] initWithData:(__a)               \
-                       andName:[(__a) stringValue] \
+#define CINT(__a)                                                  \
+  [[Symbol alloc] initWithData:(__a)                               \
+                       andName:(const char *)make_immediate_name() \
                        andType:SymbolNumber];
+
+/*
+ * Create a boolean symbol.
+ */
+#define CBOOL(__a)                                                 \
+  [[Symbol alloc] initWithData:(__a)                               \
+                       andName:(const char *)make_immediate_name() \
+                       andType:SymbolBoolean];
 
 /*
  * Create an identifier symbol.
@@ -142,14 +158,16 @@ const char *make_integer_name(void);
 %token PRINT
 %token ASSIGN
 %token EQUAL
+%token NEQUAL
 %token CONCAT
 %token END_STMT OPEN_PAR CLOSE_PAR
 %token OPEN_METH CLOSE_METH
 %token BEGIN_CS END_CS
-%token <str> ID STRING 
-%token <fixnum> INTEGER
+%token <str> ID STRING
+%token <fixnum> INTEGER BOOLEAN
 
-%type <symbol> identifier string integer
+%type <symbol> identifier string integer boolean
+%type <str>    class_name method_name
 %type <tnode>  program statement_list statement
 %type <tnode>  if_statement optional_else_statement compound_statement
 %type <tnode>  for_statement expr equal_expr assign_expr concat_expr
@@ -230,6 +248,8 @@ simple_expr
    | string                         { $$ = CTREE(StringExpr);
                                       [$$ setSymbol:$1];                       }
    | integer                        { $$ = CTREE(IntegerExpr);
+                                      [$$ setSymbol:$1];                       }
+   | boolean                        { $$ = CTREE(BooleanExpr);
                                       [$$ setSymbol:$1];                       } 
    | OPEN_PAR expr CLOSE_PAR        { $$ = $2;                                 }
    | method_call                    { $$ = $1;                                 }
@@ -250,27 +270,53 @@ integer
        Number *num = nil;
 
        num = [[Number alloc] initWithInt:$1];
-       $$  = [root_symtab valueForSymbol:[num stringValue]];
-       if ($$ == nil) {
-         $$ = CINT(num);
-         IINT($$);
-       }
+       $$ = CINT(num);
+       IINT($$);
      }
+   ;
+
+boolean
+   : BOOLEAN {
+       Boolean *bool = nil;
+
+       bool = [[Boolean alloc] initWithInt:$1];
+       $$ = CBOOL(bool);
+       IBOOL($$);
+     }
+   ;
+
+class_name
+   : ID { $$ = $1; }
+   ;
+
+method_name
+   : ID { $$ = $1; }
+   ;
 
 method_call
-   : OPEN_METH identifier identifier CLOSE_METH {
-       /*$$ = CTREE2(MethodCall, $2, $3); */
-       $$ = CTREE1(MethodCall, $2);
+   : OPEN_METH class_name method_name CLOSE_METH {
+      Selector *sel = nil;
+      Symbol   *sym = nil;
+
+      sel = [[Selector alloc] initWithMethod:$3
+                                    forClass:$2];
+
+      if ([sel selector] == NULL) {
+        yyerror("Unknown method call.");
+      }
+
+      sym = [[Symbol alloc] initWithData:sel
+                                 andName:[sel stringValue]
+                                 andType:SymbolSelector];
+      $$ = CTREE(MethodCall);
+      [$$ setSymbol:sym];
      }
    ;
 
 string
    : STRING {
-       $$ = [root_symtab valueForSymbol:$1];
-       if ($$ == nil) {
-         $$ = CSYMB(make_symbol_name(), $1, SymbolString);
-         ISYMB($$);
-       }
+       $$ = CSYMB($1, make_symbol_name(), SymbolString);
+       ISYMB($$);
      }
    ;
 
@@ -295,6 +341,30 @@ make_symbol_name(void)
   }
 
   strcpy((char *)name, "strconst");
+  strcat((char *)name, num);
+
+  return name;
+}
+
+/*
+ * Make a name for an immediate value.
+ */
+const char *
+make_immediate_name(void)
+{
+  const char *name   = NULL;
+  static int  count  = 0;
+  char        num[4] = { 0 };
+
+  sprintf(num, "%d", ++count);
+
+  name = malloc(10 * sizeof *name);
+  if (name == NULL) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
+
+  strcpy((char *)name, "immedval");
   strcat((char *)name, num);
 
   return name;

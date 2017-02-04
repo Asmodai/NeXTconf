@@ -33,8 +33,13 @@
 
 #include <stdio.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 #import "Symbol.h"
 #import "Utils.h"
+#import "snprintf.h"
 
 /*
  * String names for symbol types.
@@ -43,6 +48,7 @@ static const char *symbol_type_names[] = {
   "nil",
   "string",
   "number",
+  "boolean",
   "pointer",
   "selector",
   "object"
@@ -74,6 +80,60 @@ name_for_symbol_type(SymbolType type)
 
 @implementation Symbol
 
++ (Symbol *)newFromString:(String *)aString
+{
+  static size_t  string_counter = 1;
+  char          *name           = NULL;
+
+  name = malloc(sizeof(char) * 128);
+  if (name == NULL) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
+
+  snprintf(name, 128, "string%d", string_counter++);
+
+  return [[Symbol alloc] initWithData:aString
+                              andName:(const char *)name
+                              andType:SymbolString];
+}
+
++ (Symbol *)newFromNumber:(Number *)aNumber
+{
+  static size_t  number_counter = 1;
+  char          *name           = NULL;
+
+  name = malloc(sizeof(char*) * 128);
+  if (name == NULL) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
+
+  snprintf(name, 128, "number%d", number_counter++);
+
+  return [[Symbol alloc] initWithData:aNumber
+                              andName:(const char *)name
+                              andType:SymbolNumber];
+}
+
++ (Symbol *)newFromBoolean:(Boolean *)aBoolean
+{
+  static size_t  bool_counter = 1;
+  char          *name         = NULL;
+
+  name = malloc(sizeof(char) * 128);
+  if (name == NULL) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
+
+  snprintf(name, 128, "boolean%d", bool_counter++);
+
+  return [[Symbol alloc] initWithData:aBoolean
+                              andName:(const char *)name
+                              andType:SymbolBoolean];
+}
+
 /*
  * Initialisa a symbol with no name or value.
  */
@@ -93,7 +153,7 @@ name_for_symbol_type(SymbolType type)
 {
   if ((self = [super init]) != nil) {
     _data = data;
-    _name = [[[String alloc] initWithString:name] toLower];
+    _name = [[String alloc] initWithString:name];
     _type = type;
   }
 
@@ -110,7 +170,7 @@ name_for_symbol_type(SymbolType type)
     _data = nil;
   }
 
-  return [self free];
+  return [super free];
 }
 
 /*

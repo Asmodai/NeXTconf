@@ -1,11 +1,11 @@
 /*
- * Interp.h  --- Some title
+ * Selector.h  --- Some title
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Wed,  1 Feb 2017 14:29:34 +0000 (GMT)
+ * Created:    Wed,  1 Feb 2017 18:31:40 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -32,87 +32,53 @@
 /* }}} */
 
 #import <objc/Object.h>
+#import "String.h"
 #import "Object+Debug.h"
 
-#import "Symbol.h"
-#import "SymbolTable.h"
-#import "SyntaxTree.h"
-
-typedef enum {
-  OP_NOP,
-  OP_PUSH,
-  OP_POP,
-  OP_PRINT,
-  OP_JMP,
-  OP_JMPF,
-  OP_STR_EQUAL,
-  OP_NUM_EQUAL,
-  OP_BOOL_EQUAL,
-  OP_CONCAT,
-  OP_CALL,
-  OP_BOOL2STR,
-  JUMPTARGET
-} Opcode;
-
-/* Intermediate representation. */
-@interface IntInstr : Object
+/*
+ * Selector class.
+ */
+@interface Selector : Object
 {
-  size_t    _lineNo;
-  Opcode    _opcode;
-  Symbol   *_symbol;
-  IntInstr *_target;
-  IntInstr *_next;
+  String *_method;
+  String *_class;
+  SEL     _selector;
 }
 
 /*
- * Class methods.
- */
-+ (IntInstr *)generate:(SyntaxTree *)tree;
-
-/*
- * Initialisation.
+ * Initialisation methods.
  */
 - (id)init;
-- (id)initWithOpcode:(Opcode)anOpcode;
-- (id)initWithOpcode:(Opcode)anOpcode
-              atLine:(size_t)aLineNo;
+- (id)initWithMethod:(const char *)aMethod
+            forClass:(const char *)aClass;
 
 /*
- * Destruction.
+ * Destruction methods.
  */
 - (id)free;
 
 /*
- * Accessors.
+ * Accessor methods.
  */
-- (void)setLine:(size_t)number;
-- (size_t)line;
-- (Opcode)opcode;
-- (void)setSymbol:(Symbol *)aSymbol;
-- (Symbol *)symbol;
-- (void)setTarget:(IntInstr *)aTarget;
-- (IntInstr *)target;
-- (void)setNext:(IntInstr *)aNext;
-- (IntInstr *)next;
+- (SEL)selector;
+- (const char *)stringValue;
+- (String *)method;
+- (String *)class;
 
 /*
- * Utilities.
+ * Selector calling.
  */
-- (void)number:(size_t)origin;
-- (size_t)length;
+- (id)evaluate;
 
-@end /* IntInstr */
+@end /* Selector */
 
-@interface IntInstr (Debug)
+@interface Selector (Debug)
 
-/*
- * Debugging.
- */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* IntInstr (Debug) */
+@end
 
-/* Interp.h ends here */
+/* Selector.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

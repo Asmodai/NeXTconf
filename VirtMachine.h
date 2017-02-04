@@ -1,11 +1,11 @@
 /*
- * Interp.h  --- Some title
+ * VM.h  --- Some title
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Wed,  1 Feb 2017 14:29:34 +0000 (GMT)
+ * Created:    Thu,  2 Feb 2017 12:05:06 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -34,48 +34,48 @@
 #import <objc/Object.h>
 #import "Object+Debug.h"
 
-#import "Symbol.h"
-#import "SymbolTable.h"
+#import "Stack.h"
+#import "String.h"
 #import "SyntaxTree.h"
+#import "Interp.h"
 
-typedef enum {
-  OP_NOP,
-  OP_PUSH,
-  OP_POP,
-  OP_PRINT,
-  OP_JMP,
-  OP_JMPF,
-  OP_STR_EQUAL,
-  OP_NUM_EQUAL,
-  OP_BOOL_EQUAL,
-  OP_CONCAT,
-  OP_CALL,
-  OP_BOOL2STR,
-  JUMPTARGET
-} Opcode;
+#import <stdio.h>
+#import <stdlib.h>
 
-/* Intermediate representation. */
-@interface IntInstr : Object
+typedef unsigned int u_int_t;
+
+@interface Instruction : Object
 {
-  size_t    _lineNo;
-  Opcode    _opcode;
-  Symbol   *_symbol;
-  IntInstr *_target;
-  IntInstr *_next;
+  Opcode  _opcode;
+  u_int_t _operand;
 }
 
-/*
- * Class methods.
- */
-+ (IntInstr *)generate:(SyntaxTree *)tree;
+- (id)init;
+- (id)initWithOpcode:(Opcode)anOpcode;
+- (id)initWithOpcode:(Opcode)anOpcode
+          andOperand:(u_int_t)anOperand;
+
+- (id)free;
+
+- (void)setOpcode:(Opcode)anOpcode;
+- (Opcode)opcode;
+- (void)setOperand:(u_int_t)anOperand;
+- (u_int_t)operand;
+
+@end                            // Instruction
+
+@interface VirtualMachine : Object
+{
+  size_t  _count;
+  List   *_instrs;;
+  List   *_strings;
+  Stack  *_stack;
+}
 
 /*
  * Initialisation.
  */
 - (id)init;
-- (id)initWithOpcode:(Opcode)anOpcode;
-- (id)initWithOpcode:(Opcode)anOpcode
-              atLine:(size_t)aLineNo;
 
 /*
  * Destruction.
@@ -83,36 +83,15 @@ typedef enum {
 - (id)free;
 
 /*
- * Accessors.
+ * Methods.
  */
-- (void)setLine:(size_t)number;
-- (size_t)line;
-- (Opcode)opcode;
-- (void)setSymbol:(Symbol *)aSymbol;
-- (Symbol *)symbol;
-- (void)setTarget:(IntInstr *)aTarget;
-- (IntInstr *)target;
-- (void)setNext:(IntInstr *)aNext;
-- (IntInstr *)next;
+- (void)read:(IntInstr *)code;
+- (void)execute;
+- (void)reset;
 
-/*
- * Utilities.
- */
-- (void)number:(size_t)origin;
-- (size_t)length;
+@end                            // VirtualMachine
 
-@end /* IntInstr */
-
-@interface IntInstr (Debug)
-
-/*
- * Debugging.
- */
-- (void)_printDebugInfo:(int)indent;
-
-@end /* IntInstr (Debug) */
-
-/* Interp.h ends here */
+/* VM.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

@@ -165,6 +165,11 @@
   return YES;
 }
 
+- (id)findInstance:(String *)aClass
+{
+  return [_instances valueForKey:[aClass stringValue]];
+}
+
 @end /* Manager */
 
 @implementation Manager (Debug)

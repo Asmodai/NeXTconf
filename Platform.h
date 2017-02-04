@@ -37,17 +37,18 @@
 #import "Property.h"
 #import "Number.h"
 #import "String.h"
+#import "Boolean.h"
 
 /*
  * This class implements an operating system version property.
  */
 @interface Platform : Property
 {
-  Number *_major;               /* Major version number. */
-  Number *_minor;               /* Minor version number. */
-  String *_product;             /* Product name. */
-  String *_platform;            /* Platform name. */
-  BOOL    _OpenStep;            /* Is the platform an OpenStep? */
+  Number  *_major;              /* Major version number. */
+  Number  *_minor;              /* Minor version number. */
+  String  *_product;            /* Product name. */
+  String  *_platform;           /* Platform name. */
+  Boolean *_OpenStep;           /* Is the platform an OpenStep? */
 }
 
 /*
@@ -68,7 +69,7 @@
 /*
  * Predicates.
  */
-- (BOOL)isOpenStep;
+- (Boolean *)isOpenStep;
 
 @end /* Platform */
 

@@ -48,10 +48,12 @@ extern int   yywrap(void);
 void make_identifier(void);
 void make_string_constant(void);
 void make_integer_constant(void);
+void make_boolean_constant(void);
 void eat_comment(void);
 
 %}
 
+BVALUE    (true|false)
 LETTER    [a-zA-Z_]
 DIGIT     [0-9]+
 IDENT     {LETTER}({LETTER}|{DIGIT})*
@@ -68,6 +70,7 @@ END_STMT  ;
 "print"    { return PRINT;                                            }
 "="        { return ASSIGN;                                           }
 "=="       { return EQUAL;                                            }
+"!="       { return NEQUAL;                                           }
 "+"        { return CONCAT;                                           }
 ";"        { return END_STMT;                                         }
 "("        { return OPEN_PAR;                                         }
@@ -76,6 +79,7 @@ END_STMT  ;
 "}"        { return END_CS;                                           }
 "["        { return OPEN_METH;                                        }
 "]"        { return CLOSE_METH;                                       }
+{BVALUE}   { make_boolean_constant(); return BOOLEAN;                 }
 {IDENT}    { make_identifier(); return ID;                            }
 {STR}      { make_string_constant(); return STRING;                   }
 {DIGIT}    { make_integer_constant(); return INTEGER;                 }
@@ -131,6 +135,16 @@ void
 make_integer_constant(void)
 {
   yylval.fixnum = atol(yytext);
+}
+
+void
+make_boolean_constant(void)
+{
+  if (strncasecmp(yytext, "true", 4) == 0) {
+    yylval.fixnum = (int)YES;
+  } else {
+    yylval.fixnum = (int)NO;
+  }
 }
 
 /* Grammar.l ends here */

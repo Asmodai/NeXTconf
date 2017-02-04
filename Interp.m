@@ -9,42 +9,22 @@
  * Keywords:   
  * URL:        Not distributed yet.
  */
-
 /* {{{ License: */
 /*
- * Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *      This product includes software developed by the University of
- *      California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 /* }}} */
-
 /* {{{ Commentary: */
 /*
  *
@@ -55,102 +35,304 @@
 #import <stdlib.h>
 #import <unistd.h>
 
-#import "Symbol.h"
-#import "SyntaxTree.h"
+#import "Interp.h"
+#import "Utils.h"
 
-extern const char *node_types[];
-extern const char *return_types[];
-extern const int   children_per_node[];
+char *op_name[] = {
+  "OP_NOP",
+  "OP_PUSH",
+  "OP_POP",
+  "OP_PRINT",
+  "OP_JMP",
+  "OP_JMPF",
+  "OP_STR_EQUAL",
+  "OP_NUM_EQUAL",
+  "OP_BOOL_EQUAL",
+  "OP_CONCAT",
+  "OP_CALL",
+  "OP_BOOL2STR",
+  "JUMPTARGET"
+};
 
 static
-void
-doAssign(Symbol *lhs, Symbol *rhs)
+IntInstr *
+concatenate(IntInstr *blk1, IntInstr *blk2)
 {
-  [lhs setData:rhs];
-  
-  printf("%s = %s\n",
-         [[lhs symbolName] stringValue],
-         [[rhs data] stringValue]);
+  IntInstr *search = blk1;
+
+  while ([search next] != nil) {
+    search = [search next];
+  }
+
+  [search setNext:blk2];
+
+  return blk1;
 }
 
 static
-BOOL
-isEqual(Symbol *lhs, Symbol *rhs)
+IntInstr *
+prefixJT(IntInstr *blk, IntInstr *refInstr)
 {
-  return NO;
+  IntInstr *jt = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+
+  [jt setTarget:refInstr];
+  [jt setNext:blk];
+
+  return jt;
 }
 
-static
-String *
-getIdent(Symbol *symb)
+@implementation IntInstr
+
++ (IntInstr *)generate:(SyntaxTree *)tree
 {
-  return nil;
-}
+  SyntaxTree *root = tree;
+  IntInstr   *blk1;
+  IntInstr   *blk2;
+  IntInstr   *cond;
+  IntInstr   *jmp2else;
+  IntInstr   *thenpart;
+  IntInstr   *jmp2end;
+  IntInstr   *elsepart;
+  IntInstr   *endif;
 
-static
-int
-getInteger(Symbol *symb)
-{
-  return 0;
-}
-
-static
-String *
-getString(Symbol *symb)
-{
-  return nil;
-}
-
-static
-String *
-coerceString(Symbol *symb)
-{
-  return nil;
-}
-
-static
-void
-dointerp(SyntaxTree *node)
-{
-  size_t     i        = 0;
-  STNodeType ntype    = [node nodeType];
-  size_t     children = children_per_node[ntype];
-
-  switch (ntype) {
-    case EmptyStmt:
-      printf("Ignoring empty statement...\n");
-      break;
-
+  switch ([root nodeType]) {
     case StmtList:
-      {
-        for (i = 0; i < children; i++) {
-          printf("Interpreting children...\n");
-          dointerp([node childAtIndex:i]);
-        }
-      }
-      break;
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      return concatenate(blk1, blk2);
+
+    case EmptyStmt:
+      return [[IntInstr alloc] initWithOpcode:OP_NOP];
 
     case ExprStmt:
-      {
-        printf("Expression: ");
-        dointerp([node childAtIndex:0]);
+      return [IntInstr generate:[root childAtIndex:0]];
+
+    case PrintStmt:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [[IntInstr alloc] initWithOpcode:OP_PRINT];
+      return concatenate(blk1, blk2);
+
+    case IfThenStmt:
+      cond     = [IntInstr generate:[root childAtIndex:0]];
+      jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMPF];
+      thenpart = [IntInstr generate:[root childAtIndex:1]];
+      endif    = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+      [endif setTarget:jmp2end];
+      [jmp2end setTarget:endif];
+      concatenate(cond, jmp2end);
+      concatenate(jmp2end, thenpart);
+      concatenate(thenpart, endif);
+      return cond;
+
+    case IfThenElseStmt:
+      cond     = [IntInstr generate:[root childAtIndex:0]];
+      jmp2else = [[IntInstr alloc] initWithOpcode:OP_JMPF];
+      thenpart = [IntInstr generate:[root childAtIndex:1]];
+      elsepart = prefixJT([IntInstr generate:[root childAtIndex:2]], jmp2else);
+      [jmp2else setTarget:elsepart];
+      jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMP];
+      endif    = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+      [endif setTarget:jmp2end];
+      [jmp2end setTarget:endif];
+      concatenate(cond, jmp2else);
+      concatenate(jmp2else, thenpart);
+      concatenate(thenpart, jmp2end);
+      concatenate(jmp2end, elsepart);
+      concatenate(elsepart, endif);
+      return cond;
+
+    case ErrorStmt:
+      return [[IntInstr alloc] initWithOpcode:OP_NOP];
+
+    case MethodCall:
+      blk1 = [[IntInstr alloc] initWithOpcode:OP_CALL];
+      [blk1 setSymbol:[root symbol]];
+      return blk1;
+
+    case EqualExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk1, blk2);
+      switch ([[root childAtIndex:0] returnType]) {
+        case ReturnString:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_STR_EQUAL]);
+
+        case ReturnNumber:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_NUM_EQUAL]);
+
+        default:
+        case ReturnBool:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_BOOL_EQUAL]);
       }
-      break;
 
     case AssignExpr:
-      printf("Assigning...\n");
-      doAssign([node symbol], [[node childAtIndex:0] symbol]);
-      break;
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [[IntInstr alloc] initWithOpcode:OP_POP];
+      [blk2 setSymbol:[root symbol]];
+      return concatenate(blk1, blk2);
+
+    case ConcatExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk1, blk2);
+      return concatenate(blk1, [[IntInstr alloc] initWithOpcode:OP_CONCAT]);
+
+    case IdentExpr:
+    case IntegerExpr:
+    case StringExpr:
+    case BooleanExpr:
+      blk1 = [[IntInstr alloc] initWithOpcode:OP_PUSH];
+      [blk1 setSymbol:[root symbol]];
+      return blk1;
+
+    case CoerceToString:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [[IntInstr alloc] initWithOpcode:OP_BOOL2STR];
+      return concatenate(blk1, blk2);
 
     default:
-      break;
+      return [[IntInstr alloc] initWithOpcode:OP_NOP];
   }
 }
 
-void
-interpret(SyntaxTree *root)
+- (id)init
 {
-  dointerp(root);
+  return [self initWithOpcode:OP_NOP
+                       atLine:0];
 }
 
+- (id)initWithOpcode:(Opcode)anOpcode
+{
+  return [self initWithOpcode:anOpcode
+                       atLine:0];
+}
+
+- (id)initWithOpcode:(Opcode)anOpcode
+              atLine:(size_t)aLineNo
+{
+  if ((self = [super init]) != nil) {
+    _lineNo = aLineNo;
+    _opcode = anOpcode;
+    _symbol = nil;
+    _target = nil;
+    _next   = nil;
+  }
+
+  return self;
+}
+
+- (id)free
+{
+  [_symbol free];
+  [_target free];
+  [_next free];
+
+  _symbol = nil;
+  _target = nil;
+  _next   = nil;
+
+  return [super free];
+}
+
+- (void)setLine:(size_t)number
+{
+  _lineNo = number;
+}
+
+- (size_t)line
+{
+  return _lineNo;
+}
+
+- (Opcode)opcode
+{
+  return _opcode;
+}
+
+- (void)setSymbol:(Symbol *)aSymbol
+{
+  _symbol = aSymbol;
+}
+
+- (Symbol *)symbol
+{
+  return _symbol;
+}
+
+- (void)setTarget:(IntInstr *)aTarget
+{
+  _target = aTarget;
+}
+
+- (IntInstr *)target
+{
+  return _target;
+}
+
+- (void)setNext:(IntInstr *)aNext
+{
+  _next = aNext;
+}
+
+- (IntInstr *)next
+{
+  return _next;
+}
+
+- (void)number:(size_t)origin
+{
+  IntInstr *num = self;
+
+  while (num != nil) {
+    [num setLine:origin++];
+    num = [num next];
+  }
+}
+
+- (size_t)length
+{
+  IntInstr *i   = _next;
+  size_t    cnt = 0;
+
+  while (i != nil) {
+    cnt++;
+    i = [i next];
+  }
+
+  return cnt;
+}
+
+@end                            /* IntInstr */
+
+@implementation IntInstr (Debug)
+
+- (void)_printDebugInfo:(int)indent
+{
+  debug_print(indent, "%8d: %s ", _lineNo, op_name[_opcode]);
+
+  if (_symbol != nil) {
+    debug_print(0, "%s ", [[_symbol symbolName] stringValue]);
+  }
+
+  if (_target != nil) {
+    debug_print(0, "%d", [_target line]);
+  }
+
+  debug_print(0, "\n");
+
+  if (_next != nil) {
+    [_next _printDebugInfo:indent];
+  }
+}
+
+@end                            /* IntInstr (Debug) */
+
 /* Interp.m ends here */
+/*
+ * Local Variables: ***
+ * indent-tabs-mode: nil ***
+ * End: ***
+ */
