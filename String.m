@@ -121,14 +121,14 @@
   va_list  ap;
   char    *buf = NULL;
 
-  buf = (char *)NXZoneMalloc([self zone], 1024);
+  buf = (char *)xzonemalloc([self zone], 1024);
 
   va_start(ap, fmt);
   vsnprintf(buf, 1024, fmt, ap);
   va_end(ap);
 
   [self initWithString:buf];
-  NX_FREE(buf);
+  xzonefree([self zone], buf);
 
   return self;
 }
@@ -159,7 +159,7 @@
   }
 
   _capacity     = size + 1;
-  _buffer       = (char *)NXZoneMalloc(zone, _capacity);
+  _buffer       = (char *)xzonemalloc(zone, _capacity);
   _buffer[0]    = '\0';
   _buffer[size] = '\0';
 
@@ -172,7 +172,7 @@
 - (char *)getCopyInto:(char *)buf
 {
   if (!buf) {
-    buf = NXZoneMalloc([self zone], (_length + 1) * sizeof *buf);
+    buf = xzonemalloc([self zone], (_length + 1) * sizeof *buf);
   }
 
   strncpy(buf, _buffer, _length);
@@ -186,7 +186,7 @@
 - (id)freeString
 {
   if (_buffer) {
-    free(_buffer);
+    xzonefree([self zone], _buffer);
   }
 
   _buffer   = NULL;
@@ -676,7 +676,7 @@ caseSensitive:(BOOL)sense
   }
 
   if (!_buffer) {
-    char *tBuf = (char *)NXZoneMalloc(zone, n + 1);
+    char *tBuf = (char *)xzonemalloc(zone, n + 1);
 
     if (!tBuf) {
       return nil;
@@ -686,7 +686,7 @@ caseSensitive:(BOOL)sense
     tBuf[n] = '\0';
     
     [self setStringValue:tBuf fromZone:zone];
-    free(tBuf);
+    xzonefree(zone, tBuf);
     
     return self;
   }
@@ -701,13 +701,13 @@ caseSensitive:(BOOL)sense
 
   nSize = _length + n + 1;
   if (nSize > _capacity) {
-    nBuf    = (char *)NXZoneMalloc(zone, nSize);
+    nBuf    = (char *)xzonemalloc(zone, nSize);
     _capacity = nSize;
     nBuf[0] = '\0';
 
     strcat(nBuf, _buffer);
     strncat(nBuf, aString, n);
-    free(_buffer);
+    xzonefree([self zone], _buffer);
     _buffer = nBuf;
   } else {
     strncat(_buffer, aString, n);
@@ -731,12 +731,13 @@ caseSensitive:(BOOL)sense
   while (aString) {
     if ([aString respondsTo:@selector(stringValue)]) {
       const char *sptr = [aString stringValue];
+
       [self cat:sptr
          length:([aString respondsTo:@selector(length)]
                  ? [aString length]
                  : strlen(sptr))
        fromZone:[self zone]];
-    }
+    };
     aString = va_arg(ptr, id);
   }
   va_end(ptr);
@@ -851,12 +852,12 @@ caseSensitive:(BOOL)sense
 {
   char *buf = NULL;
 
-  buf = (char *)NXZoneMalloc([self zone], 1024);
+  buf = (char *)xzonemalloc([self zone], 1024);
 
   vsnprintf(buf, 1024, format, args);
 
   [self insert:buf at:index];
-  NX_FREE(buf);
+  xzonefree([self zone], buf);
 
   return self;
 }

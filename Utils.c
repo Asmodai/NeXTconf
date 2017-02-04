@@ -47,6 +47,130 @@
 #include "Utils.h"
 
 /*
+ * Wrapper around `NXZoneMalloc'.
+ */
+void *
+xzonemalloc(NXZone *zone, size_t size)
+{
+  void *p = NULL;
+
+  if ((p = NXZoneMalloc(zone, size)) == NULL) {
+    perror("xzonemalloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return p;
+}
+
+/*
+ * Wrapper around `NXZoneRealloc'.
+ */
+void *
+xzonerealloc(NXZone *zone, void *ptr, size_t n)
+{
+  if ((ptr = NXZoneRealloc(zone, ptr, n)) == NULL) {
+    perror("xzonerealloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return ptr;
+}
+
+/*
+ * Wrapper around `NXZoneCalloc'.
+ */
+void *
+xzonecalloc(NXZone *zone, size_t nelem, size_t elsize)
+{
+  void *newmem = NXZoneCalloc(zone,
+                              nelem  ? nelem  : 1,
+                              elsize ? elsize : 1);
+
+  if (newmem == NULL) {
+    perror("xzonecalloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return newmem;
+}
+
+void
+xzonefree(NXZone *zone, void *ptr)
+{
+  NXZoneFree(zone, ptr);
+}
+
+/*
+ * Wrapper around `malloc'.
+ */
+void *
+xmalloc(size_t n)
+{
+#ifndef USE_ZONES
+
+  void *p = NULL;
+
+  if ((p = malloc(n)) == NULL) {
+    perror("xmalloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return p;
+
+#else
+
+  return xzonemalloc(NXDefaultMallocZone(), n);
+
+#endif
+}
+
+/*
+ * Wrapper around `realloc'.
+ */
+void *
+xrealloc(void *ptr, size_t n)
+{
+#ifndef USE_ZONES
+
+  if ((ptr = realloc(ptr, n)) == NULL) {
+    perror("xrealloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return ptr;
+
+#else
+
+  return xzonerealloc(NXDefaultMallocZone(), ptr, n);
+
+#endif
+}
+
+/*
+ * Wrapper around `calloc'.
+ */
+void *
+xcalloc(size_t nelem, size_t elsize)
+{
+#ifndef USE_ZONES
+
+  void *newmem = calloc(nelem ? nelem : 1, elsize ? elsize : 1);
+
+  if (newmem == NULL) {
+    perror("xcalloc");
+    exit(EXIT_FAILURE);
+  }
+
+  return newmem;
+
+#else
+
+  return xzonecalloc(NXDefaultMallocZone(), nelem, elsize);
+
+#endif
+}
+
+/*
  * Print debug information to standard output.
  *
  * The output will be preceeded by a given amount of indentation.

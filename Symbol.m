@@ -85,12 +85,7 @@ name_for_symbol_type(SymbolType type)
   static size_t  string_counter = 1;
   char          *name           = NULL;
 
-  name = malloc(sizeof(char) * 128);
-  if (name == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
-
+  name = xmalloc(sizeof(char) * 128);
   snprintf(name, 128, "string%d", string_counter++);
 
   return [[Symbol alloc] initWithData:aString
@@ -103,12 +98,7 @@ name_for_symbol_type(SymbolType type)
   static size_t  number_counter = 1;
   char          *name           = NULL;
 
-  name = malloc(sizeof(char*) * 128);
-  if (name == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
-
+  name = xmalloc(sizeof(char*) * 128);
   snprintf(name, 128, "number%d", number_counter++);
 
   return [[Symbol alloc] initWithData:aNumber
@@ -121,12 +111,7 @@ name_for_symbol_type(SymbolType type)
   static size_t  bool_counter = 1;
   char          *name         = NULL;
 
-  name = malloc(sizeof(char) * 128);
-  if (name == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
-
+  name = xmalloc(sizeof(char) * 128);
   snprintf(name, 128, "boolean%d", bool_counter++);
 
   return [[Symbol alloc] initWithData:aBoolean

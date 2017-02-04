@@ -39,16 +39,18 @@
 #import "Property.h"
 #import "String.h"
 #import "Number.h"
+#import "Boolean.h"
 
 @interface Architecture : Property
 {
-  String *_processor;
-  String *_machine;
-  BOOL    _hasIX86;
-  BOOL    _hasM68K;
-  BOOL    _hasSPARC;
-  BOOL    _hasHPPA;
-  BOOL    _hasPPC;
+  String  *_processor;
+  String  *_machine;
+  Boolean *_hasIX86;
+  Boolean *_hasM68K;
+  Boolean *_hasSPARC;
+  Boolean *_hasHPPA;
+  Boolean *_hasPPC;
+  Boolean *_hasDeveloper;
 }
 
 /*
@@ -66,12 +68,12 @@
 /*
  * Predicates.
  */
-- (BOOL)isDeveloperInstalled;
-- (BOOL)hasM68K;
-- (BOOL)hasIX86;
-- (BOOL)hasSPARC;
-- (BOOL)hasHPPA;
-- (BOOL)hasPPC;
+- (Boolean *)isDeveloperInstalled;
+- (Boolean *)hasM68K;
+- (Boolean *)hasIX86;
+- (Boolean *)hasSPARC;
+- (Boolean *)hasHPPA;
+- (Boolean *)hasPPC;
 
 @end /* Architecture */
 

@@ -112,12 +112,20 @@ detect_hardware(String *machine, String *processor)
 
     detect_hardware(_machine, _processor);
 
-    _hasIX86  = have_arch("i386");
-    _hasM68K  = have_arch("m68k");
-    _hasSPARC = have_arch("sparc");
-    _hasHPPA  = have_arch("hppa");
-    _hasPPC   = have_arch("ppc");
+    _hasIX86  = [[Boolean alloc] initWithBool:have_arch("i386")];
+    _hasM68K  = [[Boolean alloc] initWithBool:have_arch("m68k")];
+    _hasSPARC = [[Boolean alloc] initWithBool:have_arch("sparc")];
+    _hasHPPA  = [[Boolean alloc] initWithBool:have_arch("hppa")];
+    _hasPPC   = [[Boolean alloc] initWithBool:have_arch("ppc")];
 
+    _hasDeveloper = [[Boolean alloc] initWithBool:(([_hasIX86 boolValue]  ||
+                                                    [_hasM68K boolValue]  ||
+                                                    [_hasSPARC boolValue] ||
+                                                    [_hasHPPA boolValue]  ||
+                                                    [_hasPPC boolValue])
+                                                   ? YES
+                                                   : NO)];
+    
     MANAGER_ADD_METHOD("currentArchitecture");
     MANAGER_ADD_METHOD("currentProcessor");
     MANAGER_ADD_METHOD("isDeveloperInstalled");
@@ -143,6 +151,13 @@ detect_hardware(String *machine, String *processor)
     _machine = nil;
   }
 
+  [_hasIX86 free];
+  [_hasM68K free];
+  [_hasSPARC free];
+  [_hasHPPA free];
+  [_hasPPC free];
+  [_hasDeveloper free];
+
   return [super free];
 }
 
@@ -156,38 +171,32 @@ detect_hardware(String *machine, String *processor)
   return _processor;
 }
 
-- (BOOL)isDeveloperInstalled
+- (Boolean *)isDeveloperInstalled
 {
-  static BOOL value = -1;
-
-  if (value == -1) {
-    value = (_hasIX86 || _hasM68K  || _hasSPARC || _hasHPPA  || _hasPPC);
-  }
-
-  return value;
+  return _hasDeveloper;
 }
 
-- (BOOL)hasM68K
+- (Boolean *)hasM68K
 {
   return _hasM68K;
 }
 
-- (BOOL)hasIX86
+- (Boolean *)hasIX86
 {
   return _hasIX86;
 }
 
-- (BOOL)hasSPARC
+- (Boolean *)hasSPARC
 {
   return _hasSPARC;
 }
 
-- (BOOL)hasHPPA
+- (Boolean *)hasHPPA
 {
   return _hasHPPA;
 }
 
-- (BOOL)hasPPC
+- (Boolean *)hasPPC
 {
   return _hasPPC;
 }
@@ -208,15 +217,12 @@ detect_hardware(String *machine, String *processor)
               withIndent:indent];
   }
 
-  debug_print(indent, "Have ix86      = %s\n", bool2string(_hasIX86));
-  debug_print(indent, "Have M680x0    = %s\n", bool2string(_hasM68K));
-  debug_print(indent, "Have SPARC     = %s\n", bool2string(_hasSPARC));
-  debug_print(indent, "Have PA-RISC   = %s\n", bool2string(_hasHPPA));
-  debug_print(indent, "Have PowerPC   = %s\n", bool2string(_hasPPC));
-  
-  debug_print(indent,
-              "Have developer = %s\n",
-              bool2string([self isDeveloperInstalled]));
+  debug_print(indent, "Have ix86      = %s\n", [_hasIX86 stringValue]);
+  debug_print(indent, "Have M680x0    = %s\n", [_hasM68K stringValue]);
+  debug_print(indent, "Have SPARC     = %s\n", [_hasSPARC stringValue]);
+  debug_print(indent, "Have PA-RISC   = %s\n", [_hasHPPA stringValue]);
+  debug_print(indent, "Have PowerPC   = %s\n", [_hasPPC stringValue]);
+  debug_print(indent, "Have developer = %s\n", [_hasDeveloper stringValue]);
 }
 
 @end /* Architecture (Debug) */

@@ -188,19 +188,19 @@
     state = [_instances initState];
 
     debug_print(indent, "Instances:\n");
-    debug_print(indent, "Num elements = %d\n", [_instances count]);
+    debug_print(indent + 2, "Num elements = %d\n", [_instances count]);
 
     while ([_instances nextState:&state
                              key:(void *)&ikey
                            value:(void *)&val])
     {
-      debug_print(indent, "Key   = %s\n", ikey);
+      debug_print(indent + 2, "Key = %s\n", ikey);
 
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         [val printDebug:ikey
-             withIndent:(indent + [Object debugIndentLevel])];
+             withIndent:(indent + 2 + [Object debugIndentLevel])];
       } else {
-        debug_print(indent, "Value = %s\n", [[val class] name]);
+        debug_print(indent + 2, "Value = %s\n", [[val class] name]);
       }
     }
   }
@@ -209,19 +209,19 @@
     state = [_methods initState];
 
     debug_print(indent, "Methods:\n");
-    debug_print(indent, "Num elements = %d\n", [_methods count]);
+    debug_print(indent + 2, "Num elements = %d\n", [_methods count]);
 
     while ([_methods nextState:&state
                            key:(void *)&mkey
                          value:(void *)&val])
     {
-      debug_print(indent, "Key   = %s\n", [mkey stringValue]);
+      debug_print(indent + 2, "Key = %s\n", [mkey stringValue]);
 
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         [val printDebug:[mkey stringValue]
-             withIndent:(indent + [Object debugIndentLevel])];
+             withIndent:(indent + 2 + [Object debugIndentLevel])];
       } else {
-        debug_print(indent, "Value = %s\n", [[val class] name]);
+        debug_print(indent + 2, "Value = %s\n", [[val class] name]);
       }
     }
   }

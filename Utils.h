@@ -34,11 +34,39 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
-#include <objc/objc.h>
-#include <sys/types.h>
+#import <objc/objc.h>
+#import <objc/zone.h>
+#import <sys/types.h>
 
 /* For S_ISREG and S_ISDIR */
-#include <sys/stat.h>
+#import <sys/stat.h>
+
+/*
+ * Define this if you want to use the NXZone* memory allocation
+ * functions instead of the regular C library ones.
+ */
+#define USE_ZONES 1
+
+/*
+ * We get to provide the following for non-NeXTSTEP platforms:
+ *
+ *  o MX_MALLOC     [-> malloc]
+ *  o NX_REALLOC    [-> realloc]
+ *  o NX_FREE       [-> free]
+ *
+ * The functions themselves are taken from AppKit's nextstd.h.
+ */
+#ifndef PLATFORM_NEXTSTEP
+
+#define  NX_MALLOC( VAR, TYPE, NUM )                            \
+  ((VAR) = (TYPE *)xmalloc((unsigned)(NUM) * sizeof(TYPE)))
+
+#define  NX_REALLOC( VAR, TYPE, NUM )                           \
+  ((VAR) = (TYPE *)xrealloc((VAR), (unsigned)(NUM) * sizeof(TYPE)))
+
+#define  NX_FREE( PTR ) free((PTR))
+
+#endif // !PLATFORM_NEXTSTEP
 
 /*
  * Utility to compute the size of an array.
@@ -68,11 +96,23 @@
 /*
  * Function prototypes.
  */
+void *xzonemalloc(NXZone *, size_t);
+void *xzoneralloc(NXZone *, void *, size_t);
+void *xzonecealloc(NXZone *, size_t, size_t);
+void  xzonefree(NXZone *, void *ptr);
+
+void *xmalloc(size_t);
+void *xrealloc(void *, size_t);
+void *xcalloc(size_t, size_t);
+
 char *rstrip(char *);
 char *strip(char *);
 char *lskip(const char *);
+
 void  debug_print(size_t, const char *, ...);
+
 BOOL  file_exists(const char *);
+
 BOOL  directory_exists(const char *);
 
 #endif /* !_UTILS_H_ */

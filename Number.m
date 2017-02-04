@@ -96,19 +96,12 @@
 
 /*
  * Returns the string representation of the number.
- *
- * This value MUST be freed.
  */
 - (const char *)stringValue
 {
   char *buf = NULL;
 
-  buf = malloc(256 * sizeof *buf);
-  if (buf == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
-
+  buf = xzonemalloc([self zone], 256 * sizeof *buf);
   snprintf(buf, 256, "%d", _number);
 
   return (const char *)buf;

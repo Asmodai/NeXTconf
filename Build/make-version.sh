@@ -84,8 +84,9 @@ fi
 # Both major and minor are just read from their files.
 _major=`sed 's/^ *//' ${_major_file}`
 _minor=`sed 's/^ *//' ${_minor_file}`
-
 _build=`sed 's/^ *//' ${_build_file}`
+
+# Only increment outside of code freeze.
 if [ ! -f ../.freeze ]
 then
     #

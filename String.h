@@ -38,32 +38,13 @@
 
 #ifdef PLATFORM_NEXTSTEP
 # import <appkit/Text.h>
+#else
+# import <objc/HashTable.h>
 #endif
 
 #import <sys/types.h>
 
-/*
- * We have to provide the following for non-NeXTSTEP platforms:
- *
- *  o MX_MALLOC     [-> malloc]
- *  o NX_REALLOC    [-> realloc]
- *  o NX_FREE       [-> free]
- *
- * The functions themselves are taken from AppKit's nextstd.h.
- */
-#ifndef PLATFORM_NEXTSTEP
-# import <objc/HashTable.h>
-# import <objc/zone.h>
-
-#define  NX_MALLOC( VAR, TYPE, NUM )                            \
-  ((VAR) = (TYPE *)malloc((unsigned)(NUM) * sizeof(TYPE)))
-
-#define  NX_REALLOC( VAR, TYPE, NUM )                           \
-  ((VAR) = (TYPE *)realloc((VAR), (unsigned)(NUM) * sizeof(TYPE)))
-
-#define  NX_FREE( PTR ) free((PTR))
-
-#endif // !PLATFORM_NEXTSTEP
+#import "Utils.h"
 
 /*
  * Simple string class implementation.  This is partially based on the

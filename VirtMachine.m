@@ -237,10 +237,8 @@ resolveSymbol(id symb)
         j = resolveSymbol([stack popObject]);
 
         [stack pushObject:[Symbol newFromString:
-                                    [[String alloc]
-                                      initFromFormat:"%s%s",
-                                      [j stringValue],
-                                      [i stringValue]]]];
+                                    [[[String alloc] init]
+                                      concatenate:j, i, nil]]];
         break;
 
       case OP_CALL:

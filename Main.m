@@ -51,6 +51,8 @@
 #import "Architecture.h"
 #import "Platform.h"
 
+#import "Utils.h"
+
 extern int yyparse(void);
 
 SymbolTable *root_symtab;
@@ -97,12 +99,8 @@ strdup(const char *str)
   size_t  len = 0;
   char   *copy = NULL;
 
-  len = strlen(str) + 1;
-
-  if (!(copy = malloc((u_int)len))) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
+  len  = strlen(str) + 1;
+  copy = xmalloc((u_int)len);
 
   bcopy(str, copy, len);
 
@@ -153,10 +151,8 @@ main(int argc, char **argv)
   [vm read:code];
   [vm execute];
 
-  /*
   printf("\n\n");
   [[Manager sharedInstance] printDebug:"Object manager"];
-  */
 
   /*
   printf("\n\n");

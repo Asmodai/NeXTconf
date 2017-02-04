@@ -130,11 +130,7 @@ codename_match(const platform_t *platform)
   }
 
   /* Attempt to allocate buffer for the line. */
-  line = (char *)malloc(DETECT_MAX_LINE * sizeof *line);
-  if (!line) {
-    perror("Out of memory");
-    exit(EXIT_FAILURE);
-  }
+  line = (char *)xmalloc(DETECT_MAX_LINE * sizeof *line);
 
   /*
    * Does the platform structure have a valid `versionfile' entry?
@@ -330,6 +326,7 @@ get_os_version(void)
   [_minor free];
   [_product free];
   [_platform free];
+  [_OpenStep free];
       
   return [super free];
 }
