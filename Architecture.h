@@ -75,6 +75,11 @@
 - (Boolean *)hasHPPA;
 - (Boolean *)hasPPC;
 
+/*
+ * Utilities.
+ */
+- (void)print;
+
 @end /* Architecture */
 
 @interface Architecture (Debug)

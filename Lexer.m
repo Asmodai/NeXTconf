@@ -441,12 +441,15 @@ char *yytext;
 #import "SymbolTable.h"
 #import "SyntaxTree.h"
 
+#import "Utils.h"
 #define _IN_LEXER_
 #import "Lexer.h"
 #import "Parse.h"
 
+/*
 extern char *strdup(const char *);
 extern int   yywrap(void);
+*/
 
 void make_identifier(void);
 void make_string_constant(void);
@@ -454,7 +457,7 @@ void make_integer_constant(void);
 void make_boolean_constant(void);
 void eat_comment(void);
 
-#line 458 "Lexer.c"
+#line 461 "Lexer.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -605,10 +608,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 64 "Grammar.l"
+#line 67 "Grammar.l"
 
 
-#line 612 "Lexer.c"
+#line 615 "Lexer.c"
 
 	if ( yy_init )
 		{
@@ -693,130 +696,130 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "Grammar.l"
+#line 69 "Grammar.l"
 { return IF;                                               }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 67 "Grammar.l"
+#line 70 "Grammar.l"
 { return ELSE;                                             }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 68 "Grammar.l"
+#line 71 "Grammar.l"
 { return FOR;                                              }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 69 "Grammar.l"
+#line 72 "Grammar.l"
 { return IN;                                               }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 70 "Grammar.l"
+#line 73 "Grammar.l"
 { return PRINT;                                            }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 71 "Grammar.l"
+#line 74 "Grammar.l"
 { return ASSIGN;                                           }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 72 "Grammar.l"
+#line 75 "Grammar.l"
 { return EQUAL;                                            }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 73 "Grammar.l"
+#line 76 "Grammar.l"
 { return NEQUAL;                                           }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 74 "Grammar.l"
+#line 77 "Grammar.l"
 { return CONCAT;                                           }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 75 "Grammar.l"
+#line 78 "Grammar.l"
 { return END_STMT;                                         }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 76 "Grammar.l"
+#line 79 "Grammar.l"
 { return OPEN_PAR;                                         }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 77 "Grammar.l"
+#line 80 "Grammar.l"
 { return CLOSE_PAR;                                        }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 78 "Grammar.l"
+#line 81 "Grammar.l"
 { return BEGIN_CS;                                         }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 79 "Grammar.l"
+#line 82 "Grammar.l"
 { return END_CS;                                           }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 80 "Grammar.l"
+#line 83 "Grammar.l"
 { return OPEN_METH;                                        }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 81 "Grammar.l"
+#line 84 "Grammar.l"
 { return CLOSE_METH;                                       }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 82 "Grammar.l"
+#line 85 "Grammar.l"
 { make_boolean_constant(); return BOOLEAN;                 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 83 "Grammar.l"
+#line 86 "Grammar.l"
 { make_identifier(); return ID;                            }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 84 "Grammar.l"
+#line 87 "Grammar.l"
 { make_string_constant(); return STRING;                   }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 85 "Grammar.l"
+#line 88 "Grammar.l"
 { make_integer_constant(); return INTEGER;                 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 86 "Grammar.l"
+#line 89 "Grammar.l"
 { eat_comment();                                           }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 87 "Grammar.l"
+#line 90 "Grammar.l"
 { lineno++;                                                }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 88 "Grammar.l"
+#line 91 "Grammar.l"
 {                                                          }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 89 "Grammar.l"
+#line 92 "Grammar.l"
 { return ERROR_TOKEN;                                      }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 91 "Grammar.l"
+#line 94 "Grammar.l"
 ECHO;
 	YY_BREAK
-#line 820 "Lexer.c"
+#line 823 "Lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1692,7 +1695,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 91 "Grammar.l"
+#line 94 "Grammar.l"
 
 
 /*

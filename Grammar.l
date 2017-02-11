@@ -38,12 +38,15 @@
 #import "SymbolTable.h"
 #import "SyntaxTree.h"
 
+#import "Utils.h"
 #define _IN_LEXER_
 #import "Lexer.h"
 #import "Parse.h"
 
+/*
 extern char *strdup(const char *);
 extern int   yywrap(void);
+*/
 
 void make_identifier(void);
 void make_string_constant(void);

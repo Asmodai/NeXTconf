@@ -115,6 +115,15 @@ BOOL  file_exists(const char *);
 
 BOOL  directory_exists(const char *);
 
+size_t errors;
+void   errorf(char *, ...);
+void   error_summary(void);
+
+void yyerror(char *);
+int  yywrap(void);
+
+char *strdup(const char *);
+
 #endif /* !_UTILS_H_ */
 
 /* Utils.h ends here */

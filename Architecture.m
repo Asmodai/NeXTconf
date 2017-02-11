@@ -201,6 +201,19 @@ detect_hardware(String *machine, String *processor)
   return _hasPPC;
 }
 
+- (void)print
+{
+  fprintf(stdout, "Architecture Information\n");
+  fprintf(stdout, "\tProcessor:      %s\n", [_processor stringValue]);
+  fprintf(stdout, "\tMachine:        %s\n", [_machine stringValue]);
+  fprintf(stdout, "\tHave Intel:     %s\n", [_hasIX86 stringValue]);
+  fprintf(stdout, "\tHave Motorola:  %s\n", [_hasM68K stringValue]);
+  fprintf(stdout, "\tHave HPPA:      %s\n", [_hasHPPA stringValue]);
+  fprintf(stdout, "\tHave PowerPC:   %s\n", [_hasPPC stringValue]);
+  fprintf(stdout, "\tHave Developer: %s\n", [_hasDeveloper stringValue]);
+  fprintf(stdout, "\n");
+}
+
 @end /* Architecture */
 
 @implementation Architecture (Debug)

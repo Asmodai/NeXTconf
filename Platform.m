@@ -385,6 +385,17 @@ get_os_version(void)
   return _OpenStep;
 }
 
+- (void)print
+{
+  fprintf(stdout, "Platform Information\n");
+  fprintf(stdout, "\tMajor version: %d\n", [_major intValue]);
+  fprintf(stdout, "\tMinor version: %d\n", [_minor intValue]);
+  fprintf(stdout, "\tProduct name:  %s\n", [_product stringValue]);
+  fprintf(stdout, "\tPlatform name: %s\n", [_platform stringValue]);
+  fprintf(stdout, "\tIs OpenStep:   %s\n", [_OpenStep stringValue]);
+  fprintf(stdout, "\n");
+}
+
 @end /* Platform */
 
 @implementation Platform (Debug)

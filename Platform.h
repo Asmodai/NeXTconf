@@ -71,6 +71,11 @@
  */
 - (Boolean *)isOpenStep;
 
+/*
+ * Utilities.
+ */
+- (void)print;
+
 @end /* Platform */
 
 @interface Platform (Debug)

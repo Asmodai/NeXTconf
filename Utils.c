@@ -47,6 +47,11 @@
 #include "Utils.h"
 
 /*
+ * Used by `errrorf'.
+ */
+size_t errors = 0;
+
+/*
  * Wrapper around `NXZoneMalloc'.
  */
 void *
@@ -284,7 +289,70 @@ BOOL
 directory_exists(const char *path)
 {
   return fs_thing_exists(path, YES);
-} 
+}
+
+/*
+ * Wrapper around `vfprintf' to print to stderr.
+ */
+void
+errorf(char *fmt, ...)
+{
+  va_list    ap;
+  extern int lineno;
+
+  errors++;
+  fprintf(stderr, "Line %d: ", lineno);
+
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+
+  fprintf(stderr, "\n");
+}
+
+/*
+ * Print a summary of errors.
+ */
+void
+error_summary(void)
+{
+  printf("%lu error(s) were found.\n", errors);
+}
+
+/*
+ * Required for lex.
+ */
+void
+yyerror(char *msg)
+{
+  errorf(msg);
+}
+
+/*
+ * Required for lex.
+ */
+int
+yywrap(void)
+{
+  return 1;
+}
+
+/*
+ * NeXT lacks a `strdup' function.
+ */
+char *
+strdup(const char *str)
+{
+  size_t  len = 0;
+  char   *copy = NULL;
+
+  len  = strlen(str) + 1;
+  copy = xmalloc((u_int)len);
+
+  bcopy(str, copy, len);
+
+  return copy;
+}
 
 /* Utils.c ends here */
 /*
