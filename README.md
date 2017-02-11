@@ -34,4 +34,28 @@ one of the below commands:
     rhapsody          make
 
 
-  
+# Generating the grammar
+
+To generate the grammar, first ensure that you have flex and bison
+installed and then simply run `./make_parser.sh`.
+
+You do *not* have to build the grammar files in order to compile
+NeXTconf.  The output of flex and bison are included in the project --
+`Parse.m`, `Parse.h`, and `Lexer.m`.
+
+
+# Syntax
+
+NeXTconf uses a C-like syntax with Objective-C like method calls.
+
+The following is an example of the syntax:
+
+```objc
+name = "Dave";
+
+if ([Platform platform]) == "NEXTSTEP") {
+  print "Welcome, " + name + ", to NEXTSTEP.";
+} else {
+  print "Welcome, " + name + ", to something that is not NEXTSTEP.";
+}
+```
