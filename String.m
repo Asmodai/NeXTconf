@@ -581,7 +581,7 @@ caseSensitive:(BOOL)sense
   char smash = 0;
   id   nstr  = nil;
 
-  if ((count < 0) || (!_buffer)) {
+  if (!_buffer) {
     return nil;
   }
 
@@ -607,7 +607,7 @@ caseSensitive:(BOOL)sense
 {
   id nstr = nil;
 
-  if ((count < 0) || (!_buffer)) {
+  if (!_buffer) {
     return nil;
   }
 
@@ -756,10 +756,6 @@ caseSensitive:(BOOL)sense
 
   if ((aString == NULL) || (strlen(aString) <= 0)) {
     return self;
-  }
-
-  if (index < 0) {
-    index = 0;
   }
 
   if (index >= _length) {
