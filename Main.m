@@ -35,6 +35,7 @@
 #import <stdlib.h>
 #import <unistd.h>
 #import <libc.h>
+#import <errno.h>
 
 #include <sys/types.h>
 
@@ -43,6 +44,7 @@
 #import "SyntaxTree.h"
 #import "Interp.h"
 #import "VirtMachine.h"
+#import "Version.h"
 
 #import "Lexer.h"
 #import "Parse.h"
@@ -58,62 +60,29 @@ extern int yyparse(void);
 SymbolTable *root_symtab;
 SyntaxTree  *root_syntree;
 
-int errors = 0;
+static char *progname = NULL;
 
 void
-errorf(char *fmt, ...)
+usage(void)
 {
-  va_list ap;
-
-  errors++;
-  fprintf(stderr, "Line %d: ", lineno);
-
-  va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
-  va_end(ap);
-
-  fprintf(stderr, "\n");
-}
-
-void
-error_summary(void)
-{
-  printf("%d error(s) were found.\n", errors);
-}
-
-void
-yyerror(char *msg)
-{
-  errorf(msg);
-}
-
-int
-yywrap(void)
-{
-  return 1;
-}
-
-char *
-strdup(const char *str)
-{
-  size_t  len = 0;
-  char   *copy = NULL;
-
-  len  = strlen(str) + 1;
-  copy = xmalloc((u_int)len);
-
-  bcopy(str, copy, len);
-
-  return copy;
+  fprintf(stderr,
+          "usage: %s [-ivh] <file>\n",
+          progname);
+  exit(EXIT_FAILURE);
 }
 
 int
 main(int argc, char **argv)
 {
-  IntInstr       *code = nil;
-  Platform       *plat = nil;
-  Architecture   *arch = nil;
-  VirtualMachine *vm   = nil;
+  int             ch    = 0;
+  char           *fname = NULL;
+  IntInstr       *code  = nil;
+  Platform       *plat  = nil;
+  Architecture   *arch  = nil;
+  VirtualMachine *vm    = nil;
+
+  extern int   optind;
+  extern char *optarg;
 
   root_symtab  = [[SymbolTable alloc] init];
   root_syntree = [[SyntaxTree alloc] init];
@@ -122,10 +91,40 @@ main(int argc, char **argv)
   arch = [[Architecture alloc] init];
   vm   = [[VirtualMachine alloc] init];
 
-  yyin = NULL;
+  progname = argv[0];
+  yyin     = NULL;
 
-  if (argc == 2) {
-    yyin = fopen(argv[1], "r");
+  while ((ch = getopt(argc, argv, "ivhf:")) != EOF) {
+    switch (ch) {
+      case 'v':
+        [Version print];
+        break;
+
+      case 'i':
+        [plat print];
+        [arch print];
+        break;
+
+      case 'h':
+        usage();
+        break;
+
+      case 'f':
+        fname = optarg;
+        break;
+    }
+  }
+
+  if (!fname) {
+    exit(EXIT_FAILURE);
+  }
+
+  if ((yyin = fopen(fname, "r")) == NULL) {
+    fprintf(stderr, "%s: Could not open '%s': %s\n",
+            progname,
+            fname,
+            strerror(errno));
+    exit(EXIT_FAILURE);
   }
 
   if (yyin == NULL) {
@@ -144,7 +143,7 @@ main(int argc, char **argv)
   //printf("\n\n\n");
   code = [IntInstr generate:root_syntree];
   [code number:1];
-  [code printDebug:"Intermediate code"];
+  //[code printDebug:"Intermediate code"];
   //printf("\n");
 
   [vm reset];
