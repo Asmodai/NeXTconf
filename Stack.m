@@ -76,11 +76,10 @@
   debug_print(indent, "Num elements = %d\n", numElements);
   debug_print(indent, "Max elements = %d\n", maxElements);
 
-
   for (idx = 0; idx < numElements; idx++) {
     id thing = [self objectAt:idx];
 
-    if (thing && [thing respondsTo:@selector(print:)]) {
+    if (thing && [thing respondsTo:@selector(printDebug:)]) {
       [thing printDebug:"List element"
              withIndent:(indent + [Object debugIndentLevel])];
     }
