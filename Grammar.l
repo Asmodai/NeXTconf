@@ -56,6 +56,8 @@ void eat_comment(void);
 
 %}
 
+%x C_COMMENT
+
 BVALUE    (true|false)
 LETTER    [a-zA-Z_]
 DIGIT     [0-9]+
@@ -65,6 +67,10 @@ WSPACE    [ \t]+
 END_STMT  ;
 
 %%
+
+"/*"            { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL);   }
+<C_COMMENT>.    {}
 
 "if"       { return IF;                                               }
 "else"     { return ELSE;                                             }
