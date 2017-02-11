@@ -60,3 +60,33 @@ CLASSES = Architecture.m \
 OTHERSRCS = Makefile.preamble Makefile Makefile.postamble
 
 -include Build/NeXTconf.version
+
+all::
+
+distclean: clean
+	@echo "************ Cleaning for distribution ************"
+	@(rm -f *.o .otool.out; )
+	find ./ -name .dir3_0.wmd -print | xargs rm -f
+	find ./ -name ".nfs*" -print | xargs rm -f
+	find ./ -name "*~" -print | xargs rm -f
+	@rm -f .prepped *.tar *.tar.gz *.tar.Z
+
+dist:
+	echo $(PROJECTNAME).$(PRODUCTVERSION).s > .fname
+	mkdir `cat .fname`
+	@for f in * ; do \
+		if [ $$f = `cat .fname` ] ; then continue ; fi ; \
+		ln -s `pwd`/$$f `cat .fname` ;\
+	done ;
+	tar chf `cat .fname`.tar `cat .fname`
+	@rm -rf `cat .fname` .fname
+
+package:
+	FAKEROOT=`pwd`/Package/FakeRoot make install ;
+	(cd Package ; ./build $(PROJECTNAME) $(PRODUCTVERSION)) ;
+	echo $(PROJECTNAME).$(PRODUCTVERSION).b > .fname
+	mkdir `cat .fname`
+	@ln -s `pwd`/Package/$(NAME)/$(NAME).pkg `cat .fname`
+	tar chf `cat .fname`.tar `cat .fname`
+	@rm -rf `cat .fname` .fname
+	@rm -rf Package/$(NAME)
