@@ -169,9 +169,12 @@ const char *make_immediate_name(void);
 %type <symbol> identifier string integer boolean
 %type <str>    class_name method_name
 %type <tnode>  program statement_list statement
-%type <tnode>  if_statement optional_else_statement compound_statement
+%type <tnode>  if_statement compound_statement
 %type <tnode>  for_statement expr equal_expr assign_expr concat_expr
 %type <tnode>  simple_expr method_call
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
 
 %expect 1
 
@@ -182,7 +185,7 @@ program
    ;
 
 statement_list
-   : statement_list statement       { $$ = CTREE2(StmtList, $1, $2);           }
+   : statement statement_list       { $$ = CTREE2(StmtList, $1, $2);           }
    | /* Empty */                    { $$ = CTREE(EmptyStmt);                   }
    ;
 
@@ -197,18 +200,16 @@ statement
    ;
 
 if_statement
-   : IF OPEN_PAR expr CLOSE_PAR statement optional_else_statement {
-       if ($6 != nil) {
-         $$ = CTREE3(IfThenElseStmt, $3, $5, $6);
+   : IF OPEN_PAR expr CLOSE_PAR statement %prec LOWER_THAN_ELSE {
+       $$ = CTREE2(IfThenStmt, $3, $5);
+     }
+   | IF OPEN_PAR expr CLOSE_PAR statement ELSE statement {
+       if ($7 != nil) {
+         $$ = CTREE3(IfThenElseStmt, $3, $5, $7);
        } else {
          $$ = CTREE2(IfThenStmt, $3, $5);
        }
      }
-   ;
-
-optional_else_statement
-   : ELSE statement                 { $$ = $2;                                 }
-   | /* empty */                    { $$ = nil;                                }
    ;
 
 for_statement
@@ -219,7 +220,7 @@ for_statement
    ;
 
 compound_statement
-   : BEGIN_CS statement END_CS      { $$ = $2;                                 }
+   : BEGIN_CS statement_list END_CS { $$ = $2;                                 }
    ;
 
 expr

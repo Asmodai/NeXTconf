@@ -25,6 +25,7 @@
 #define	STRING	276
 #define	INTEGER	277
 #define	BOOLEAN	278
+#define	LOWER_THAN_ELSE	279
 
 #line 27 "Grammar.y"
 
@@ -181,9 +182,9 @@ typedef
 
 #define	YYFINAL		63
 #define	YYFLAG		-32768
-#define	YYNTBASE	24
+#define	YYNTBASE	25
 
-#define YYTRANSLATE(x) ((unsigned)(x) <= 278 ? yytranslate[x] : 43)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 279 ? yytranslate[x] : 43)
 
 static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -213,116 +214,124 @@ static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     1,     2,     3,     4,     5,
      6,     7,     8,     9,    10,    11,    12,    13,    14,    15,
-    16,    17,    18,    19,    20,    21,    22,    23
+    16,    17,    18,    19,    20,    21,    22,    23,    24
 };
 
 #if YYDEBUG != 0
 static const short yyprhs[] = {     0,
      0,     2,     5,     6,     8,    11,    15,    17,    19,    21,
-    24,    31,    34,    35,    43,    47,    49,    53,    55,    59,
-    61,    65,    67,    69,    71,    73,    75,    79,    81,    83,
-    85,    87,    89,    91,    96
+    24,    30,    38,    46,    50,    52,    56,    58,    62,    64,
+    68,    70,    72,    74,    76,    78,    82,    84,    86,    88,
+    90,    92,    94,    99
 };
 
-static const short yyrhs[] = {    25,
-     0,    25,    26,     0,     0,    13,     0,    31,    13,     0,
-     8,    31,    13,     0,    27,     0,    29,     0,    30,     0,
-     1,    13,     0,     4,    14,    31,    15,    26,    28,     0,
-     5,    26,     0,     0,     6,    36,     7,    14,    31,    15,
-    26,     0,    18,    26,    19,     0,    32,     0,    31,    10,
-    33,     0,    33,     0,    36,     9,    33,     0,    34,     0,
-    34,    12,    35,     0,    35,     0,    36,     0,    42,     0,
-    37,     0,    38,     0,    14,    31,    15,     0,    41,     0,
-    20,     0,    22,     0,    23,     0,    20,     0,    20,     0,
-    16,    39,    40,    17,     0,    21,     0
+static const short yyrhs[] = {    26,
+     0,    27,    26,     0,     0,    13,     0,    31,    13,     0,
+     8,    31,    13,     0,    28,     0,    29,     0,    30,     0,
+     1,    13,     0,     4,    14,    31,    15,    27,     0,     4,
+    14,    31,    15,    27,     5,    27,     0,     6,    36,     7,
+    14,    31,    15,    27,     0,    18,    26,    19,     0,    32,
+     0,    31,    10,    33,     0,    33,     0,    36,     9,    33,
+     0,    34,     0,    34,    12,    35,     0,    35,     0,    36,
+     0,    42,     0,    37,     0,    38,     0,    14,    31,    15,
+     0,    41,     0,    20,     0,    22,     0,    23,     0,    20,
+     0,    20,     0,    16,    39,    40,    17,     0,    21,     0
 };
 
 #endif
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   181,   185,   186,   190,   191,   192,   193,   194,   195,   196,
-   200,   210,   211,   215,   222,   226,   230,   231,   235,   237,
-   241,   242,   246,   248,   250,   252,   254,   255,   259,   269,
-   279,   289,   293,   297,   317
+   184,   188,   189,   193,   194,   195,   196,   197,   198,   199,
+   203,   206,   216,   223,   227,   231,   232,   236,   238,   242,
+   243,   247,   249,   251,   253,   255,   256,   260,   270,   280,
+   290,   294,   298,   318
 };
 
 static const char * const yytname[] = {   "$","error","$undefined.","ERROR_TOKEN",
 "IF","ELSE","FOR","IN","PRINT","ASSIGN","EQUAL","NEQUAL","CONCAT","END_STMT",
 "OPEN_PAR","CLOSE_PAR","OPEN_METH","CLOSE_METH","BEGIN_CS","END_CS","ID","STRING",
-"INTEGER","BOOLEAN","program","statement_list","statement","if_statement","optional_else_statement",
-"for_statement","compound_statement","expr","equal_expr","assign_expr","concat_expr",
-"simple_expr","identifier","integer","boolean","class_name","method_name","method_call",
-"string",""
+"INTEGER","BOOLEAN","LOWER_THAN_ELSE","program","statement_list","statement",
+"if_statement","for_statement","compound_statement","expr","equal_expr","assign_expr",
+"concat_expr","simple_expr","identifier","integer","boolean","class_name","method_name",
+"method_call","string",""
 };
 #endif
 
 static const short yyr1[] = {     0,
-    24,    25,    25,    26,    26,    26,    26,    26,    26,    26,
-    27,    28,    28,    29,    30,    31,    32,    32,    33,    33,
-    34,    34,    35,    35,    35,    35,    35,    35,    36,    37,
-    38,    39,    40,    41,    42
+    25,    26,    26,    27,    27,    27,    27,    27,    27,    27,
+    28,    28,    29,    30,    31,    32,    32,    33,    33,    34,
+    34,    35,    35,    35,    35,    35,    35,    36,    37,    38,
+    39,    40,    41,    42
 };
 
 static const short yyr2[] = {     0,
      1,     2,     0,     1,     2,     3,     1,     1,     1,     2,
-     6,     2,     0,     7,     3,     1,     3,     1,     3,     1,
-     3,     1,     1,     1,     1,     1,     3,     1,     1,     1,
-     1,     1,     1,     4,     1
+     5,     7,     7,     3,     1,     3,     1,     3,     1,     3,
+     1,     1,     1,     1,     1,     3,     1,     1,     1,     1,
+     1,     1,     4,     1
 };
 
-static const short yydefact[] = {     3,
-     0,     0,     0,     0,     0,     4,     0,     0,     0,    29,
-    35,    30,    31,     2,     7,     8,     9,     0,    16,    18,
-    20,    22,    23,    25,    26,    28,    24,    10,     0,     0,
-     0,     0,    32,     0,     0,     0,     5,     0,     0,     0,
-     0,     6,    27,    33,     0,    15,    17,    21,    23,    19,
-     0,     0,    34,    13,     0,     0,    11,     0,    12,    14,
+static const short yydefact[] = {     0,
+     0,     0,     0,     0,     4,     0,     0,     0,    28,    34,
+    29,    30,     1,     0,     7,     8,     9,     0,    15,    17,
+    19,    21,    22,    24,    25,    27,    23,    10,     0,     0,
+     0,     0,    31,     0,     0,     2,     0,     5,     0,     0,
+     0,     0,     6,    26,    32,     0,    14,    16,    20,    22,
+    18,     0,     0,    33,    11,     0,     0,     0,    12,    13,
      0,     0,     0
 };
 
 static const short yydefgoto[] = {    61,
-     1,    14,    15,    57,    16,    17,    18,    19,    20,    21,
-    22,    23,    24,    25,    34,    45,    26,    27
+    13,    14,    15,    16,    17,    18,    19,    20,    21,    22,
+    23,    24,    25,    34,    46,    26,    27
 };
 
-static const short yypact[] = {-32768,
-     6,     0,   -10,     1,    -5,-32768,    -5,     3,    37,-32768,
--32768,-32768,-32768,-32768,-32768,-32768,-32768,    51,-32768,-32768,
-    19,-32768,    31,-32768,-32768,-32768,-32768,-32768,    -5,    26,
-    52,    20,-32768,    32,    25,    -5,-32768,    -5,    -5,    22,
-    40,-32768,-32768,-32768,    29,-32768,-32768,-32768,-32768,-32768,
-    37,    -5,-32768,    58,    24,    37,-32768,    37,-32768,-32768,
-    56,    66,-32768
+static const short yypact[] = {    32,
+     2,     9,    22,    -3,-32768,    -3,    23,    55,-32768,-32768,
+-32768,-32768,-32768,     8,-32768,-32768,-32768,    -7,-32768,-32768,
+    39,-32768,    49,-32768,-32768,-32768,-32768,-32768,    -3,    53,
+    -6,    -5,-32768,    44,    46,-32768,    -3,-32768,    -3,    -3,
+    24,    52,-32768,-32768,-32768,    50,-32768,-32768,-32768,-32768,
+-32768,    78,    -3,-32768,    65,    47,    78,    78,-32768,-32768,
+    72,    80,-32768
 };
 
 static const short yypgoto[] = {-32768,
--32768,    -9,-32768,-32768,-32768,-32768,    -4,-32768,   -31,-32768,
-    30,    -2,-32768,-32768,-32768,-32768,-32768,-32768
+    27,    31,-32768,-32768,-32768,    -4,-32768,     7,-32768,    42,
+    -2,-32768,-32768,-32768,-32768,-32768,-32768
 };
 
 
-#define	YYLAST		68
+#define	YYLAST		101
 
 
-static const short yytable[] = {    35,
-    31,    30,    32,    29,    47,    -1,     2,    50,     7,     3,
-     8,     4,    28,     5,    10,    11,    12,    13,     6,     7,
-    10,     8,    33,     9,    40,    10,    11,    12,    13,    36,
-    38,    36,    41,    36,    43,    49,    51,     2,    58,    39,
-     3,    54,     4,    46,     5,    53,    59,    55,    60,     6,
-     7,    44,     8,    52,     9,    62,    10,    11,    12,    13,
-    36,    36,    56,    37,    42,    63,     0,    48
+static const short yytable[] = {    31,
+    30,    32,    37,    37,    37,    38,    43,    -3,     1,    44,
+     6,     2,     7,     3,    28,     4,     9,    10,    11,    12,
+     5,     6,    29,     7,    41,     8,    -3,     9,    10,    11,
+    12,    -3,     1,    37,    35,     2,    50,     3,    52,     4,
+    36,     9,    33,    48,     5,     6,    51,     7,    56,     8,
+    39,     9,    10,    11,    12,     1,    37,    40,     2,    42,
+     3,    58,     4,    45,    47,    53,    54,     5,     6,    57,
+     7,    62,     8,    -3,     9,    10,    11,    12,     1,    63,
+    49,     2,    55,     3,     0,     4,     0,    59,    60,     0,
+     5,     6,     0,     7,     0,     8,     0,     9,    10,    11,
+    12
 };
 
-static const short yycheck[] = {     9,
-     5,     4,     7,    14,    36,     0,     1,    39,    14,     4,
-    16,     6,    13,     8,    20,    21,    22,    23,    13,    14,
-    20,    16,    20,    18,    29,    20,    21,    22,    23,    10,
-    12,    10,     7,    10,    15,    38,    15,     1,    15,     9,
-     4,    51,     6,    19,     8,    17,    56,    52,    58,    13,
-    14,    20,    16,    14,    18,     0,    20,    21,    22,    23,
-    10,    10,     5,    13,    13,     0,    -1,    38
+static const short yycheck[] = {     4,
+     3,     6,    10,    10,    10,    13,    13,     0,     1,    15,
+    14,     4,    16,     6,    13,     8,    20,    21,    22,    23,
+    13,    14,    14,    16,    29,    18,    19,    20,    21,    22,
+    23,     0,     1,    10,     8,     4,    39,     6,    15,     8,
+    14,    20,    20,    37,    13,    14,    40,    16,    53,    18,
+    12,    20,    21,    22,    23,     1,    10,     9,     4,     7,
+     6,    15,     8,    20,    19,    14,    17,    13,    14,     5,
+    16,     0,    18,    19,    20,    21,    22,    23,     1,     0,
+    39,     4,    52,     6,    -1,     8,    -1,    57,    58,    -1,
+    13,    14,    -1,    16,    -1,    18,    -1,    20,    21,    22,
+    23
 };
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
 #line 3 "/usr/local/share/bison.simple"
@@ -817,133 +826,131 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 181 "Grammar.y"
+#line 184 "Grammar.y"
 { root_syntree = yyvsp[0].tnode;                       ;
     break;}
 case 2:
-#line 185 "Grammar.y"
+#line 188 "Grammar.y"
 { yyval.tnode = CTREE2(StmtList, yyvsp[-1].tnode, yyvsp[0].tnode);           ;
     break;}
 case 3:
-#line 186 "Grammar.y"
+#line 189 "Grammar.y"
 { yyval.tnode = CTREE(EmptyStmt);                   ;
     break;}
 case 4:
-#line 190 "Grammar.y"
+#line 193 "Grammar.y"
 { yyval.tnode = CTREE(EmptyStmt);                   ;
     break;}
 case 5:
-#line 191 "Grammar.y"
+#line 194 "Grammar.y"
 { yyval.tnode = CTREE1(ExprStmt, yyvsp[-1].tnode);               ;
     break;}
 case 6:
-#line 192 "Grammar.y"
+#line 195 "Grammar.y"
 { yyval.tnode = CTREE1(PrintStmt, yyvsp[-1].tnode);              ;
     break;}
 case 7:
-#line 193 "Grammar.y"
+#line 196 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
 case 8:
-#line 194 "Grammar.y"
+#line 197 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
 case 9:
-#line 195 "Grammar.y"
+#line 198 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
 case 10:
-#line 196 "Grammar.y"
+#line 199 "Grammar.y"
 { yyval.tnode = CTREE(ErrorStmt);                   ;
     break;}
 case 11:
-#line 200 "Grammar.y"
+#line 203 "Grammar.y"
 {
-       if (yyvsp[0].tnode != nil) {
-         yyval.tnode = CTREE3(IfThenElseStmt, yyvsp[-3].tnode, yyvsp[-1].tnode, yyvsp[0].tnode);
-       } else {
-         yyval.tnode = CTREE2(IfThenStmt, yyvsp[-3].tnode, yyvsp[-1].tnode);
-       }
+       yyval.tnode = CTREE2(IfThenStmt, yyvsp[-2].tnode, yyvsp[0].tnode);
      ;
     break;}
 case 12:
-#line 210 "Grammar.y"
-{ yyval.tnode = yyvsp[0].tnode;                                 ;
+#line 206 "Grammar.y"
+{
+       if (yyvsp[0].tnode != nil) {
+         yyval.tnode = CTREE3(IfThenElseStmt, yyvsp[-4].tnode, yyvsp[-2].tnode, yyvsp[0].tnode);
+       } else {
+         yyval.tnode = CTREE2(IfThenStmt, yyvsp[-4].tnode, yyvsp[-2].tnode);
+       }
+     ;
     break;}
 case 13:
-#line 211 "Grammar.y"
-{ yyval.tnode = nil;                                ;
-    break;}
-case 14:
-#line 215 "Grammar.y"
+#line 216 "Grammar.y"
 {
        yyval.tnode = CTREE2(ForInStmt, yyvsp[-2].tnode, yyvsp[0].tnode);
        [yyval.tnode setSymbol:yyvsp[-5].symbol];
      ;
     break;}
-case 15:
-#line 222 "Grammar.y"
+case 14:
+#line 223 "Grammar.y"
 { yyval.tnode = yyvsp[-1].tnode;                                 ;
     break;}
-case 16:
-#line 226 "Grammar.y"
+case 15:
+#line 227 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
-case 17:
-#line 230 "Grammar.y"
+case 16:
+#line 231 "Grammar.y"
 { yyval.tnode = CTREE2(EqualExpr, yyvsp[-2].tnode, yyvsp[0].tnode);          ;
     break;}
-case 18:
-#line 231 "Grammar.y"
+case 17:
+#line 232 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
-case 19:
-#line 235 "Grammar.y"
+case 18:
+#line 236 "Grammar.y"
 { yyval.tnode = CTREE1(AssignExpr, yyvsp[0].tnode);
                                       [yyval.tnode setSymbol:yyvsp[-2].symbol];                       ;
     break;}
-case 20:
-#line 237 "Grammar.y"
+case 19:
+#line 238 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
-case 21:
-#line 241 "Grammar.y"
+case 20:
+#line 242 "Grammar.y"
 { yyval.tnode = CTREE2(ConcatExpr, yyvsp[-2].tnode, yyvsp[0].tnode);         ;
     break;}
-case 22:
-#line 242 "Grammar.y"
+case 21:
+#line 243 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
-case 23:
-#line 246 "Grammar.y"
+case 22:
+#line 247 "Grammar.y"
 { yyval.tnode = CTREE(IdentExpr);
                                       [yyval.tnode setSymbol:yyvsp[0].symbol];                       ;
     break;}
-case 24:
-#line 248 "Grammar.y"
+case 23:
+#line 249 "Grammar.y"
 { yyval.tnode = CTREE(StringExpr);
                                       [yyval.tnode setSymbol:yyvsp[0].symbol];                       ;
     break;}
-case 25:
-#line 250 "Grammar.y"
+case 24:
+#line 251 "Grammar.y"
 { yyval.tnode = CTREE(IntegerExpr);
                                       [yyval.tnode setSymbol:yyvsp[0].symbol];                       ;
     break;}
-case 26:
-#line 252 "Grammar.y"
+case 25:
+#line 253 "Grammar.y"
 { yyval.tnode = CTREE(BooleanExpr);
                                       [yyval.tnode setSymbol:yyvsp[0].symbol];                       ;
     break;}
-case 27:
-#line 254 "Grammar.y"
+case 26:
+#line 255 "Grammar.y"
 { yyval.tnode = yyvsp[-1].tnode;                                 ;
     break;}
-case 28:
-#line 255 "Grammar.y"
+case 27:
+#line 256 "Grammar.y"
 { yyval.tnode = yyvsp[0].tnode;                                 ;
     break;}
-case 29:
-#line 259 "Grammar.y"
+case 28:
+#line 260 "Grammar.y"
 {
        yyval.symbol = [root_symtab valueForSymbol:yyvsp[0].str];
        if (yyval.symbol == nil) {
@@ -952,8 +959,8 @@ case 29:
        }
      ;
     break;}
-case 30:
-#line 269 "Grammar.y"
+case 29:
+#line 270 "Grammar.y"
 {
        Number *num = nil;
 
@@ -962,8 +969,8 @@ case 30:
        IINT(yyval.symbol);
      ;
     break;}
-case 31:
-#line 279 "Grammar.y"
+case 30:
+#line 280 "Grammar.y"
 {
        Boolean *bool = nil;
 
@@ -972,16 +979,16 @@ case 31:
        IBOOL(yyval.symbol);
      ;
     break;}
+case 31:
+#line 290 "Grammar.y"
+{ yyval.str = yyvsp[0].str; ;
+    break;}
 case 32:
-#line 289 "Grammar.y"
+#line 294 "Grammar.y"
 { yyval.str = yyvsp[0].str; ;
     break;}
 case 33:
-#line 293 "Grammar.y"
-{ yyval.str = yyvsp[0].str; ;
-    break;}
-case 34:
-#line 297 "Grammar.y"
+#line 298 "Grammar.y"
 {
       Selector *sel = nil;
       Symbol   *sym = nil;
@@ -1000,8 +1007,8 @@ case 34:
       [yyval.tnode setSymbol:sym];
      ;
     break;}
-case 35:
-#line 317 "Grammar.y"
+case 34:
+#line 318 "Grammar.y"
 {
        yyval.symbol = CSYMB(yyvsp[0].str, make_symbol_name(), SymbolString);
        ISYMB(yyval.symbol);
@@ -1205,7 +1212,7 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 323 "Grammar.y"
+#line 324 "Grammar.y"
 
 
 /*

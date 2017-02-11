@@ -25,6 +25,7 @@ typedef union {
 #define	STRING	276
 #define	INTEGER	277
 #define	BOOLEAN	278
+#define	LOWER_THAN_ELSE	279
 
 
 extern YYSTYPE yylval;
