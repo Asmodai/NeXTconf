@@ -47,6 +47,7 @@ typedef enum {
   ForInStmt,                    // For..In statement.
   ErrorStmt,                    // Error statement.
   EqualExpr,                    // Equal expression.
+  NotEqualExpr,                 // Not-Equal expression.
   AssignExpr,                   // Assign expression.
   ConcatExpr,                   // Concatenation expression.
   IdentExpr,                    // Identifier expression.

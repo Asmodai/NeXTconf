@@ -48,6 +48,9 @@ char *op_name[] = {
   "OP_STREQL",
   "OP_NUMEQL",
   "OP_BLNEQL",
+  "OP_STRNEQL",
+  "OP_NUMNEQ",
+  "OP_BLNNEQL",
   "OP_CONCAT",
   "OP_CALL",
   "OP_BLN2STR",
@@ -149,6 +152,25 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       [blk1 setSymbol:[root symbol]];
       return blk1;
 
+    case NotEqualExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk1, blk2);
+      switch ([[root childAtIndex:1] returnType]) {
+        case ReturnString:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_STRNEQL]);
+
+        case ReturnNumber:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_NUMNEQL]);
+
+        case ReturnBool:
+        default:
+          return concatenate(blk1,
+                             [[IntInstr alloc] initWithOpcode:OP_BLNNEQL]);
+
+      }
     case EqualExpr:
       blk1 = [IntInstr generate:[root childAtIndex:0]];
       blk2 = [IntInstr generate:[root childAtIndex:1]];
@@ -162,8 +184,8 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
           return concatenate(blk1,
                              [[IntInstr alloc] initWithOpcode:OP_NUMEQL]);
 
-        default:
         case ReturnBool:
+        default:
           return concatenate(blk1,
                              [[IntInstr alloc] initWithOpcode:OP_BLNEQL]);
       }

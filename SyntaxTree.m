@@ -54,6 +54,7 @@ const char *node_types[] = {
   "FOR..IN statement",
   "Error statement",
   "Equals",
+  "Not Equals",
   "Assign",
   "Concatenate",
   "Identifier",
@@ -81,6 +82,7 @@ const int children_per_node[] = {
   2,                            // FOR..IN statement
   0,                            // Error statement
   2,                            // Equals
+  2,                            // Not-Equals
   1,                            // Assign
   2,                            // Concatenate
   0,                            // Identifier
@@ -307,6 +309,7 @@ const int children_per_node[] = {
       _retType = ReturnVoid;
       break;
 
+    case NotEqualExpr:
     case EqualExpr:
       _retType = ReturnBool;
       break;

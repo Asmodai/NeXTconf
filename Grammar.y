@@ -170,8 +170,8 @@ const char *make_immediate_name(void);
 %type <str>    class_name method_name
 %type <tnode>  program statement_list statement
 %type <tnode>  if_statement compound_statement
-%type <tnode>  for_statement expr equal_expr assign_expr concat_expr
-%type <tnode>  simple_expr method_call
+%type <tnode>  for_statement expr equal_expr assign_expr
+%type <tnode>  concat_expr simple_expr method_call
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -229,6 +229,7 @@ expr
 
 equal_expr
    : expr EQUAL assign_expr         { $$ = CTREE2(EqualExpr, $1, $3);          }
+   | expr NEQUAL assign_expr        { $$ = CTREE2(NotEqualExpr, $1, $3);       }
    | assign_expr                    { $$ = $1;                                 }
    ;
 

@@ -167,6 +167,9 @@ resolveSymbol(id symb)
       case OP_STREQL:  ADD_ISN1(i, OP_STREQL);                           break;
       case OP_NUMEQL:  ADD_ISN1(i, OP_NUMEQL);                           break;
       case OP_BLNEQL:  ADD_ISN1(i, OP_BLNEQL);                           break;
+      case OP_STRNEQL: ADD_ISN1(i, OP_STRNEQL);                          break;
+      case OP_NUMNEQL: ADD_ISN1(i, OP_NUMNEQL);                          break;
+      case OP_BLNNEQL: ADD_ISN1(i, OP_BLNNEQL);                          break;
       case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
       case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
       case OP_BLN2STR: ADD_ISN1(i, OP_BLN2STR);                          break;
@@ -231,6 +234,20 @@ resolveSymbol(id symb)
           [stack pushObject:[Symbol newFromBoolean:b]];
         }
         break;
+
+      case OP_STRNEQL:
+      case OP_NUMNEQL:
+      case OP_BLNNEQL:
+        {
+          Boolean *b = [[Boolean alloc] init];
+
+          i = resolveSymbol([stack popObject]);
+          j = resolveSymbol([stack popObject]);
+          [b setValueFromBool:![i isEqual:j]];
+
+          [stack pushObject:[Symbol newFromBoolean:b]];
+        }
+      break;
 
       case OP_CONCAT:
         i = resolveSymbol([stack popObject]);
