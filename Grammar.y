@@ -161,7 +161,7 @@ const char *make_immediate_name(void);
 %token NEQUAL
 %token CONCAT
 %token END_STMT OPEN_PAR CLOSE_PAR
-%token OPEN_METH CLOSE_METH
+%token OPEN_METH CLOSE_METH METH_ARG
 %token BEGIN_CS END_CS
 %token <str> ID STRING
 %token <fixnum> INTEGER BOOLEAN
@@ -311,6 +311,23 @@ method_call
                                  andName:[sel stringValue]
                                  andType:SymbolSelector];
       $$ = CTREE(MethodCall);
+      [$$ setSymbol:sym];
+     }
+   | OPEN_METH class_name method_name METH_ARG simple_expr CLOSE_METH {
+      Selector *sel = nil;
+      Symbol   *sym = nil;
+
+      sel = [[Selector alloc] initWithMethod:$3
+                                    forClass:$2];
+
+      if ([sel selector] == NULL) {
+        yyerror("Unknown method call.");
+      }
+
+      sym = [[Symbol alloc] initWithData:sel
+                                 andName:[sel stringValue]
+                                 andType:SymbolSelector];
+      $$ = CTREE1(MethodCall, $5);
       [$$ setSymbol:sym];
      }
    ;

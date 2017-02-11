@@ -69,6 +69,7 @@
  * Selector calling.
  */
 - (id)evaluate;
+- (id)evaluateWithArg:(id)anArg;
 
 @end /* Selector */
 

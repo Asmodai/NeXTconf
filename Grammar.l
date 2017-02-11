@@ -88,6 +88,7 @@ END_STMT  ;
 "}"        { return END_CS;                                           }
 "["        { return OPEN_METH;                                        }
 "]"        { return CLOSE_METH;                                       }
+":"        { return METH_ARG;                                         }
 {BVALUE}   { make_boolean_constant(); return BOOLEAN;                 }
 {IDENT}    { make_identifier(); return ID;                            }
 {STR}      { make_string_constant(); return STRING;                   }

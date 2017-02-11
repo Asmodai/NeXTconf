@@ -65,6 +65,36 @@ resolveSymbol(id symb)
   }
 }
 
+static
+id
+resolveSymbolWithArg(id symb, id arg)
+{
+  id  result = symb;
+  id  data   = arg;
+  int type   = -1;
+
+  if ([symb respondsTo:@selector(data)]) {
+    result = [symb data];
+    type   = [symb type];
+  }
+
+  if ([arg respondsTo:@selector(data)]) {
+    data = [arg data];
+  }
+
+  switch (type) {
+    case SymbolSelector:
+      {
+        Selector *sel = (Selector *)result;
+
+        result = [sel evaluateWithArg:data];
+      }
+
+    default:
+      return result;
+  }
+}
+
 @implementation Instruction
 
 - (id)init
@@ -172,6 +202,7 @@ resolveSymbol(id symb)
       case OP_BLNNEQL: ADD_ISN1(i, OP_BLNNEQL);                          break;
       case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
       case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
+      case OP_CALLA:   ADD_ISN2(i, OP_CALLA, [cinstr symbol]);           break;
       case OP_BLN2STR: ADD_ISN1(i, OP_BLN2STR);                          break;
       case JMPTGT:     ADD_ISN1(i, OP_NOP);                              break;
     }
@@ -261,6 +292,12 @@ resolveSymbol(id symb)
       case OP_CALL:
         i = (Symbol *)[[_instrs objectAt:ip] operand];
         [stack pushObject:resolveSymbol(i)];
+        break;
+
+      case OP_CALLA:
+        i = resolveSymbol([stack popObject]);
+        j = (Symbol *)[[_instrs objectAt:ip] operand];
+        [stack pushObject:resolveSymbolWithArg(j, i)];
         break;
 
       case OP_BLN2STR:

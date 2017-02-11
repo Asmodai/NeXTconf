@@ -118,6 +118,11 @@
 
 - (id)evaluate
 {
+  return [self evaluateWithArg:nil];
+}
+
+- (id)evaluateWithArg:(id)anArg
+{
   id class = nil;
 
   if ([[Manager sharedInstance] haveMethod:_method
@@ -134,8 +139,13 @@
   }
 
   if ([class respondsTo:_selector]) {
-    return [class perform:_selector];
-  }  
+    if (anArg == nil) {
+      return [class perform:_selector];
+    }
+
+    return [class perform:_selector
+                     with:anArg];
+  }
 
   fprintf(stderr,
           "Class '%s' [%s] does not respond to method '%s'.\n",

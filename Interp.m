@@ -53,6 +53,7 @@ char *op_name[] = {
   "OP_BLNNEQL",
   "OP_CONCAT",
   "OP_CALL",
+  "OP_CALLA",
   "OP_BLN2STR",
   "JMPTGT"
 };
@@ -88,15 +89,15 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 + (IntInstr *)generate:(SyntaxTree *)tree
 {
-  SyntaxTree *root = tree;
-  IntInstr   *blk1;
-  IntInstr   *blk2;
-  IntInstr   *cond;
-  IntInstr   *jmp2else;
-  IntInstr   *thenpart;
-  IntInstr   *jmp2end;
-  IntInstr   *elsepart;
-  IntInstr   *endif;
+  SyntaxTree *root     = tree;
+  IntInstr   *blk1     = nil;
+  IntInstr   *blk2     = nil;
+  IntInstr   *cond     = nil;
+  IntInstr   *jmp2else = nil;
+  IntInstr   *thenpart = nil;
+  IntInstr   *jmp2end  = nil;
+  IntInstr   *elsepart = nil;
+  IntInstr   *endif    = nil;
 
   switch ([root nodeType]) {
     case StmtList:
@@ -148,6 +149,12 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return [[IntInstr alloc] initWithOpcode:OP_NOP];
 
     case MethodCall:
+      if ([root childAtIndex:0] != nil) {
+        blk1 = [IntInstr generate:[root childAtIndex:0]];
+        blk2 = [[IntInstr alloc] initWithOpcode:OP_CALLA];
+        [blk2 setSymbol:[root symbol]];
+        return concatenate(blk1, blk2);
+      }
       blk1 = [[IntInstr alloc] initWithOpcode:OP_CALL];
       [blk1 setSymbol:[root symbol]];
       return blk1;

@@ -19,13 +19,14 @@ typedef union {
 #define	CLOSE_PAR	270
 #define	OPEN_METH	271
 #define	CLOSE_METH	272
-#define	BEGIN_CS	273
-#define	END_CS	274
-#define	ID	275
-#define	STRING	276
-#define	INTEGER	277
-#define	BOOLEAN	278
-#define	LOWER_THAN_ELSE	279
+#define	METH_ARG	273
+#define	BEGIN_CS	274
+#define	END_CS	275
+#define	ID	276
+#define	STRING	277
+#define	INTEGER	278
+#define	BOOLEAN	279
+#define	LOWER_THAN_ELSE	280
 
 
 extern YYSTYPE yylval;

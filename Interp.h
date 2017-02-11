@@ -53,6 +53,7 @@ typedef enum {
   OP_BLNNEQL,
   OP_CONCAT,
   OP_CALL,
+  OP_CALLA,
   OP_BLN2STR,
   JMPTGT
 } Opcode;
