@@ -1,0 +1,57 @@
+# Platform object
+The `Platform` object is used to determine version information of the
+platform.
+
+
+Please be aware that it will not consider NeXTSTEP with Foundation
+(from EOF) to be OpenStep.
+
+You also should not assume that a product of `NEXTSTEP` means it is
+not an OpenStep, as this software considers OPENSTEP 4.0 PR 1 to be
+NEXTSTEP 4.0 (so there are no collisions with OPENSTEP 4.0).
+
+For example, the following would not do what you assume it does:
+
+```objc
+if ([Platform platform] == "NEXTSTEP") {
+  print "This is not an OpenStep implementation";
+}
+
+if ([Platform isOpenStep] == true) {
+  print "Ah, but it is";
+}
+```
+
+It would evaluate to the following on NeXTSTEP 3.3:
+```
+This is not an OpenStep implementation"
+```
+but would evaluate to the following on OPENSTEP 4.0 PR 1:
+```
+This is not an OpenStep implementation
+Ah, but it is
+```
+
+## Methods
+
+#### majorVersion [number]
+Returns the major version number.
+
+#### minorVersion [number]
+Returns the minor version number.
+
+#### versionString [string]
+Returns the version string.
+
+The string is in the form of `x.x`, e.g. `3.3`.
+
+#### product [string]
+Returns the product name, e.g. `NEXTSTEP 3.x`.
+
+#### platform [string]
+Returns the platform name, e.g. `NEXTSTEP`.
+
+#### isOpenStep [boolean]
+Returns `true` if the platform is an implementation of the OpenStep
+specification.
+
