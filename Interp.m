@@ -153,7 +153,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       blk1 = [IntInstr generate:[root childAtIndex:0]];
       blk2 = [IntInstr generate:[root childAtIndex:1]];
       concatenate(blk1, blk2);
-      switch ([[root childAtIndex:0] returnType]) {
+      switch ([[root childAtIndex:1] returnType]) {
         case ReturnString:
           return concatenate(blk1,
                              [[IntInstr alloc] initWithOpcode:OP_STREQL]);
