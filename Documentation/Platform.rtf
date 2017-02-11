@@ -25,14 +25,14 @@ You also should not assume that a product of `NEXTSTEP' means it is not an OpenS
 For example, the following would not do what you assume it does:\
 \
 
-\f3 	if ([Platform platform] == "NEXTSTEP") \{\
+\f3\fs24 	if ([Platform platform] == "NEXTSTEP") \{\
 	  print "This is not an OpenStep implementation";\
 	\}\
 \
 	if ([Platform isOpenStep] == true) \{\
 	  print "Ah, but it is";\
 	\}
-\f0 \
+\f0\fs28 \
 \
 It would evaluate to the following on NeXTSTEP 3.3:\
 \
@@ -43,9 +43,9 @@ It would evaluate to the following on NeXTSTEP 3.3:\
 but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 \
 
-\f3 	This is not an OpenStep implementation\
+\f3\fs24 	This is not an OpenStep implementation\
 	Ah, but it is
-\f0 \
+\f0\fs28 \
 
 \pard\f2\b\fs36\li1360\fc0\cf0 \
 
@@ -61,8 +61,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (Boolean)
+\f0\b0\fs28\fi-760\li3240 (Boolean)
 \b isOpenStep
 \b0 \
 
@@ -81,8 +80,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (Number)
+\f0\b0\fs28\fi-760\li3240 (Number)
 \b majorVersion
 \b0 \
 
@@ -97,8 +95,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (Number)
+\f0\b0\fs28\fi-760\li3240 (Number)
 \b minorVersion
 \b0 \
 
@@ -115,8 +112,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (String)
+\f0\b0\fs28\fi-760\li3240 (String)
 \b platform
 \b0 \
 
@@ -135,8 +131,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (String)
+\f0\b0\fs28\fi-760\li3240 (String)
 \b hasM68K
 \b0 \
 
@@ -155,8 +150,7 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:\
 
 \fs6 \
 
-\f1\b0\fs28\fi-760\li3240 -
-\f0  (String)
+\f0\b0\fs28\fi-760\li3240 (String)
 \b versionString
 \b0 \
 

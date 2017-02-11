@@ -18,48 +18,48 @@ This object can also be used to ascertain if the Developer tools are indeed inst
 
 ### currentArchitecture
 
-- (String)currentArchitecture
+(String)currentArchitecture
 
 Returns the current architecture name.
 
 
 ### currentProcessor
 
-- (String)currentProcessor
+(String)currentProcessor
 
 Returns the processor name.
 
 ### hasHPPA
 
-- (Boolean)hasHPPA
+(Boolean)hasHPPA
 
 Returns true if the Developer tools are capable of generating HP PA-RISC binaries.
 
 
 ### hasIX86
 
-- (Boolean)hasIX86
+(Boolean)hasIX86
 
 Returns true if the Developer tools are capable of generating Intel binaries.
 
 
 ### hasM68K
 
-- (Boolean)hasM68K
+(Boolean)hasM68K
 
 Returns true if the Developer tools are capable of generating Motorola 680x0 binaries.
 
 
 ### hasPPC
 
-- (Boolean)hasPPC
+(Boolean)hasPPC
 
 Returns true if the Developer tools are capable of generating PowerPC binaries.
 
 
 ### hasSPARC
 
-- (Boolean)hasSPARC
+(Boolean)hasSPARC
 
 Returns true if the Developer tools are capable of generating SPARC
 binaries.
@@ -67,7 +67,7 @@ binaries.
 
 ### isDeveloperInstalled
 
-- (Boolean)isDeveloperInstalled
+(Boolean)isDeveloperInstalled
 
 Returns true if the Developer packages have been installed.
 
