@@ -158,19 +158,19 @@ resolveSymbol(id symb)
 
   for (i = 0; i < _count; i++) {
     switch ([cinstr opcode]) {
-      case OP_NOP:        ADD_ISN1(i, OP_NOP);                             break;
-      case OP_PUSH:       ADD_ISN2(i, OP_PUSH, [cinstr symbol]);           break;
-      case OP_POP:        ADD_ISN2(i, OP_POP, [cinstr symbol]);            break;
-      case OP_PRINT:      ADD_ISN1(i, OP_PRINT);                           break;
-      case OP_JMP:        ADD_ISN2(i, OP_JMP, [[cinstr target] line]-i);   break;
-      case OP_JMPF:       ADD_ISN2(i, OP_JMPF, [[cinstr target] line]-i);  break;
-      case OP_STR_EQUAL:  ADD_ISN1(i, OP_STR_EQUAL);                       break;
-      case OP_NUM_EQUAL:  ADD_ISN1(i, OP_NUM_EQUAL);                       break;
-      case OP_BOOL_EQUAL: ADD_ISN1(i, OP_BOOL_EQUAL);                      break;
-      case OP_CONCAT:     ADD_ISN1(i, OP_CONCAT);                          break;
-      case OP_CALL:       ADD_ISN2(i, OP_CALL, [cinstr symbol]);           break;
-      case OP_BOOL2STR:   ADD_ISN1(i, OP_BOOL2STR);                        break;
-      case JUMPTARGET:    ADD_ISN1(i, OP_NOP);                             break;
+      case OP_NOP:     ADD_ISN1(i, OP_NOP);                              break;
+      case OP_PUSH:    ADD_ISN2(i, OP_PUSH, [cinstr symbol]);            break;
+      case OP_POP:     ADD_ISN2(i, OP_POP, [cinstr symbol]);             break;
+      case OP_PRINT:   ADD_ISN1(i, OP_PRINT);                            break;
+      case OP_JMP:     ADD_ISN2(i, OP_JMP, [[cinstr target] line] - i);  break;
+      case OP_JMPF:    ADD_ISN2(i, OP_JMPF, [[cinstr target] line] - i); break;
+      case OP_STREQL:  ADD_ISN1(i, OP_STREQL);                           break;
+      case OP_NUMEQL:  ADD_ISN1(i, OP_NUMEQL);                           break;
+      case OP_BLNEQL:  ADD_ISN1(i, OP_BLNEQL);                           break;
+      case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
+      case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
+      case OP_BLN2STR: ADD_ISN1(i, OP_BLN2STR);                          break;
+      case JMPTGT:     ADD_ISN1(i, OP_NOP);                              break;
     }
 
     cinstr = [cinstr next];
@@ -218,9 +218,9 @@ resolveSymbol(id symb)
         }
         break;
 
-      case OP_STR_EQUAL:
-      case OP_NUM_EQUAL:
-      case OP_BOOL_EQUAL:
+      case OP_STREQL:
+      case OP_NUMEQL:
+      case OP_BLNEQL:
         {
           Boolean *b = [[Boolean alloc] init];
 
@@ -246,7 +246,7 @@ resolveSymbol(id symb)
         [stack pushObject:resolveSymbol(i)];
         break;
 
-      case OP_BOOL2STR:
+      case OP_BLN2STR:
         break;
 
       default:

@@ -45,13 +45,13 @@ typedef enum {
   OP_PRINT,
   OP_JMP,
   OP_JMPF,
-  OP_STR_EQUAL,
-  OP_NUM_EQUAL,
-  OP_BOOL_EQUAL,
+  OP_STREQL,
+  OP_NUMEQL,
+  OP_BLNEQL,
   OP_CONCAT,
   OP_CALL,
-  OP_BOOL2STR,
-  JUMPTARGET
+  OP_BLN2STR,
+  JMPTGT
 } Opcode;
 
 /* Intermediate representation. */

@@ -45,13 +45,13 @@ char *op_name[] = {
   "OP_PRINT",
   "OP_JMP",
   "OP_JMPF",
-  "OP_STR_EQUAL",
-  "OP_NUM_EQUAL",
-  "OP_BOOL_EQUAL",
+  "OP_STREQL",
+  "OP_NUMEQL",
+  "OP_BLNEQL",
   "OP_CONCAT",
   "OP_CALL",
-  "OP_BOOL2STR",
-  "JUMPTARGET"
+  "OP_BLN2STR",
+  "JMPTGT"
 };
 
 static
@@ -73,7 +73,7 @@ static
 IntInstr *
 prefixJT(IntInstr *blk, IntInstr *refInstr)
 {
-  IntInstr *jt = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+  IntInstr *jt = [[IntInstr alloc] initWithOpcode:JMPTGT];
 
   [jt setTarget:refInstr];
   [jt setNext:blk];
@@ -116,7 +116,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       cond     = [IntInstr generate:[root childAtIndex:0]];
       jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMPF];
       thenpart = [IntInstr generate:[root childAtIndex:1]];
-      endif    = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+      endif    = [[IntInstr alloc] initWithOpcode:JMPTGT];
       [endif setTarget:jmp2end];
       [jmp2end setTarget:endif];
       concatenate(cond, jmp2end);
@@ -131,7 +131,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       elsepart = prefixJT([IntInstr generate:[root childAtIndex:2]], jmp2else);
       [jmp2else setTarget:elsepart];
       jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMP];
-      endif    = [[IntInstr alloc] initWithOpcode:JUMPTARGET];
+      endif    = [[IntInstr alloc] initWithOpcode:JMPTGT];
       [endif setTarget:jmp2end];
       [jmp2end setTarget:endif];
       concatenate(cond, jmp2else);
@@ -156,16 +156,16 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       switch ([[root childAtIndex:0] returnType]) {
         case ReturnString:
           return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_STR_EQUAL]);
+                             [[IntInstr alloc] initWithOpcode:OP_STREQL]);
 
         case ReturnNumber:
           return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_NUM_EQUAL]);
+                             [[IntInstr alloc] initWithOpcode:OP_NUMEQL]);
 
         default:
         case ReturnBool:
           return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_BOOL_EQUAL]);
+                             [[IntInstr alloc] initWithOpcode:OP_BLNEQL]);
       }
 
     case AssignExpr:
@@ -190,7 +190,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
     case CoerceToString:
       blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [[IntInstr alloc] initWithOpcode:OP_BOOL2STR];
+      blk2 = [[IntInstr alloc] initWithOpcode:OP_BLN2STR];
       return concatenate(blk1, blk2);
 
     default:
@@ -314,11 +314,11 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   debug_print(indent, "%8d: %s ", _lineNo, op_name[_opcode]);
 
   if (_symbol != nil) {
-    debug_print(0, "%s ", [[_symbol symbolName] stringValue]);
+    debug_print(0, "\t%s ", [[_symbol symbolName] stringValue]);
   }
 
   if (_target != nil) {
-    debug_print(0, "%d", [_target line]);
+    debug_print(0, "\t%d", [_target line]);
   }
 
   debug_print(0, "\n");
