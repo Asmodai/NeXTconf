@@ -248,6 +248,9 @@ resolveSymbol(id symb)
 
       case OP_BOOL2STR:
         break;
+
+      default:
+        break;
     }
 
     ip += ipc;
