@@ -7,16 +7,21 @@ installed).
 This object can also be used to ascertain if the Developer tools are indeed
 installed.
 
+```objc
+if ([Architecture isDeveloperInstalled] == false) {
+  print "You do not have the Developer packages installed.";
+}
+```
 
 ## Methods
 
-##### currentArchitecture [string]
+#### currentArchitecture [string]
 Returns the current architecture name.
 
-##### currentProcessor [string]
+#### currentProcessor [string]
 Returns the processor name.
 
-##### isDeveloperInstalled [boolean]
+#### isDeveloperInstalled [boolean]
 Returns `true` if the Developer packages have been installed.
 
 This might not be accurate.  We assume Developer is installed if there
@@ -24,22 +29,22 @@ are any spec files in `/lib/<arch>/specs` or
 `/usr/libexec/<arch>/specs`, as these files are usually used by the C
 compiler.
 
-##### hasM68K [boolean]
+#### hasM68K [boolean]
 Returns `true` if the Developer tools are capable of generating
 Motorola 680x0 binaries.
 
-##### hasIX86 [boolean]
+#### hasIX86 [boolean]
 Returns `true` if the Developer tools are capable of generating Intel
 binaries.
 
-##### hasSPARC [boolean]
+#### hasSPARC [boolean]
 Returns `true` if the Developer tools are capable of generating SPARC
 binaries.
 
-##### hasHPPA [boolean]
+#### hasHPPA [boolean]
 Returns `true` if the Developer tools are capable of generating HP
 PA-RISC binaries.
 
-##### hasPPC [boolean]
+#### hasPPC [boolean]
 Returns `true` if the Developer tools are capable of generating
 PowerPC binaries.
