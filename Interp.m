@@ -169,8 +169,8 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
         default:
           return concatenate(blk1,
                              [[IntInstr alloc] initWithOpcode:OP_BLNNEQL]);
-
       }
+
     case EqualExpr:
       blk1 = [IntInstr generate:[root childAtIndex:0]];
       blk2 = [IntInstr generate:[root childAtIndex:1]];
