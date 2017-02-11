@@ -208,6 +208,7 @@ detect_hardware(String *machine, String *processor)
   fprintf(stdout, "\tMachine:        %s\n", [_machine stringValue]);
   fprintf(stdout, "\tHave Intel:     %s\n", [_hasIX86 stringValue]);
   fprintf(stdout, "\tHave Motorola:  %s\n", [_hasM68K stringValue]);
+  fprintf(stdout, "\tHave SPARC:     %s\n", [_hasSPARC stringValue]);
   fprintf(stdout, "\tHave HPPA:      %s\n", [_hasHPPA stringValue]);
   fprintf(stdout, "\tHave PowerPC:   %s\n", [_hasPPC stringValue]);
   fprintf(stdout, "\tHave Developer: %s\n", [_hasDeveloper stringValue]);
