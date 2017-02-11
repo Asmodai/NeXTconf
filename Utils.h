@@ -115,9 +115,10 @@ BOOL  file_exists(const char *);
 
 BOOL  directory_exists(const char *);
 
-size_t errors;
-void   errorf(char *, ...);
-void   error_summary(void);
+extern size_t errors;
+
+void errorf(char *, ...);
+void error_summary(void);
 
 void yyerror(char *);
 int  yywrap(void);
