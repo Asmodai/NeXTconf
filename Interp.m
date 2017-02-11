@@ -225,8 +225,6 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 - (id)free
 {
-  printf("Freeing %d on line %lu\n", _opcode, _lineNo);
-  
   [_symbol free];
   [_target free];
   [_next free];
