@@ -1,0 +1,169 @@
+{\rtf0\ansi{\fonttbl\f0\fnil Times-Roman;\f1\ftech Symbol;\f2\fswiss Helvetica;\f3\fmodern Courier;\f4\fmodern Ohlfs;}
+\paperw13720
+\paperh10020
+\margl40
+\margr40
+\f0\b0\i0\ulnone\ql\fs24\fi0\li0\gray0\fc0\cf0\up0\dn0 Release 0.91  Copyleft 
+\f1 ã
+\f0 2017 by Paul Ward.  All Rights Reserved.\
+\
+
+\f2\b\fs56\li2100 Platform\
+
+\fs52\li1360 \
+
+\fs36 Class Description\
+
+\fs14 \
+
+\pard\tx2480\tx2860\tx3240\f0\b0\fs28\li2100\fc0\cf0 The `Platform' object is used to determine version information of the platform.\
+\
+Please be aware that it will not consider NeXTSTEP with Foundation (from EOF) to be OpenStep.\
+\
+You also should not assume that a product of `NEXTSTEP' means it is not an OpenStep, as this software considers OPENSTEP 4.0 PR 1 to be NEXTSTEP 4.0 (so there are no collisions with OPENSTEP 4.0).\
+\
+For example, the following would not do what you assume it does:\
+\
+
+\f3 	if ([Platform platform] == "NEXTSTEP") \{\
+	  print "This is not an OpenStep implementation";\
+	\}\
+\
+	if ([Platform isOpenStep] == true) \{\
+	  print "Ah, but it is";\
+	\}
+\f0 \
+\
+It would evaluate to the following on NeXTSTEP 3.3:\
+\
+
+\f3\fs24 	This is not an OpenStep implementation
+\f0\fs28 \
+\
+but would evaluate to the following on OPENSTEP 4.0 PR 1:\
+\
+
+\f3 	This is not an OpenStep implementation\
+	Ah, but it is
+\f0 \
+
+\pard\f2\b\fs36\li1360\fc0\cf0 \
+
+\fs14 \
+
+\fs36 Instance Methods\
+
+\fs14 \
+
+\fs52\fi-380\li2480 \
+
+\fs28 isOpenStep\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b isOpenStep
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the platform is an implementation of the OpenStep specification.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 majorVersion\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Number)
+\b majorVersion
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the major version number.
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 minorVersion\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Number)
+\b minorVersion
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the minor version number.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 platform\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (String)
+\b platform
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the product name, e.g. `
+\f3 NEXTSTEP 3.x
+\f0 '.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 product\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (String)
+\b hasM68K
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the platform name, e.g. `
+\f3 NEXTSTEP
+\f0 '.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 versionString\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (String)
+\b versionString
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the version string, e.g. `
+\f3 3.3
+\f0 '.\
+
+}

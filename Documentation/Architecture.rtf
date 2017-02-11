@@ -1,0 +1,200 @@
+{\rtf0\ansi{\fonttbl\f0\fnil Times-Roman;\f1\ftech Symbol;\f2\fswiss Helvetica;\f3\fmodern Courier;\f4\fmodern Ohlfs;}
+\paperw13720
+\paperh10020
+\margl40
+\margr40
+\f0\b0\i0\ulnone\ql\fs24\fi0\li0\gray0\fc0\cf0\up0\dn0 Release 0.91  Copyleft 
+\f1 ã
+\f0 2017 by Paul Ward.  All Rights Reserved.\
+\
+
+\f2\b\fs56\li2100 Architecture\
+
+\fs52\li1360 \
+
+\fs36 Class Description\
+
+\fs14 \
+
+\pard\tx2480\tx2860\tx3240\f0\b0\fs28\li2100\fc0\cf0 The `Architecture' object is used to determine architecture features of the platform.  This includes the processor and machine types as well as various features supported by the Developer tools (if installed).\
+\
+This object can also be used to ascertain if the Developer tools are indeed installed.\
+\
+
+\f3\fs24 	if ([Architecture isDeveloperInstalled] == false) \{\
+	  print "You do not have the Developer packages installed.";\
+	\}
+\f0\fs28 \
+
+\pard\f2\b\fs36\li1360\fc0\cf0 \
+
+\fs14 \
+
+\fs36 Instance Methods\
+
+\fs14 \
+
+\fs52\fi-380\li2480 \
+
+\fs28 currentArchitecture\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (String)
+\b currentArchitecture
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the current architecture name.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 currentProcessor\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (String)
+\b currentProcessor
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns the processor name.
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 hasHPPA\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b hasHPPA
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer tools are capable of generating HP PA-RISC binaries.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 hasIX86\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b hasIX86
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer tools are capable of generating Intel binaries.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 hasM68K\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b hasM68K
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer tools are capable of generating Motorola 680x0 binaries.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 hasPPC\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b hasPPC
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer tools are capable of generating PowerPC binaries.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 hasSPARC\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b hasSPARC
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer tools are capable of generating SPARC\
+binaries.
+\fs16 \
+
+\fs14 \
+
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+\fs28 isDeveloperInstalled\
+
+\fs6 \
+
+\f1\b0\fs28\fi-760\li3240 -
+\f0  (Boolean)
+\b isDeveloperInstalled
+\b0 \
+
+\pard\tx2480\tx2860\tx3240\fs14\li2100\fc0\cf0 \
+
+\fs28 Returns 
+\i true
+\i0  if the Developer packages have been installed.\
+\
+This might not be accurate.  We assume Developer is installed if there are any spec files in 
+\f3\fs24 /lib/
+\i arch
+\i0 /specs
+\f0\fs28  or 
+\f3\fs24 /usr/libexec/
+\i arch
+\i0 /specs
+\f0\fs28 , as these files are usually used by the C compiler.
+\pard\f2\b\fs52\fi-380\li2480\fc0\cf0 \
+
+}
