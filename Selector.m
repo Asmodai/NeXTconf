@@ -148,11 +148,12 @@
   }
 
   fprintf(stderr,
-          "Class '%s' [%s] does not respond to method '%s'.\n",
+          "Class '%s' does not respond to method '%s'.\n",
           [_class stringValue],
-          [class name],
           [_method stringValue]);
+  exit(EXIT_FAILURE);
 
+  /* Keep compiler happy. */
   return nil;
 }
 

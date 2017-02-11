@@ -45,12 +45,8 @@ char *op_name[] = {
   "OP_PRINT",
   "OP_JMP",
   "OP_JMPF",
-  "OP_STREQL",
-  "OP_NUMEQL",
-  "OP_BLNEQL",
-  "OP_STRNEQL",
-  "OP_NUMNEQ",
-  "OP_BLNNEQL",
+  "OP_EQL",
+  "OP_NEQ",
   "OP_CONCAT",
   "OP_CALL",
   "OP_CALLA",
@@ -160,42 +156,16 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return blk1;
 
     case NotEqualExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
-      concatenate(blk1, blk2);
-      switch ([[root childAtIndex:1] returnType]) {
-        case ReturnString:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_STRNEQL]);
-
-        case ReturnNumber:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_NUMNEQL]);
-
-        case ReturnBool:
-        default:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_BLNNEQL]);
-      }
-
     case EqualExpr:
       blk1 = [IntInstr generate:[root childAtIndex:0]];
       blk2 = [IntInstr generate:[root childAtIndex:1]];
       concatenate(blk1, blk2);
-      switch ([[root childAtIndex:1] returnType]) {
-        case ReturnString:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_STREQL]);
-
-        case ReturnNumber:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_NUMEQL]);
-
-        case ReturnBool:
-        default:
-          return concatenate(blk1,
-                             [[IntInstr alloc] initWithOpcode:OP_BLNEQL]);
-      }
+      return concatenate(blk1,
+                         [[IntInstr alloc]
+                           initWithOpcode:
+                             ([root nodeType] == NotEqualExpr)
+                               ? OP_NEQ
+                               : OP_EQL]);
 
     case AssignExpr:
       blk1 = [IntInstr generate:[root childAtIndex:0]];
@@ -255,6 +225,8 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 - (id)free
 {
+  printf("Freeing %d on line %lu\n", _opcode, _lineNo);
+  
   [_symbol free];
   [_target free];
   [_next free];

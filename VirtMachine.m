@@ -194,12 +194,8 @@ resolveSymbolWithArg(id symb, id arg)
       case OP_PRINT:   ADD_ISN1(i, OP_PRINT);                            break;
       case OP_JMP:     ADD_ISN2(i, OP_JMP, [[cinstr target] line] - i);  break;
       case OP_JMPF:    ADD_ISN2(i, OP_JMPF, [[cinstr target] line] - i); break;
-      case OP_STREQL:  ADD_ISN1(i, OP_STREQL);                           break;
-      case OP_NUMEQL:  ADD_ISN1(i, OP_NUMEQL);                           break;
-      case OP_BLNEQL:  ADD_ISN1(i, OP_BLNEQL);                           break;
-      case OP_STRNEQL: ADD_ISN1(i, OP_STRNEQL);                          break;
-      case OP_NUMNEQL: ADD_ISN1(i, OP_NUMNEQL);                          break;
-      case OP_BLNNEQL: ADD_ISN1(i, OP_BLNNEQL);                          break;
+      case OP_EQL:     ADD_ISN1(i, OP_EQL);                              break;
+      case OP_NEQ:     ADD_ISN1(i, OP_NEQ);                              break;
       case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
       case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
       case OP_CALLA:   ADD_ISN2(i, OP_CALLA, [cinstr symbol]);           break;
@@ -252,9 +248,7 @@ resolveSymbolWithArg(id symb, id arg)
         }
         break;
 
-      case OP_STREQL:
-      case OP_NUMEQL:
-      case OP_BLNEQL:
+      case OP_EQL:
         {
           Boolean *b = [[Boolean alloc] init];
 
@@ -266,9 +260,7 @@ resolveSymbolWithArg(id symb, id arg)
         }
         break;
 
-      case OP_STRNEQL:
-      case OP_NUMNEQL:
-      case OP_BLNNEQL:
+      case OP_NEQ:
         {
           Boolean *b = [[Boolean alloc] init];
 
