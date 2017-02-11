@@ -53,7 +53,7 @@ The following is an example of the syntax:
 ```objc
 name = "Dave";
 
-if ([Platform platform]) == "NEXTSTEP") {
+if ([Platform platform]  == "NEXTSTEP") {
   print "Welcome, " + name + ", to NEXTSTEP.";
 } else {
   print "Welcome, " + name + ", to something that is not NEXTSTEP.";
