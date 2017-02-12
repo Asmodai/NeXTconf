@@ -80,7 +80,7 @@
 
 - (Symbol *)insertSymbol:(Symbol *)value
 {
-  Symbol *exists = nil;
+  register Symbol *exists = nil;
 
   exists = [self valueForSymbol:[value uniqueSymbolName]];
   if (exists && [exists readOnly]) {

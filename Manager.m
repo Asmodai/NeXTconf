@@ -137,7 +137,7 @@
 - (BOOL)haveMethod:(String *)aString
           forClass:(String *)aClass
 {
-  List *lst = nil;
+  register List *lst = nil;
 
   lst = [_methods valueForKey:aClass];
   if (lst == nil) {

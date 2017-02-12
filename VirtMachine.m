@@ -59,7 +59,7 @@ resolveSymbol(id symb, id argSymb)
 
     case SymbolSelector:
       {
-        Selector *sel = (Selector *)result;
+        register Selector *sel = (Selector *)result;
 
         if (argSymb != nil) {
           result = [sel evaluateWithArg:arg];
@@ -231,8 +231,8 @@ resolveSymbol(id symb, id argSymb)
       case OP_NEQ:
       case OP_EQL:
         {
-          Boolean *b   = [[Boolean alloc] init];
-          BOOL     res = NO;
+          register Boolean *b   = [[Boolean alloc] init];
+          register BOOL     res = NO;
 
           i   = resolveSymbol([stack popObject], nil);
           j   = resolveSymbol([stack popObject], nil);
