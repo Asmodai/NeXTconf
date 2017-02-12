@@ -1,7 +1,7 @@
 /*
- * Stack.h  --- Stack.
+ * Stack.h  --- Stack interface.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -49,7 +49,7 @@
 - (id)popObject;
 - (id)topObject;
 
-@end /* Stack */
+@end                            //* Stack
 
 @interface Stack (Debug)
 
@@ -58,7 +58,7 @@
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Stack (Debug) */
+@end                            // Stack (Debug)
 
 /* Stack.h ends here */
 /*

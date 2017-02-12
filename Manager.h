@@ -1,7 +1,7 @@
 /*
- * Manager.h  --- Instance manager.
+ * Manager.h  --- Instance manager interface.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -45,8 +45,8 @@
 
 @interface Manager : Object
 {
-  HashTable *_instances;        /* Hash of instances. */
-  HashTable *_methods;          /* Hash of method calls. */
+  HashTable *_instances;        // Hash of instances.
+  HashTable *_methods;          // Hash of method calls.
 }
 
 /*
@@ -87,14 +87,13 @@
  */
 - (id)findInstance:(String *)aClass;
 
-@end /* Manager */
+@end                            // Manager
 
 @interface Manager (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Manager (Debug) */
-
+@end                            // Manager (Debug)
 
 /* Manager.h ends here */
 /*

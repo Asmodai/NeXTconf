@@ -1,5 +1,5 @@
 /*
- * VM.h  --- Some title
+ * VM.h  --- Virtual machine interface.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -37,17 +37,20 @@
 #import "Stack.h"
 #import "String.h"
 #import "SyntaxTree.h"
-#import "Interp.h"
+#import "IntInstr.h"
 
 #import <stdio.h>
 #import <stdlib.h>
 
 typedef unsigned int u_int_t;
 
+/*
+ * This class implements a VM instruction.
+ */
 @interface Instruction : Object
 {
-  Opcode  _opcode;
-  u_int_t _operand;
+  Opcode  _opcode;              // Opcode.
+  u_int_t _operand;             // Operand.
 }
 
 - (id)init;
@@ -64,12 +67,14 @@ typedef unsigned int u_int_t;
 
 @end                            // Instruction
 
+/*
+ * This class implements a virtual machine.
+ */
 @interface VirtualMachine : Object
 {
-  size_t  _count;
-  List   *_instrs;;
-  List   *_strings;
-  Stack  *_stack;
+  size_t  _count;               // Count of instructions.
+  List   *_instrs;              // List of instructions.
+  Stack  *_stack;               // Program stack.
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * Boolean.h  --- Some title
+ * Boolean.h  --- Boolean data type interface.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -36,9 +36,12 @@
 
 #import "String.h"
 
+/*
+ * This class defines a Boolean datatype.
+ */
 @interface Boolean : Object
 {
-  BOOL _value;
+  BOOL _value;                  // The boolean value.
 }
 
 /*
@@ -68,13 +71,13 @@
  */
 - (BOOL)isEqual:(id)anObject;
 
-@end                            /* Boolean */
+@end                            // Boolean
 
 @interface Boolean (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end                            /* Boolean (Debug) */
+@end                            // Boolean (Debug)
 
 /* Boolean.h ends here */
 /*

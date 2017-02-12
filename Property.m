@@ -1,7 +1,7 @@
 /*
  * Property.m  --- Property base class implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -37,9 +37,6 @@
 
 @implementation Property
 
-/*
- * Initialise a new instance.
- */
 - (id)init
 {
   if ((self = [super init]) != nil) {
@@ -49,9 +46,6 @@
   return self;
 }
 
-/*
- * Free an instance.
- */
 - (id)free
 {
   [[Manager sharedInstance] removeInstance:self];
@@ -59,19 +53,16 @@
   return [super free];
 }
 
-@end /* Property */
+@end                            // Property
 
 @implementation Property (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   debug_print(indent, "property = %s\n", [[self class] name]);
 }
 
-@end /* Property (Debug) */
+@end                            // Property (Debug)
 
 /* Property.m ends here */
 /*

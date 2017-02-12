@@ -1,7 +1,7 @@
 /*
  * ConfParser.h  --- File parser.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -38,23 +38,23 @@
 #include <sys/file.h>
 #include <objc/objc.h>
 
-/**
+/*
  * Number of characters for a line.
  */
 #define PARSER_MAX_LINE             200
 
-/**
+/*
  * Define if the parser should stop when it comes across the first
  * error.
  */
 #define PARSER_STOP_ON_FIRST_ERRROR
 
-/**
+/*
  * Parser input handler function pointer type definition.
  */
 typedef BOOL (*parser_handler)(void *, const char *, const char *);
 
-/**
+/*
  * Parser input reader function pointer type definition.
  */
 typedef char *(*parser_reader)(char *, size_t, void *);

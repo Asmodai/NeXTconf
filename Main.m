@@ -1,7 +1,7 @@
 /*
  * Main.m  --- The Glue.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -42,7 +42,7 @@
 #import "Symbol.h"
 #import "SymbolTable.h"
 #import "SyntaxTree.h"
-#import "Interp.h"
+#import "IntInstr.h"
 #import "VirtMachine.h"
 #import "Version.h"
 
@@ -132,17 +132,22 @@ main(int argc, char **argv)
   }
 
   yyparse();
-  //error_summary();
+
+  if (errors > 0) {
+    error_summary();
+    exit(EXIT_FAILURE);
+  }
 
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
   //[root_syntree printDebug:"Parsed tokens"];
   //putchar('\n');
-
   //printf("\n\n\n");
+
   code = [IntInstr generate:root_syntree];
   [code number:1];
+
   //[code printDebug:"Intermediate code"];
   //printf("\n");
 
@@ -150,8 +155,8 @@ main(int argc, char **argv)
   [vm read:code];
   [vm execute];
 
-  printf("\n\n");
-  [[Manager sharedInstance] printDebug:"Object manager"];
+  //printf("\n\n");
+  //[[Manager sharedInstance] printDebug:"Object manager"];
 
   /*
   printf("\n\n");

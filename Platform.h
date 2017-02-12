@@ -1,7 +1,7 @@
 /*
  * Platform.h  --- Platform detection.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -44,11 +44,11 @@
  */
 @interface Platform : Property
 {
-  Number  *_major;              /* Major version number. */
-  Number  *_minor;              /* Minor version number. */
-  String  *_product;            /* Product name. */
-  String  *_platform;           /* Platform name. */
-  Boolean *_OpenStep;           /* Is the platform an OpenStep? */
+  Number  *_major;              // Major version number.
+  Number  *_minor;              // Minor version number.
+  String  *_product;            // Product name.
+  String  *_platform;           // Platform name.
+  Boolean *_OpenStep;           // Is the platform an OpenStep?
 }
 
 /*
@@ -76,7 +76,7 @@
  */
 - (void)print;
 
-@end /* Platform */
+@end                            // Platform
 
 @interface Platform (Debug)
 
@@ -85,7 +85,7 @@
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Platform (Debug) */
+@end                            // Platform (Debug)
 
 /* Platform.h ends here */
 /*

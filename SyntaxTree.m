@@ -1,7 +1,7 @@
 /*
  * SyntaxTree.m  --- Syntax tree implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -37,13 +37,16 @@
 
 #import "SyntaxTree.h"
 #import "Utils.h"
-#import "Interp.h"
+#import "IntInstr.h"
 
 /*
  * Default maximum number of children.
  */
 #define DEFAULT_MAX_CHILD_SLOTS    3
 
+/*
+ * Thus MUST match `STNodeType' in SyntaxTree.h
+ */
 const char *node_types[] = {
   "Statement list",
   "Empty statement",
@@ -65,6 +68,9 @@ const char *node_types[] = {
   "Method call"
 };
 
+/*
+ * This MUST match `STRetType' in SyntaxTree.h
+ */
 const char *return_types[] = {
   "void",
   "string",
@@ -72,6 +78,9 @@ const char *return_types[] = {
   "bool"
 };
 
+/*
+ * This MUST match `STNodeType' in SyntaxTree.h
+ */
 const int children_per_node[] = {
   2,                            // Statement list
   0,                            // Empty statement
@@ -95,9 +104,6 @@ const int children_per_node[] = {
 
 @implementation SyntaxTree
 
-/*
- * Initialise a syntax tree with no children.
- */
 - (id)init
 {
   return [self initWithType:EmptyStmt
@@ -106,9 +112,6 @@ const int children_per_node[] = {
                   andChild3:nil];
 }
 
-/*
- * Initialise a syntax tree with a type and no children.
- */
 - (id)initWithType:(STNodeType)type
 {
   return [self initWithType:type
@@ -117,9 +120,6 @@ const int children_per_node[] = {
                   andChild3:nil];
 }
 
-/*
- * Initialise a syntax tree with a type and one child.
- */
 - (id)initWithType:(STNodeType)type
          andChild1:(SyntaxTree *)child1
 {
@@ -129,9 +129,6 @@ const int children_per_node[] = {
                   andChild3:nil];
 }
 
-/*
- * Initialise a syntax tree with a type and two children.
- */
 - (id)initWithType:(STNodeType)type
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2
@@ -142,9 +139,6 @@ const int children_per_node[] = {
                   andChild3:nil];
 }
 
-/*
- * Initialise a syntax tree with a type and three children.
- */
 - (id)initWithType:(STNodeType)type
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2
@@ -168,11 +162,13 @@ const int children_per_node[] = {
 }
 
 /*
- * Free a syntax tree.
+ * The reason why we do not free `_symbol' is so that when a syntax
+ * tree is nuked, any symbols created and placed in the symbol manager
+ * are left intact.  This is so we can, at some point, kill a syntax
+ * tree's memory WITHOUT killing the associated symbols.
  */
 - (id)free
 {
-  /* Free the children if they exist. */
   if (_children) {
     [_children freeObjects];
     [_children free];
@@ -185,59 +181,36 @@ const int children_per_node[] = {
   return [super free];
 }
 
-/*
- * Sets the node type to the given type.
- */
 - (void)setNodeType:(STNodeType)type
 {
   _nodeType = type;
 }
 
-/*
- * Returns the node type.
- */
 - (STNodeType)nodeType
 {
   return _nodeType;
 }
 
-/*
- * Sets the return type to the given type.
- */
 - (void)setReturnType:(STRetType)type
 {
   _retType = type;
 }
 
-/*
- * Returns the return type.
- */
 - (STRetType)returnType
 {
   return _retType;
 }
 
-/*
- * Sets the symbol to the given value.
- */
 - (void)setSymbol:(Symbol *)symb
 {
   _symbol = symb;
 }
 
-/*
- * Returns the symbol.
- */
 - (Symbol *)symbol
 {
   return _symbol;
 }
 
-/*
- * Sets the child at the given index to the given value.
- *
- * If index is out of bounds, then nothing is done.
- */
 - (void)setChildAtIndex:(int)index
                      to:(SyntaxTree *)child
 {
@@ -249,12 +222,6 @@ const int children_per_node[] = {
                         with:child];
 }
 
-/*
- * Returns the child at the given index.
- *
- * If the index does not exist, or there is no child at that index
- * then nil is returned.
- */
 - (SyntaxTree *)childAtIndex:(int)index
 {
   if (index > [_children count]) {
@@ -264,9 +231,6 @@ const int children_per_node[] = {
   return [_children objectAt:index];
 }
 
-/*
- * Coerce the child to a string.
- */
 - (BOOL)coerceToString:(int)child
 {
   STRetType ret = ReturnVoid;
@@ -291,9 +255,6 @@ const int children_per_node[] = {
   return YES;
 }
 
-/*
- * Check the syntax for this node.
- */
 - (void)checkSyntax
 {
   /* First, set the required return type. */
@@ -350,16 +311,6 @@ const int children_per_node[] = {
       }
       break;
 
-      /*
-    case EqualExpr:
-      if ([[_children objectAt:0] returnType] !=
-          [[_children objectAt:1] returnType])
-      {
-        fprintf(stderr, "==: Different types.\n");
-      }
-      break;
-      */
-
     case ConcatExpr:
       if (![self coerceToString:0]) {
         fprintf(stderr, "+: Cannot coerce first argument to string.\n");
@@ -375,13 +326,10 @@ const int children_per_node[] = {
   }
 }
 
-@end /* SyntaxTree */
+@end                            // SyntaxTree
 
 @implementation SyntaxTree (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   size_t i = 0;
@@ -402,7 +350,7 @@ const int children_per_node[] = {
   }
 }
 
-@end /* SyntaxTree (Debug) */
+@end                            // SyntaxTree (Debug)
 
 /* SyntaxTree.m ends here */
 /*

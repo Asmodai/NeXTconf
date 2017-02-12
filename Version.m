@@ -1,7 +1,7 @@
 /*
  * Version.m  --- Program version implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -45,57 +45,36 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
 
 @implementation Version
 
-/*
- * Returns the version string.
- */
 + (const char *)versionString
 {
   return VERSIONSTR;
 }
 
-/*
- * Returns the short version string.
- */
 + (const char *)versionShortString
 {
   return VERSIONSHORTSTR;
 }
 
-/*
- * Returns the build string.
- */
 + (const char *)buildString
 {
   return BUILDSTR;
 }
 
-/*
- * Returns the build system string.
- */
 + (const char *)buildSystemString
 {
   return BUILDSYSFULL;
 }
 
-/*
- * Returns the build date.
- */
 + (const char *)buildDateString
 {
   return BUILDDATE;
 }
 
-/*
- * Returns the `built by' string.
- */
 + (const char *)builtByString
 {
   return BUILTBY;
 }
 
-/*
- * Print program version details to standard output.
- */
 + (void)print
 {
   printf("This is %s\n\n"

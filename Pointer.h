@@ -1,7 +1,7 @@
 /*
  * Pointer.h  --- Pointer container.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -39,7 +39,7 @@
  */
 @interface Pointer : Object
 {
-  void *_ptr;
+  void *_ptr;                   // The pointer.
 }
 
 /*
@@ -60,13 +60,13 @@
 - (void *)pointer;
 - (void)invalidate;
 
-@end /* Pointer */
+@end                            // Pointer
 
 @interface Pointer (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Pointer (Debug) */
+@end                            // Pointer (Debug)
 
 /* Pointer.h ends here */
 /*

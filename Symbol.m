@@ -1,7 +1,7 @@
 /*
  * Symbol.m  --- Symbol implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -42,7 +42,7 @@
 #import "snprintf.h"
 
 /*
- * String names for symbol types.
+ * This MUST match `SymbolType' in Symbol.h.
  */
 static const char *symbol_type_names[] = {
   "nil",
@@ -64,9 +64,6 @@ static const char default_symbol_type[] = "<invalid>";
  */
 static const char default_symbol_name[] = "<unnamed>";
 
-/*
- * Translate a symbol type to a string value for pretty printing.
- */
 static 
 const char *
 name_for_symbol_type(SymbolType type)
@@ -119,9 +116,6 @@ name_for_symbol_type(SymbolType type)
                               andType:SymbolBoolean];
 }
 
-/*
- * Initialisa a symbol with no name or value.
- */
 - (id)init
 {
   return [self initWithData:nil
@@ -129,9 +123,6 @@ name_for_symbol_type(SymbolType type)
                     andType:SymbolNil];
 }
 
-/*
- * Initialise a symbol with the given name, type, and data.
- */
 - (id)initWithData:(id)data
            andName:(const char *)name
            andType:(SymbolType)type
@@ -145,9 +136,6 @@ name_for_symbol_type(SymbolType type)
   return self;
 }
 
-/*
- * Free a symbol.
- */
 - (id)free
 {
   if (_data) {
@@ -158,65 +146,41 @@ name_for_symbol_type(SymbolType type)
   return [super free];
 }
 
-/*
- * Sets the symbol's data.
- */
 - (void)setData:(id)data
 {
   _data = data;
 }
 
-/*
- * Returns the symbol's data.
- */
 - (id)data
 {
   return _data;
 }
 
-/*
- * Sets the symbol's type.
- */
 - (void)setType:(SymbolType)aType
 {
   _type = aType;
 }
 
-/*
- * Gets the symbol's type.
- */
 - (SymbolType)type
 {
   return _type;
 }
 
-/*
- * Sets the read-only status of the symbol.
- */
 - (void)setReadOnly:(BOOL)aFlag
 {
   _readOnly = aFlag;
 }
 
-/*
- * Gets the read-only status of the symbol.
- */
 - (BOOL)readOnly
 {
   return _readOnly;
 }
 
-/*
- * Gets the symbol's type as a printable string.
- */
 - (const char *)typeName
 {
   return name_for_symbol_type(_type);
 }
 
-/*
- * Sets the symbol's name.
- */
 - (void)setName:(String *)aName
 {
   if (_name) {
@@ -229,9 +193,6 @@ name_for_symbol_type(SymbolType type)
   [aName free];
 }
 
-/*
- * Sets the symbol's name from a C string.
- */
 - (void)setNameFromCString:(const char *)aName
 {
   if (_name) {
@@ -242,32 +203,25 @@ name_for_symbol_type(SymbolType type)
   [_name toLower];
 }
 
-/*
- * Returns the symbol's name.
- */
 - (String *)symbolName
 {
   return _name;
 }
 
 /*
- * Returns the symbol's unique name.
- *
- * It is unique in that it is garaunteed to have just one string
- * instance in memory during the entire run time of the program.
+ * NXUniqueString means that the returned value is unique in that it
+ * is garaunteed to have just one string instance in memory during the
+ * entire run time of the program.
  */
 - (NXAtom)uniqueSymbolName
 {
   return NXUniqueString([_name stringValue]);
 }
 
-@end /* Symbol */
+@end                            // Symbol
 
 @implementation Symbol (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   if (_name) {
@@ -283,7 +237,7 @@ name_for_symbol_type(SymbolType type)
   }
 }
 
-@end /* Symbol (Debug) */
+@end                            //* Symbol (Debug)
 
 /* Symbol.m ends here */
 /*

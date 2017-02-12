@@ -1,7 +1,7 @@
 /*
  * Architecture.m  --- Architecture detection implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -48,11 +48,19 @@
 #import "Utils.h"
 #import "snprintf.h"
 
+/*
+ * Location for 'specs' files.
+ */
 static const char *arch_dirs[] = {
   "/lib/",
   "/usr/libexec/"
 };
 
+/*
+ * Determine whether we have support for an architecture by looking
+ * for its spec file.  If there's a spec file, the compiler supports
+ * the architecture, thus we can claim to support it.
+ */
 BOOL
 have_arch(const char *arch)
 {
@@ -215,7 +223,7 @@ detect_hardware(String *machine, String *processor)
   fprintf(stdout, "\n");
 }
 
-@end /* Architecture */
+@end                            // Architecture
 
 @implementation Architecture (Debug)
 
@@ -239,7 +247,7 @@ detect_hardware(String *machine, String *processor)
   debug_print(indent, "Have developer = %s\n", [_hasDeveloper stringValue]);
 }
 
-@end /* Architecture (Debug) */
+@end                            // Architecture (Debug)
 
 /* Architecture.m ends here */
 /*

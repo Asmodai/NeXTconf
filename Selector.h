@@ -1,5 +1,5 @@
 /*
- * Selector.h  --- Some title
+ * Selector.h  --- Selector data type interface.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -36,13 +36,15 @@
 #import "Object+Debug.h"
 
 /*
- * Selector class.
+ * This class implements a Selector data type.  This works in the same
+ * way as an Objective-C selector, but associates a class as well as a
+ * method.
  */
 @interface Selector : Object
 {
-  String *_method;
-  String *_class;
-  SEL     _selector;
+  String *_method;              // The method.
+  String *_class;               // The owning class.
+  SEL     _selector;            // The constructed selector.
 }
 
 /*
@@ -71,13 +73,13 @@
 - (id)evaluate;
 - (id)evaluateWithArg:(id)anArg;
 
-@end /* Selector */
+@end                            // Selector
 
 @interface Selector (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end
+@end                            // Selector (Debug)
 
 /* Selector.h ends here */
 /*

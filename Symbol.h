@@ -1,7 +1,7 @@
 /*
  * Symbol.h  --- Symbol.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -98,7 +98,7 @@ typedef enum {
 - (String *)symbolName;
 - (NXAtom)uniqueSymbolName;
 
-@end /* Symbol */
+@end                            // Symbol
 
 @interface Symbol (Debug)
 
@@ -107,7 +107,7 @@ typedef enum {
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Symbol (Debug) */
+@end                            // Symbol (Debug)
 
 /* Symbol.h ends here */
 /*

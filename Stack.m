@@ -1,7 +1,7 @@
 /*
  * Stack.m  --- Stack implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2015 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -38,37 +38,25 @@
 
 @implementation Stack
 
-/*
- * Push an object to the stack.
- */
 - (id)pushObject:(id)anObject
 {
   return [self addObject:anObject];
 }
 
-/*
- * Pop an object from the stack.
- */
 - (id)popObject
 {
   return [self removeLastObject];
 }
 
-/*
- * Get the top object on the stack.
- */
 - (id)topObject
 {
   return [self lastObject];
 }
 
-@end /* Stack */
+@end                            //* Stack
 
 @implementation Stack (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   size_t idx = 0;
@@ -86,7 +74,7 @@
   }
 }
 
-@end /* Stack (Debug) */
+@end                            // Stack (Debug)
 
 /* Stack.m ends here */
 /*

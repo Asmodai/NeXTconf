@@ -1,7 +1,7 @@
 /*
- * Object+Debug.h  --- Debugging category.
+ * Object+Debug.h  --- Debugging category interface.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -51,7 +51,7 @@
 - (void)printDebug:(const char *)label
         withIndent:(int)indent;
 
-@end /* Object (Debug) */
+@end                            // Object (Debug)
 
 /* Object+Debug.h ends here */
 /*

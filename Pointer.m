@@ -1,7 +1,7 @@
 /*
  * Pointer.m  --- Pointer container implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -38,17 +38,11 @@
 
 @implementation Pointer
 
-/*
- * Initialise a new instance with no pointer.
- */
 - (id)init
 {
   return [self initWithPointer:NULL];
 }
 
-/*
- * Initialise a new instance with the given pointer.
- */
 - (id)initWithPointer:(void *)ptr
 {
   if ((self = [super init]) != nil) {
@@ -58,9 +52,6 @@
   return self;
 }
 
-/*
- * Free the container.
- */
 - (id)free
 {
   /* Do NOT free the pointer. */
@@ -69,46 +60,32 @@
   return [super free];
 }
 
-/*
- * Sets the pointer to the given value.
- */
 - (void)setPointer:(void *)ptr
 {
   _ptr = ptr;
 }
 
-/*
- * Returns the pointer.
- */
 - (void *)pointer
 {
   return _ptr;
 }
 
-/*
- * Invalidates the pointer.
- *
- * This does not modify any data, it just simply sets the container's pointer
- * to null.
- */
 - (void)invalidate
 {
+  /* Do NOT modify the pointer. */
   _ptr = NULL;
 }
 
-@end /* Pointer */
+@end                            // Pointer
 
 @implementation Pointer (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   debug_print(indent, "ptr = %p\n", _ptr);
 }
 
-@end /* Pointer (Debug) */
+@end                            // Pointer (Debug)
 
 /* Pointer.m ends here */
 /*

@@ -1,7 +1,7 @@
 /*
  * Manager.m  --- Instance manager implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -37,9 +37,6 @@
 
 @implementation Manager
 
-/*
- * Obtain the singleton instance.
- */
 + (id)sharedInstance
 {
   static Manager *instance = nil;
@@ -58,9 +55,7 @@
   return nil;
 }
 
-/*
- * Initialise a new instance.
- */
+
 - (id)_initFromShared_
 {
   if ((self = [super init]) != nil) {
@@ -71,9 +66,6 @@
   return self;
 }
 
-/*
- * Free the instance.
- */
 - (id)free
 {
   if (_instances) {
@@ -85,18 +77,12 @@
   return [super free];
 }
 
-/*
- * Adds an instance to the manager.
- */
 - (void)addInstance:(id)anObject
 {
   [_instances insertKey:[[anObject class] name]
                   value:anObject];
 }
 
-/*
- * Removes an instance from the manager.
- */
 - (void)removeInstance:(id)anObject
 {
   id obj = nil;
@@ -170,13 +156,10 @@
   return [_instances valueForKey:[aClass stringValue]];
 }
 
-@end /* Manager */
+@end                            // Manager
 
 @implementation Manager (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   const char  *ikey = NULL;
@@ -227,7 +210,7 @@
   }
 }
 
-@end /* Manager (Debug) */
+@end                            // Manager (Debug)
 
 /* Manager.m ends here */
 /*

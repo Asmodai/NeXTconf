@@ -3,10 +3,7 @@
 #
 # init --- Initialise makefiles for a given platform.
 #
-# Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
-#
-# Time-stamp: <15/11/09 09:01:55 asmodai>
-# Revision:   1
+# Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
 #
 # Author:     Paul Ward <asmodai@gmail.com>
 # Maintainer: Paul Ward <asmodai@gmail.com>
@@ -53,8 +50,8 @@ copy_makefiles()
 {
     if [ -z ${PLATFORM} ]
     then
-	echo "No platform.  Cannot copy makefiles."
-	exit 3
+        echo "No platform.  Cannot copy makefiles."
+        exit 3
     fi
 
     rm Makefile* 2>/dev/null
@@ -96,8 +93,8 @@ case $1 in
   wof)      PLATFORM="WOF"                  ;;
   *)        echo "Unknown platform \"$1\""
             usage
-	    exit 2
-	    ;;
+            exit 2
+            ;;
 esac
 
 process

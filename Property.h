@@ -1,7 +1,7 @@
 /*
  * Property.h  --- Property base class.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -42,13 +42,13 @@
 - (id)init;
 - (id)free;
 
-@end /* Property */
+@end                            // Property
 
 @interface Property (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Property (Debug) */
+@end                            // Property (Debug)
 
 /* Property.h ends here */
 /*

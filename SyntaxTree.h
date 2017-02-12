@@ -1,7 +1,7 @@
 /*
  * SyntaxTree.h  --- Syntax tree.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -120,7 +120,7 @@ typedef enum {
 - (BOOL)coerceToString:(int)child;
 - (void)checkSyntax;
 
-@end /* SyntaxTree */
+@end                            // SyntaxTree
 
 @interface SyntaxTree (Debug)
 
@@ -129,7 +129,7 @@ typedef enum {
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* SyntaxTree (Debug) */
+@end                            // SyntaxTree (Debug)
 
 /* SyntaxTree.h ends here */
 /*

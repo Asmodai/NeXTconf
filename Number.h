@@ -1,7 +1,7 @@
 /*
- * Number.h  --- Numeric data type.
+ * Number.h  --- Numeric data type interface.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -39,7 +39,7 @@
  */
 @interface Number : Object
 {
-  unsigned int _number;
+  unsigned int _number;         // The number.
 }
 
 /*
@@ -67,17 +67,16 @@
  */
 - (BOOL)isEqual:(id)anObject;
 
-@end /* Number */
+@end                            // Number
 
-
-/*
- * Debugging methods added by the Debug category.
- */
 @interface Number (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Number (Debug) */
+@end                            // Number (Debug)
 
 /* Number.h ends here */
 /*

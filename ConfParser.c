@@ -1,7 +1,7 @@
 /*
  * ConfParser.c  --- File parser implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -73,9 +73,6 @@ strncpy0(char *dest, const char *src, size_t size)
   return dest;
 }
 
-/**
- * Parse a config from a stream.
- */
 int
 parser_parse_stream(parser_reader   reader,
                     void           *stream,
@@ -141,9 +138,6 @@ parser_parse_stream(parser_reader   reader,
   return err;
 }
 
-/**
- * Parse a config from a file.
- */
 int
 parser_parse_file(FILE *file, parser_handler handler, void *user)
 {
@@ -153,9 +147,6 @@ parser_parse_file(FILE *file, parser_handler handler, void *user)
                              (void *)user);
 }
 
-/**
- * Parse a config.
- */
 int
 parser_parse(const char *filename, parser_handler handler, void *user)
 {

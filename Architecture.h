@@ -1,7 +1,7 @@
 /*
  * Architecture.h  --- Architecture detection.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -41,16 +41,20 @@
 #import "Number.h"
 #import "Boolean.h"
 
+/*
+ * This class defines an object that stores various system
+ * architecture properties.
+ */
 @interface Architecture : Property
 {
-  String  *_processor;
-  String  *_machine;
-  Boolean *_hasIX86;
-  Boolean *_hasM68K;
-  Boolean *_hasSPARC;
-  Boolean *_hasHPPA;
-  Boolean *_hasPPC;
-  Boolean *_hasDeveloper;
+  String  *_processor;          // Processor type.
+  String  *_machine;            // Machine type.
+  Boolean *_hasIX86;            // Can compiler do Intel?
+  Boolean *_hasM68K;            // Can compiler do m68k?
+  Boolean *_hasSPARC;           // Can compiler do SPARC?
+  Boolean *_hasHPPA;            // Can compiler do PA-RISC?
+  Boolean *_hasPPC;             // Can compiler to PPC?
+  Boolean *_hasDeveloper;       // Is Developer installed?
 }
 
 /*
@@ -80,13 +84,13 @@
  */
 - (void)print;
 
-@end /* Architecture */
+@end                            // Architecture
 
 @interface Architecture (Debug)
 
 - (void)_printDebugInfo:(int)indent;
 
-@end /* Architecture (Debug) */
+@end                            // Architecture (Debug)
 
 /* Architecture.h ends here */
 /*

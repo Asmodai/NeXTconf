@@ -1,7 +1,7 @@
 /*
  * Object+Debug.m  --- Debugging category implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -41,34 +41,22 @@
 
 @implementation Object (Debug)
 
-/*
- * Returns the indentation level to be used when printing.
- */
 + (int)debugIndentLevel
 {
   return INDENT_LEVEL;
 }
 
-/*
- * Prints debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   [self notImplemented:_cmd];
 }
 
-/*
- * Print information about an instance.
- */
 - (void)printDebug:(const char *)label
 {
   [self printDebug:label
         withIndent:0];
 }
 
-/*
- * Print information about an instance with a given indentation level.
- */
 - (void)printDebug:(const char *)label
         withIndent:(int)indent
 {
@@ -83,7 +71,7 @@
   }
 }
 
-@end /* Object (Debug) */
+@end                            // Object (Debug)
 
 /* Object+Debug.m ends here */
 /*

@@ -40,19 +40,11 @@
 
 @implementation Number
 
-/*
- * Initialise a new instance.
- *
- * The initial value defaults to 0.
- */
 - (id)init
 {
   return [self initWithInt:0];
 }
 
-/*
- * Initialise an instance using the given integer value.
- */
 - (id)initWithInt:(int)value
 {
   if ((self = [super init]) != nil) {
@@ -62,11 +54,6 @@
   return self;
 }
 
-/*
- * Initialise an instance using the given string value.
- *
- * The string is converted into an integer.
- */
 - (id)initWithString:(const char *)string
 {
   if ((self = [super init]) != nil) {
@@ -78,25 +65,16 @@
   return self;
 }
 
-/*
- * Free the instance.
- */
 - (id)free
 {
   return [super free];
 }
 
-/*
- * Returns the integer value.
- */
 - (int)intValue
 {
   return _number;
 }
 
-/*
- * Returns the string representation of the number.
- */
 - (const char *)stringValue
 {
   char *buf = NULL;
@@ -107,17 +85,11 @@
   return (const char *)buf;
 }
 
-/*
- * Sets the value from the given integer.
- */
 - (void)setValueFromInt:(int)value
 {
   _number = value;
 }
 
-/*
- * Sets the value from the given string.
- */
 - (void)setValueFromString:(const char *)string
 {
   if (!string) {
@@ -128,9 +100,6 @@
   _number = atoi(string);
 }
 
-/*
- * Is this object equal to another?
- */
 - (BOOL)isEqual:(id)anObject
 {
   if (anObject == self) {
@@ -146,19 +115,16 @@
   return NO;
 }
 
-@end /* Number */
+@end                            // Number
 
 @implementation Number (Debug)
 
-/*
- * Display debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   debug_print(indent, "int = %d\n", _number);
 }
 
-@end /* Number (Debug) */
+@end                            // Number (Debug)
 
 /* Number.m ends here */
 /*

@@ -1,7 +1,7 @@
 /*
  * Platform.m  --- Platform detection implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -53,25 +53,28 @@
  */
 #define DETECT_MAX_LINE    200
 
+/* OS major version number. */
 static int _major_version = 0;
 
+/* OS minor version number. */
 static int _minor_version = 0;
 
+/* OS version string.*/
 static String *_version_string = nil;
 
 
 
-/**
+/*
  * Platform information structure.
  */
 typedef struct platform_s {
-  char   *name;                 /* Platform pretty name. */
-  char   *platform;             /* Platform name. */
-  int     major;                /* Major version matcher. */
-  int     minor;                /* Minor version matcher. -1 to ignore. */
-  char   *versionFile;          /* Version file name. */
-  char   *codename;             /* Platform codename. */
-  BOOL    isOpenStep;           /* Is the platform OpenStep-compliant? */
+  char   *name;                 // Platform pretty name.
+  char   *platform;             // Platform name.
+  int     major;                // Major version matcher.
+  int     minor;                // Minor version matcher. -1 to ignore.
+  char   *versionFile;          // Version file name.
+  char   *codename;             // Platform codename.
+  BOOL    isOpenStep;           // Is the platform OpenStep-compliant?
 } platform_t;
 
 /*
@@ -124,31 +127,21 @@ codename_match(const platform_t *platform)
   char *line = NULL;
   FILE *file = NULL;
 
-  /* If the platform given is not valid, exit. */
   if (!platform) {
     return NO;
   }
 
-  /* Attempt to allocate buffer for the line. */
   line = (char *)xmalloc(DETECT_MAX_LINE * sizeof *line);
 
-  /*
-   * Does the platform structure have a valid `versionfile' entry?
-   */
+
   if (platform->versionFile == NULL) {
     return NO;
   }
 
-  /*
-   * Does the platform have a valid `codename' entry?
-   */
   if (platform->codename == NULL) {
     return NO;
   }
 
-  /*
-   * Can we open the version file?
-   */
   if ((file = fopen(platform->versionFile, "r")) == NULL) {
     return NO;
   }
@@ -162,7 +155,6 @@ codename_match(const platform_t *platform)
                 line,
                 strlen(platform->codename)) == 0)
     {
-      /* All good */
       return YES;
     }
   }
@@ -265,32 +257,21 @@ get_os_version(void)
 
 @implementation Platform
 
-/*
- * Initialise a new instance.
- */
 - (id)init
 {
   if ((self = [super init]) != nil) {
     const platform_t *platform = NULL;
 
-    /*
-     * First, get the version numbers from the Mach kernel.
-     */
     if (get_os_version() == NO) {
       fprintf(stderr, "Could not get kernel version from Mach.\n");
       exit(EXIT_FAILURE);
     }
 
-    /*
-     * Now we can use them to get the right entry from the platform
-     * structure.
-     */
     platform = get_platform(_major_version, _minor_version);
 
     _major = [[Number alloc] initWithInt:_major_version];
     _minor = [[Number alloc] initWithInt:_minor_version];
 
-    /* Grab the platform details. */
     if (platform) {
       _product  = [[String alloc] initWithString:platform->name];
       _platform = [[String alloc] initWithString:platform->platform];
@@ -312,9 +293,6 @@ get_os_version(void)
   return self;
 }
 
-/*
- * Free an instance.
- */
 - (id)free
 {
   if (_version_string) {
@@ -331,25 +309,16 @@ get_os_version(void)
   return [super free];
 }
 
-/*
- * Returns the major version.
- */
 - (Number *)majorVersion
 {
   return _major;
 }
 
-/*
- * Returns the minor version.
- */
 - (Number *)minorVersion
 {
   return _minor;
 }
 
-/*
- * Returns the version string.
- */
 - (String *)versionString
 {
   if (_version_string == nil) {
@@ -361,25 +330,16 @@ get_os_version(void)
   return _version_string;
 }
 
-/*
- * Returns the product name.
- */
 - (String *)product
 {
   return _product;
 }
 
-/*
- * Returns the platform name.
- */
 - (String *)platform
 {
   return _platform;
 }
 
-/*
- * Is the platform an implementation of the OpenStep specification?
- */
 - (Boolean *)isOpenStep
 {
   return _OpenStep;
@@ -396,13 +356,10 @@ get_os_version(void)
   fprintf(stdout, "\n");
 }
 
-@end /* Platform */
+@end                            // Platform
 
 @implementation Platform (Debug)
 
-/*
- * Print debugging info.
- */
 - (void)_printDebugInfo:(int)indent
 {
   if (_major) {
@@ -430,7 +387,7 @@ get_os_version(void)
               [_OpenStep stringValue]);
 }
 
-@end /* Platform (Debug) */
+@end                            // Platform (Debug)
 
 /* Platform.m ends here */
 /*

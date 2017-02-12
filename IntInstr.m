@@ -1,5 +1,5 @@
 /*
- * Interp.m  --- Some title
+ * IntInstr.m  --- Intermediate instruction implementation.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -35,9 +35,12 @@
 #import <stdlib.h>
 #import <unistd.h>
 
-#import "Interp.h"
+#import "IntInstr.h"
 #import "Utils.h"
 
+/*
+ * These MUST be kept in sync with `Opcode' in IntInstr.h!
+ */
 char *op_name[] = {
   "OP_NOP",
   "OP_PUSH",
@@ -304,7 +307,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   return cnt;
 }
 
-@end                            /* IntInstr */
+@end                            // IntInstr
 
 @implementation IntInstr (Debug)
 
@@ -327,9 +330,9 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   }
 }
 
-@end                            /* IntInstr (Debug) */
+@end                            // IntInstr (Debug)
 
-/* Interp.m ends here */
+/* IntInstr.m ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***

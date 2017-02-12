@@ -1,5 +1,5 @@
 /*
- * Boolean.m  --- Some title
+ * Boolean.m  --- Boolean data type implementation.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -134,7 +134,7 @@ const char *falseCStr = "false";
   return NO;
 }
 
-@end                            /* Boolean */
+@end                            // Boolean
 
 @implementation Boolean (Debug)
 
@@ -143,7 +143,7 @@ const char *falseCStr = "false";
   debug_print(indent, "bool = %d\n", _value);
 }
 
-@end                            /* Boolean (Debug) */
+@end                            // Boolean (Debug)
 
 /* Boolean.m ends here */
 /*

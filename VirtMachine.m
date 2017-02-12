@@ -1,5 +1,5 @@
 /*
- * VM.m  --- Some title
+ * VM.m  --- Virtual machine implementation.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -32,62 +32,40 @@
 /* }}} */
 
 #import "VirtMachine.h"
-#import "Interp.h"
 #import "Selector.h"
-
-const size_t MAX_STRINGS = 100;
 
 static
 id
-resolveSymbol(id symb)
+resolveSymbol(id symb, id argSymb)
 {
-  id  result = symb;
-  int type   = -1;
+  register id  result = symb;
+  register id  arg    = argSymb;
+  register int type   = -1;
 
   if ([symb respondsTo:@selector(data)]) {
     result = [symb data];
     type   = [symb type];
+  }
+
+  if (argSymb != nil) {
+    if ([argSymb respondsTo:@selector(data)]) {
+      arg = [argSymb data];
+    }
   }
 
   switch (type) {
     case SymbolObject:
-      return resolveSymbol(result);
+      return resolveSymbol(result, nil);
 
     case SymbolSelector:
       {
         Selector *sel = (Selector *)result;
 
-        result = [sel evaluate];
-      }
-
-    default:
-      return result;
-  }
-}
-
-static
-id
-resolveSymbolWithArg(id symb, id arg)
-{
-  id  result = symb;
-  id  data   = arg;
-  int type   = -1;
-
-  if ([symb respondsTo:@selector(data)]) {
-    result = [symb data];
-    type   = [symb type];
-  }
-
-  if ([arg respondsTo:@selector(data)]) {
-    data = [arg data];
-  }
-
-  switch (type) {
-    case SymbolSelector:
-      {
-        Selector *sel = (Selector *)result;
-
-        result = [sel evaluateWithArg:data];
+        if (argSymb != nil) {
+          result = [sel evaluateWithArg:arg];
+        } else {
+          result = [sel evaluate];
+        }
       }
 
     default:
@@ -154,7 +132,6 @@ resolveSymbolWithArg(id symb, id arg)
   if ((self = [super init]) != nil) {
     _count   = 0;
     _instrs  = [[List alloc] init];
-    _strings = [[List alloc] initCount:MAX_STRINGS];
   }
   
   return self;
@@ -167,10 +144,12 @@ resolveSymbolWithArg(id symb, id arg)
   return [super free];
 }
 
+/* Add an instruction with just an opcode. */
 #define ADD_ISN1(Place, OpCode)                                       \
   [_instrs insertObject:[[Instruction alloc] initWithOpcode:(OpCode)] \
                      at:(Place)]
 
+/* Add an instruction with an opcode and an operand. */
 #define ADD_ISN2(Place, OpCode, Operand)                       \
   [_instrs insertObject:[[Instruction alloc]                   \
                             initWithOpcode:(OpCode)            \
@@ -179,11 +158,11 @@ resolveSymbolWithArg(id symb, id arg)
 
 - (void)read:(IntInstr *)code
 {
-  size_t i         = 0;
-  IntInstr *cinstr = nil;
+  register size_t    i      = 0;
+  register IntInstr *cinstr = nil;
 
-  _count = [code length] + 1;
-  cinstr = code;
+  _count  = [code length] + 1;
+  cinstr  = code;
   _instrs = [[List alloc] initCount:(_count + 1)];
 
   for (i = 0; i < _count; i++) {
@@ -209,16 +188,18 @@ resolveSymbolWithArg(id symb, id arg)
 
 - (void)execute
 {
-  size_t  ip    = 0;
-  size_t  ipc   = 0;
-  Stack  *stack = [[Stack alloc] init];
-  id      i     = nil;
-  id      j     = nil;
+  register size_t  ip    = 0;
+  register size_t  ipc   = 0;
+  register Stack  *stack = [[Stack alloc] init];
+  register id      i     = nil;
+  register id      j     = nil;
+  register int     op    = 0;
 
   while (ip < _count) {
     ipc = 1;
+    op  = [[_instrs objectAt:ip] opcode];
 
-    switch ([[_instrs objectAt:ip] opcode]) {
+    switch (op) {
       case OP_NOP:
         break;
 
@@ -231,7 +212,7 @@ resolveSymbolWithArg(id symb, id arg)
         break;
 
       case OP_PRINT:
-        i = resolveSymbol([stack popObject]);
+        i = resolveSymbol([stack popObject], nil);
         fprintf(stdout, "%s\n", [i stringValue]);
         break;
 
@@ -242,39 +223,32 @@ resolveSymbolWithArg(id symb, id arg)
       case OP_JMPF:
         i = [stack popObject];
 
-        // XXX
         if ([[i data] boolValue] == NO) {
           ipc = [[_instrs objectAt:ip] operand];
         }
         break;
 
+      case OP_NEQ:
       case OP_EQL:
         {
-          Boolean *b = [[Boolean alloc] init];
+          Boolean *b   = [[Boolean alloc] init];
+          BOOL     res = NO;
 
-          i = resolveSymbol([stack popObject]);
-          j = resolveSymbol([stack popObject]);
-          [b setValueFromBool:[i isEqual:j]];
+          i   = resolveSymbol([stack popObject], nil);
+          j   = resolveSymbol([stack popObject], nil);
+          res = [i isEqual:j];
+
+          [b setValueFromBool:(op == OP_EQL)
+                                ? res
+                                : !res];
 
           [stack pushObject:[Symbol newFromBoolean:b]];
         }
         break;
 
-      case OP_NEQ:
-        {
-          Boolean *b = [[Boolean alloc] init];
-
-          i = resolveSymbol([stack popObject]);
-          j = resolveSymbol([stack popObject]);
-          [b setValueFromBool:![i isEqual:j]];
-
-          [stack pushObject:[Symbol newFromBoolean:b]];
-        }
-      break;
-
       case OP_CONCAT:
-        i = resolveSymbol([stack popObject]);
-        j = resolveSymbol([stack popObject]);
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
 
         [stack pushObject:[Symbol newFromString:
                                     [[[String alloc] init]
@@ -283,13 +257,13 @@ resolveSymbolWithArg(id symb, id arg)
 
       case OP_CALL:
         i = (Symbol *)[[_instrs objectAt:ip] operand];
-        [stack pushObject:resolveSymbol(i)];
+        [stack pushObject:resolveSymbol(i, nil)];
         break;
 
       case OP_CALLA:
-        i = resolveSymbol([stack popObject]);
+        i = resolveSymbol([stack popObject], nil);
         j = (Symbol *)[[_instrs objectAt:ip] operand];
-        [stack pushObject:resolveSymbolWithArg(j, i)];
+        [stack pushObject:resolveSymbol(j, i)];
         break;
 
       case OP_BLN2STR:
@@ -305,12 +279,6 @@ resolveSymbolWithArg(id symb, id arg)
 
 - (void)reset
 {
-  if (_strings) {
-    [_strings freeObjects];
-    [_strings free];
-    _strings = nil;
-  }
-
   if (_instrs) {
     [_instrs freeObjects];
     [_instrs free];

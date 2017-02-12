@@ -1,7 +1,7 @@
 /*
  * String.m  --- String implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2015 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -56,9 +56,7 @@
 
 @implementation String
 
-/*
- * Initialise a string with no value.
- */
+
 - (id)init
 {
   if ((self = [super init]) != nil) {
@@ -73,19 +71,12 @@
   return self;
 }
 
-/*
- * Initialise a string with a given capacity and no value.
- */
 - (id)initWithCapacity:(size_t)capacity
 {
   return [self initWithCapacity:capacity
                        fromZone:[self zone]];
 }
 
-/*
- * Initialise a string with a given capacity from the given memory
- * zone and no value.
- */
 - (id)initWithCapacity:(size_t)capacity
               fromZone:(NXZone *)zone
 {
@@ -99,9 +90,6 @@
   return self;
 }
 
-/*
- * Initialise a string with a given C string value.
- */
 - (id)initWithString:(const char *)string
 {
   [self init];
@@ -113,9 +101,6 @@
   return self;
 }
 
-/*
- * Initialise a string with a given value from a format string.
- */
 - (id)initFromFormat:(const char *)fmt, ...
 {
   va_list  ap;
@@ -133,18 +118,12 @@
   return self;
 }
 
-/*
- * Allocate a buffer of a given size.
- */
 - (id)allocateBuffer:(size_t)size
 {
   return [self allocateBuffer:size
                      fromZone:[self zone]];
 }
 
-/*
- * Allocate a buffer of a given size from the given memory zone.
- */
 - (id)allocateBuffer:(size_t)size
             fromZone:(NXZone *)zone
 {
@@ -166,9 +145,6 @@
   return self;
 }
 
-/*
- * Make a copy of a string into this string's buffer.
- */
 - (char *)getCopyInto:(char *)buf
 {
   if (!buf) {
@@ -180,9 +156,6 @@
   return buf;
 }
 
-/*
- * Free a string's value.
- */
 - (id)freeString
 {
   if (_buffer) {
@@ -196,9 +169,6 @@
   return self;
 }
 
-/*
- * Free a string.
- */
 - (id)free
 {
   [self freeString];
@@ -206,47 +176,31 @@
   return [super free];
 }
 
-/*
- * Is the string empty?
- */
 - (BOOL)isEmpty
 {
   return _length > 0 ? NO : YES;
 }
 
-/*
- * Returns the character at a given index.
- *
- * If the index is out of bounds, then the null character is returned.
- */
-- (char)charAt:(int)index
+- (char)charAt:(size_t)index
 {
-  if ((index < 0) || (index > _length - 1)) {
+  if (index > _length - 1) {
     return '\0';
   }
 
   return (char)_buffer[index];
 }
 
-/*
- * Count the number of the given character in the string.
- *
- * This method is case sensitive.
- */
 - (size_t)numOfChar:(char)aChar
 {
   return [self numOfChar:aChar
            caseSensitive:YES];
 }
 
-/*
- * Count the number of the given character in the string.
- */
 - (size_t)numOfChar:(char)aChar
       caseSensitive:(BOOL)sense
 {
-  size_t idx = 0;
-  size_t cnt = 0;
+  register size_t idx = 0;
+  register size_t cnt = 0;
 
   if (sense) {
     for (idx = 0; idx < _length; idx++) {
@@ -265,26 +219,18 @@
   return cnt;
 }
 
-/*
- * Count the number of given characters in the string.
- *
- * This method is case sensitive.
- */
 - (size_t)numOfChars:(const char *)aString
 {
   return [self numOfChars:aString
             caseSensitive:YES];
 }
 
-/*
- * Count the number of given characters in the string.
- */
 - (size_t)numOfChars:(const char *)aString
        caseSensitive:(BOOL)sense
 {
-  size_t idx    = 0;
-  size_t cnt    = 0;
-  id     tmpStr = nil;
+  register size_t idx    = 0;
+  register size_t cnt    = 0;
+  id              tmpStr = nil;
 
   if (!aString) {
     return 0;
@@ -302,17 +248,11 @@
   return cnt;
 }
 
-/*
- * Returns the length of the string.
- */
 - (size_t)length
 {
   return _length;
 }
 
-/*
- * Recalculates and returns the length of the string.
- */
 - (size_t)recalcLength
 {
   if (_buffer) {
@@ -324,12 +264,6 @@
   return _length;
 }
 
-/*
- * Fixes the length of the string.
- *
- * This is designed to be used after a string manipulation that changes
- * the bytes in the string's buffer.
- */
 - (id)fixStringLength
 {
   char *tmp = NULL;
@@ -348,9 +282,6 @@
   return self;
 }
 
-/*
- * Fixes the length of the string, starting at the given offset.
- */
 - (id)fixStringLengthAt:(size_t)index
 {
   if (!_buffer) {
@@ -369,9 +300,6 @@
   return self;
 }
 
-/*
- * Sets the string's capacity to the given value.
- */
 - (id)setCapacity:(size_t)capacity
 {
   char *tmp = NULL;
@@ -392,27 +320,17 @@
   return self;
 }
 
-/*
- * Returns the string's capacity.
- */
 - (size_t)capacity
 {
   return _capacity;
 }
 
-/*
- * Sets the string's value to the given C string.
- */
 - (void)setStringValue:(const char *)string
 {
   [self setStringValue:string
               fromZone:[self zone]];
 }
 
-/*
- * Sets the string's value to the given C string, with the resulting
- * string being stored in the given memory zone.
- */
 - (void)setStringValue:(const char *)string
               fromZone:(NXZone *)zone
 {
@@ -430,25 +348,16 @@
   _length = len;
 }
 
-/*
- * Reeturns the string's value.
- */
 - (const char *)stringValue
 {
   return _buffer;
 }
 
-/*
- * Returns the string's unique value.
- */
 - (NXAtom)uniqueStringValue
 {
   return NXUniqueString(_buffer);
 }
 
-/*
- * Returns the string's value as an integer.
- */
 - (int)intValue
 {
   if (!_buffer) {
@@ -458,9 +367,6 @@
   return atoi(_buffer);
 }
 
-/*
- * Is the string equal to another object?
- */
 - (BOOL)isEqual:(id)anObject
 {
   if (anObject == self) {
@@ -476,17 +382,12 @@
   return NO;
 }
 
-/*
- * Compute the string's hash value.
- */
 - (unsigned int)hash
 {
   return NXStrHash(NULL, _buffer);
 }
 
 /*
- * Returns the location of the first occurrence of the given character.
- *
  * This method is case sensitive.
  */
 - (int)spotOf:(char)aChar
@@ -496,9 +397,6 @@
         caseSensitive:YES];
 }
 
-/*
- * Returns the location of the first occurrence of the given character.
- */
 - (int)spotOf:(char)aChar
 caseSensitive:(BOOL)sense
 {
@@ -507,16 +405,12 @@ caseSensitive:(BOOL)sense
         caseSensitive:YES];
 }
 
-/*
- * Returns the location of the next occurrence of the given character
- * after the given occurence.
- */
 - (int)spotOf:(char)aChar
    occurrence:(int)occurrence
 caseSensitive:(BOOL)sense
 {
-  int cur = -1;
-  int cnt = 0;
+  register int cur = -1;
+  register int cnt = 0;
 
   if (occurrence < 0) {
     return -1;
@@ -543,13 +437,10 @@ caseSensitive:(BOOL)sense
   return cnt - 1;
 }
 
-/*
- * Converts the string to lower case.
- */
 - (id)toLower
 {
   if (_buffer) {
-    size_t i = 0;
+    register size_t i = 0;
 
     for (i = 0; i < _length; i++) {
       _buffer[i] = NXToLower(_buffer[i]);
@@ -559,13 +450,10 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-/*
- * Converts the string to upper case.
- */
 - (id)toUpper
 {
   if (_buffer) {
-    size_t i = 0;
+    register size_t i = 0;
 
     for (i = 0; i < _length; i++) {
       _buffer[i] = NXToUpper(_buffer[i]);
@@ -635,9 +523,6 @@ caseSensitive:(BOOL)sense
   return [self right:count fromZone:[self zone]];
 }
 
-/*
- * Concatenate a string.
- */
 - (id)cat:(const char *)aString
 {
   if (!aString) {
@@ -649,9 +534,6 @@ caseSensitive:(BOOL)sense
           fromZone:[self zone]];
 }
 
-/*
- * Concatenate a string of a given length.
- */
 - (id)cat:(const char *)aString
    length:(size_t)n
 {
@@ -660,10 +542,6 @@ caseSensitive:(BOOL)sense
           fromZone:[self zone]];
 }
 
-
-/*
- * Concatenate a string of a given length from a given memory zone.
- */
 - (id)cat:(const char *)aString
    length:(size_t)n
  fromZone:(NXZone *)zone
@@ -719,7 +597,7 @@ caseSensitive:(BOOL)sense
 }
 
 /*
- * Concatenate a list of strings.
+ * MUST terminate a list of strings with nil.
  */
 - (id)concatenate:(id)strings, ...
 {
@@ -745,9 +623,6 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-/*
- * Insert a string at a given position.
- */
 - (id)insert:(const char *)aString
           at:(size_t)index
 {
@@ -777,9 +652,6 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-/*
- * Insert a stringable thing at a given position.
- */
 - (id)insertString:(id)sender
                 at:(size_t)index
 {
@@ -790,25 +662,16 @@ caseSensitive:(BOOL)sense
   return [self insert:[sender stringValue] at:index];
 }
 
-/*
- * Insert a string.
- */
 - (id)insert:(const char *)aString
 {
   return [self insert:aString at:0];
 }
 
-/*
- * Insert a stringable thing.
- */
 - (id)insertString:(id)sender
 {
   return [self insertString:sender at:0];
 }
 
-/*
- * Insert a string with a format specifier.
- */
 - (id)insertFromFormat:(const char *)format, ...
 {
   va_list args;
@@ -822,9 +685,6 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-/*
- * Insert a string at a given position using varargs.
- */
 - (id)insertAt:(size_t)index
     fromFormat:(const char *)format, ...
 {
@@ -839,9 +699,6 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-/*
- * Insert a string at a position with computed varargs.
- */
 - (id)insertAt:(size_t)index
     fromFormat:(const char *)format
      arguments:(va_list)args
@@ -858,7 +715,7 @@ caseSensitive:(BOOL)sense
   return self;
 }
 
-@end /* String */
+@end                            //* String
 
 @implementation String (Debug)
 
@@ -876,7 +733,7 @@ caseSensitive:(BOOL)sense
   debug_print(indent, "allocated = %d\n", _capacity);
 }
 
-@end /* String (Debug) */
+@end                            //* String (Debug)
 
 /* String.m ends here */
 /*

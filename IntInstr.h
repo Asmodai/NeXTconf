@@ -1,5 +1,5 @@
 /*
- * Interp.h  --- Some title
+ * IntInstr.h  --- Intermediate instruction interface.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -101,7 +101,7 @@ typedef enum {
 - (void)number:(size_t)origin;
 - (size_t)length;
 
-@end /* IntInstr */
+@end                            // IntInstr
 
 @interface IntInstr (Debug)
 
@@ -110,9 +110,9 @@ typedef enum {
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* IntInstr (Debug) */
+@end                            // IntInstr (Debug)
 
-/* Interp.h ends here */
+/* IntInstr.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

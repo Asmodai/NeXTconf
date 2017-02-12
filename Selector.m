@@ -1,5 +1,5 @@
 /*
- * Selector.m  --- Some title
+ * Selector.m  --- Selector data type implementation.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -43,9 +43,6 @@
 
 @implementation Selector
 
-/*
- * Initialise a new instance.
- */
 - (id)init
 {
   return [self initWithMethod:NULL
@@ -53,8 +50,6 @@
 }
 
 /*
- * Initialise a new instance with a class and method.
- *
  * This builds a selector using gnarly low-level stuff that might not
  * be portable across Objective-C implementations.
  */
@@ -74,9 +69,6 @@
   return self;
 }
 
-/*
- * Free the instance.
- */
 - (id)free
 {
   [_method free];
@@ -89,9 +81,6 @@
   return [super free];
 }
 
-/*
- * Get the selector.
- */
 - (SEL)selector
 {
   return _selector;
@@ -158,7 +147,7 @@
 }
 
 
-@end /* Selector */
+@end                            // Selector
 
 @implementation Selector (Debug)
 
@@ -172,7 +161,7 @@
   }
 }
 
-@end /* Selector (Debug) */
+@end                            // Selector (Debug)
 
 
 /* Selector.m ends here */

@@ -1,7 +1,7 @@
 /*
  * SymbolTable.m  --- Symbol table implementation.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -41,9 +41,6 @@
 
 @implementation SymbolTable
 
-/*
- * Initialise a symbol table.
- */
 - (id)init
 {
   if ((self = [super init]) != nil) {
@@ -55,12 +52,8 @@
   return self;
 }
 
-/*
- * Free a symbol table.
- */
 - (id)free
 {
-  /* Free any objects if they exist. */
   if (_tbl) {
     [_tbl freeObjects];
     [_tbl free];
@@ -70,36 +63,21 @@
   return [super free];
 }
 
-/*
- * Returns the number of items inside the symbol table.
- */
 - (size_t)count
 {
   return (size_t)[_tbl count];
 }
 
-/*
- * Is the given symbol name a symbol that is present in the
- * symbol table?
- */
 - (BOOL)isSymbol:(const char *)symbol
 {
   return [_tbl isKey:symbol];
 }
 
-/*
- * Returns any value for the given symbol name.
- */
 - (Symbol *)valueForSymbol:(const char *)symbol
 {
   return (Symbol *)[_tbl valueForKey:symbol];
 }
 
-/*
- * Insert a symbol into the symbol table.
- *
- * If the symbol already exists, then the value is updated.
- */
 - (Symbol *)insertSymbol:(Symbol *)value
 {
   Symbol *exists = nil;
@@ -113,21 +91,15 @@
                              value:value];
 }
 
-/*
- * Remove a symbol from the symbol table.
- */
 - (Symbol *)removeSymbol:(const char *)symbol
 {
   return (Symbol *)[_tbl removeKey:symbol];
 }
 
-@end /* SymbolTable */
+@end                            // SymbolTable
 
 @implementation SymbolTable (Debug)
 
-/*
- * Print debugging information.
- */
 - (void)_printDebugInfo:(int)indent
 {
   const char  *key   = NULL;
@@ -154,7 +126,7 @@
   }
 }
 
-@end /* SymbolTable (Debug) */
+@end                            // SymbolTable (Debug)
 
 /* SymbolTable.m ends here */
 /*

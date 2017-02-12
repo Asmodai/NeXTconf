@@ -1,7 +1,7 @@
 /*
- * String.h  --- String.
+ * String.h  --- String data type interface.
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -95,7 +95,7 @@
 /*
  * Character methods.
  */
-- (char)charAt:(int)index;
+- (char)charAt:(size_t)index;
 - (size_t)numOfChar:(char)aChar;
 - (size_t)numOfChar:(char)aChar
       caseSensitive:(BOOL)sense;
@@ -182,7 +182,7 @@ caseSensitive:(BOOL)sense;
  */
 - (unsigned int)hash;
 
-@end /* String */
+@end                            // String
 
 @interface String (Debug)
 
@@ -191,7 +191,7 @@ caseSensitive:(BOOL)sense;
  */
 - (void)_printDebugInfo:(int)indent;
 
-@end /* String (Debug) */
+@end                            // String (Debug)
 
 /* String.h ends here */
 /*
