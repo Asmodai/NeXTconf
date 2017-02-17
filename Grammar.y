@@ -37,9 +37,10 @@
 #import "Symbol.h"
 #import "Selector.h"
 #import "SymbolTable.h"
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "SyntaxTree.h"
 #import "Lexer.h"
+#import "Utils.h"
 
 extern SymbolTable *root_symtab;
 extern SyntaxTree  *root_syntree;
@@ -160,6 +161,7 @@ const char *make_immediate_name(void);
 %token EQUAL
 %token NEQUAL
 %token CONCAT
+%token LOGICAL_AND LOGICAL_OR LOGICAL_XOR LOGICAL_NOT
 %token END_STMT OPEN_PAR CLOSE_PAR
 %token OPEN_METH CLOSE_METH METH_ARG
 %token BEGIN_CS END_CS
@@ -172,6 +174,7 @@ const char *make_immediate_name(void);
 %type <tnode>  if_statement compound_statement
 %type <tnode>  for_statement expr equal_expr assign_expr
 %type <tnode>  concat_expr simple_expr method_call
+%type <tnode>  logical_and_expr logical_or_expr logical_xor_expr
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -241,7 +244,28 @@ assign_expr
 
 concat_expr
    : concat_expr CONCAT simple_expr { $$ = CTREE2(ConcatExpr, $1, $3);         }
-   | simple_expr                    { $$ = $1;                                 }
+   | logical_and_expr               { $$ = $1;                                 }
+   ;
+
+logical_and_expr
+   : logical_or_expr                { $$ = $1; }
+   | logical_and_expr LOGICAL_AND logical_or_expr {
+       $$ = CTREE2(LogicalAndExpr, $1, $3);
+     }
+   ;
+
+logical_or_expr
+   : logical_xor_expr               { $$ = $1; }
+   | logical_or_expr LOGICAL_OR logical_xor_expr {
+       $$ = CTREE2(LogicalOrExpr, $1, $3);
+     }
+   ;
+
+logical_xor_expr
+   : simple_expr                    { $$ = $1; }
+   | logical_xor_expr LOGICAL_XOR simple_expr {
+       $$ = CTREE2(LogicalXorExpr, $1, $3);
+     }
    ;
 
 simple_expr
@@ -353,11 +377,7 @@ make_symbol_name(void)
 
   sprintf(num, "%d", ++count);
 
-  name = malloc(10 * sizeof *name);
-  if (name == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
+  name = xmalloc(10 * sizeof *name);
 
   strcpy((char *)name, "strconst");
   strcat((char *)name, num);
@@ -377,11 +397,7 @@ make_immediate_name(void)
 
   sprintf(num, "%d", ++count);
 
-  name = malloc(10 * sizeof *name);
-  if (name == NULL) {
-    perror("malloc");
-    exit(EXIT_FAILURE);
-  }
+  name = xmalloc(10 * sizeof *name);
 
   strcpy((char *)name, "immedval");
   strcat((char *)name, num);

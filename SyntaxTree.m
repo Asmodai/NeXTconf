@@ -60,6 +60,9 @@ const char *node_types[] = {
   "Not Equals",
   "Assign",
   "Concatenate",
+  "Logical AND",
+  "Logical OR",
+  "Logical XOR",
   "Identifier",
   "Integer constant",
   "String constant",
@@ -94,6 +97,10 @@ const int children_per_node[] = {
   2,                            // Not-Equals
   1,                            // Assign
   2,                            // Concatenate
+  2,                            // Logical AND
+  2,                            // Logical OR
+  2,                            // Logical XOR
+  2,                            // Logical NOT
   0,                            // Identifier
   0,                            // Integer constant
   0,                            // String constant
@@ -289,6 +296,9 @@ const int children_per_node[] = {
       _retType = ReturnNumber;
       break;
 
+    case LogicalAndExpr:
+    case LogicalOrExpr:
+    case LogicalXorExpr:
     case BooleanExpr:
       _retType = ReturnBool;
       break;
@@ -308,6 +318,16 @@ const int children_per_node[] = {
     case IfThenElseStmt:
       if ([[_children objectAt:0] returnType] != ReturnBool) {
         fprintf(stderr, "if: Condition should be boolean.\n");
+      }
+      break;
+
+    case LogicalAndExpr:
+    case LogicalOrExpr:
+    case LogicalXorExpr:
+      if (([[_children objectAt:0] returnType] != ReturnBool) &&
+          ([[_children objectAt:1] returnType] != ReturnBool))
+      {
+        fprintf(stderr, "Logic operator: Both arguments should be boolean.\n");
       }
       break;
 

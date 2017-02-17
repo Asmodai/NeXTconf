@@ -176,6 +176,9 @@ resolveSymbol(id symb, id argSymb)
       case OP_EQL:     ADD_ISN1(i, OP_EQL);                              break;
       case OP_NEQ:     ADD_ISN1(i, OP_NEQ);                              break;
       case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
+      case OP_LAND:    ADD_ISN1(i, OP_LAND);                             break;
+      case OP_LOR:     ADD_ISN1(i, OP_LOR);                              break;
+      case OP_LXOR:    ADD_ISN1(i, OP_LXOR);                             break;
       case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
       case OP_CALLA:   ADD_ISN2(i, OP_CALLA, [cinstr symbol]);           break;
       case OP_BLN2STR: ADD_ISN1(i, OP_BLN2STR);                          break;
@@ -193,6 +196,8 @@ resolveSymbol(id symb, id argSymb)
   register Stack  *stack = [[Stack alloc] init];
   register id      i     = nil;
   register id      j     = nil;
+  register id      k     = nil;
+  register BOOL    b     = NO;
   register int     op    = 0;
 
   while (ip < _count) {
@@ -230,29 +235,47 @@ resolveSymbol(id symb, id argSymb)
 
       case OP_NEQ:
       case OP_EQL:
-        {
-          register Boolean *b   = [[Boolean alloc] init];
-          register BOOL     res = NO;
-
-          i   = resolveSymbol([stack popObject], nil);
-          j   = resolveSymbol([stack popObject], nil);
-          res = [i isEqual:j];
-
-          [b setValueFromBool:(op == OP_EQL)
-                                ? res
-                                : !res];
-
-          [stack pushObject:[Symbol newFromBoolean:b]];
-        }
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        k = [[Boolean alloc] init];
+        b = [i isEqual:j];
+        [k setValueFromBool:(op == OP_EQL) ? b : !b];
+        [stack pushObject:[Symbol newFromBoolean:k]];
         break;
 
       case OP_CONCAT:
         i = resolveSymbol([stack popObject], nil);
         j = resolveSymbol([stack popObject], nil);
-
         [stack pushObject:[Symbol newFromString:
                                     [[[String alloc] init]
                                       concatenate:j, i, nil]]];
+        break;
+
+      case OP_LAND:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        k = [[Boolean alloc] init];
+        b = [i boolValue] && [j boolValue];
+        [k setValueFromBool:b];
+        [stack pushObject:[Symbol newFromBoolean:k]];
+        break;
+
+      case OP_LOR:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        k = [[Boolean alloc] init];
+        b = [i boolValue] || [j boolValue];
+        [k setValueFromBool:b];
+        [stack pushObject:[Symbol newFromBoolean:k]];
+        break;
+
+      case OP_LXOR:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        k = [[Boolean alloc] init];
+        b = !([i boolValue]) != !([j boolValue]);
+        [k setValueFromBool:b];
+        [stack pushObject:[Symbol newFromBoolean:k]];
         break;
 
       case OP_CALL:

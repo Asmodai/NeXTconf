@@ -50,6 +50,10 @@ char *op_name[] = {
   "OP_JMPF",
   "OP_EQL",
   "OP_NEQ",
+  "OP_LAND",
+  "OP_LOR",
+  "OP_LXOR",
+  "OP_LNOT",
   "OP_CONCAT",
   "OP_CALL",
   "OP_CALLA",
@@ -181,6 +185,24 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       blk2 = [IntInstr generate:[root childAtIndex:1]];
       concatenate(blk1, blk2);
       return concatenate(blk1, [[IntInstr alloc] initWithOpcode:OP_CONCAT]);
+
+    case LogicalAndExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LAND]);
+      return concatenate(blk1, blk2);
+
+    case LogicalOrExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LOR]);
+      return concatenate(blk1, blk2);
+
+    case LogicalXorExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LXOR]);
+      return concatenate(blk1, blk2);
 
     case IdentExpr:
     case IntegerExpr:

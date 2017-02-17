@@ -77,6 +77,9 @@ END_STMT  ;
 "for"      { return FOR;                                              }
 "in"       { return IN;                                               }
 "print"    { return PRINT;                                            }
+"or"       { return LOGICAL_OR;                                       }
+"xor"      { return LOGICAL_XOR;                                      }
+"and"      { return LOGICAL_AND;                                      }
 "="        { return ASSIGN;                                           }
 "=="       { return EQUAL;                                            }
 "!="       { return NEQUAL;                                           }
