@@ -39,6 +39,9 @@
 {
 }
 
+/*
+ * Initialisation and destruction.
+ */
 - (id)init;
 - (id)free;
 
@@ -46,6 +49,9 @@
 
 @interface Property (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // Property (Debug)

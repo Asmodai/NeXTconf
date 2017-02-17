@@ -49,7 +49,7 @@
 #import "Lexer.h"
 #import "Parse.h"
 
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "Architecture.h"
 #import "Platform.h"
 
@@ -141,22 +141,22 @@ main(int argc, char **argv)
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  //[root_syntree printDebug:"Parsed tokens"];
+  [root_syntree printDebug:"Parsed tokens"];
   //putchar('\n');
-  //printf("\n\n\n");
+  printf("\n\n\n");
 
   code = [IntInstr generate:root_syntree];
   [code number:1];
 
-  //[code printDebug:"Intermediate code"];
-  //printf("\n");
+  [code printDebug:"Intermediate code"];
+  printf("\n\n\n");
 
   [vm reset];
   [vm read:code];
   [vm execute];
 
   //printf("\n\n");
-  //[[Manager sharedInstance] printDebug:"Object manager"];
+  //[Property[Manager sharedInstance] printDebug:"Object manager"];
 
   /*
   printf("\n\n");

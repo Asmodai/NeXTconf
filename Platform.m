@@ -41,7 +41,7 @@
 #include <mach/mach_host.h>
 #include <mach/mach_error.h>
 
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "Platform.h"
 #import "Utils.h"
 #import "snprintf.h"
@@ -282,12 +282,12 @@ get_os_version(void)
       _OpenStep = [[Boolean alloc] initWithBool:NO];
     }
 
-    MANAGER_ADD_METHOD("majorVersion");
-    MANAGER_ADD_METHOD("minorVersion");
-    MANAGER_ADD_METHOD("versionString");
-    MANAGER_ADD_METHOD("product");
-    MANAGER_ADD_METHOD("platform");
-    MANAGER_ADD_METHOD("isOpenStep");
+    ADD_PROPERTY_METHOD("majorVersion");
+    ADD_PROPERTY_METHOD("minorVersion");
+    ADD_PROPERTY_METHOD("versionString");
+    ADD_PROPERTY_METHOD("product");
+    ADD_PROPERTY_METHOD("platform");
+    ADD_PROPERTY_METHOD("isOpenStep");
   } 
 
   return self;

@@ -1,5 +1,5 @@
 /*
- * Manager.h  --- Instance manager interface.
+ * PropertyManager.h  --- Property manager interface.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
@@ -38,12 +38,12 @@
 
 #import "String.h"
 
-#define MANAGER_ADD_METHOD(__m)                      \
-  [[Manager sharedInstance]                          \
+#define ADD_PROPERTY_METHOD(__m)                     \
+  [[PropertyManager sharedInstance]                  \
      addMethod:[[String alloc] initWithString:(__m)] \
       forClass:[self class]]
 
-@interface Manager : Object
+@interface PropertyManager : Object
 {
   HashTable *_instances;        // Hash of instances.
   HashTable *_methods;          // Hash of method calls.
@@ -87,15 +87,18 @@
  */
 - (id)findInstance:(String *)aClass;
 
-@end                            // Manager
+@end                            // PropertyManager
 
-@interface Manager (Debug)
+@interface PropertyManager (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
-@end                            // Manager (Debug)
+@end                            // PropertyManager (Debug)
 
-/* Manager.h ends here */
+/* PropertyManager.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

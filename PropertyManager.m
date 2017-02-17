@@ -1,5 +1,5 @@
 /*
- * Manager.m  --- Instance manager implementation.
+ * PropertyManager.m  --- Property manager implementation.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
@@ -31,15 +31,15 @@
  */
 /* }}} */
 
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "Utils.h"
 #import "List+Debug.h"
 
-@implementation Manager
+@implementation PropertyManager
 
 + (id)sharedInstance
 {
-  static Manager *instance = nil;
+  static PropertyManager *instance = nil;
 
   if (instance == nil) {
     instance = [[self alloc] _initFromShared_];
@@ -50,7 +50,7 @@
 
 - (id)init
 {
-  [Object error:"Please do not call Manager's init method directly."];
+  [Object error:"Please do not call PropertyManager's init method directly."];
 
   return nil;
 }
@@ -156,9 +156,9 @@
   return [_instances valueForKey:[aClass stringValue]];
 }
 
-@end                            // Manager
+@end                            // PropertyManager
 
-@implementation Manager (Debug)
+@implementation PropertyManager (Debug)
 
 - (void)_printDebugInfo:(int)indent
 {
@@ -210,9 +210,9 @@
   }
 }
 
-@end                            // Manager (Debug)
+@end                            // PropertyManager (Debug)
 
-/* Manager.m ends here */
+/* PropertyManager.m ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***

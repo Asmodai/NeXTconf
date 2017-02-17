@@ -43,7 +43,7 @@
 #import <mach/mach_host.h>
 #import <mach/mach_error.h>
 
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "Architecture.h"
 #import "Utils.h"
 #import "snprintf.h"
@@ -134,14 +134,14 @@ detect_hardware(String *machine, String *processor)
                                                    ? YES
                                                    : NO)];
     
-    MANAGER_ADD_METHOD("currentArchitecture");
-    MANAGER_ADD_METHOD("currentProcessor");
-    MANAGER_ADD_METHOD("isDeveloperInstalled");
-    MANAGER_ADD_METHOD("hasM68K");
-    MANAGER_ADD_METHOD("hasIX86");
-    MANAGER_ADD_METHOD("hasSPARC");
-    MANAGER_ADD_METHOD("hasHPPA");
-    MANAGER_ADD_METHOD("hasPPC");
+    ADD_PROPERTY_METHOD("currentArchitecture");
+    ADD_PROPERTY_METHOD("currentProcessor");
+    ADD_PROPERTY_METHOD("isDeveloperInstalled");
+    ADD_PROPERTY_METHOD("hasM68K");
+    ADD_PROPERTY_METHOD("hasIX86");
+    ADD_PROPERTY_METHOD("hasSPARC");
+    ADD_PROPERTY_METHOD("hasHPPA");
+    ADD_PROPERTY_METHOD("hasPPC");
   }
 
   return self;

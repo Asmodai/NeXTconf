@@ -32,7 +32,7 @@
 /* }}} */
 
 #import "Selector.h"
-#import "Manager.h"
+#import "PropertyManager.h"
 #import "Utils.h"
 #import "snprintf.h"
 
@@ -114,10 +114,10 @@
 {
   id class = nil;
 
-  if ([[Manager sharedInstance] haveMethod:_method
-                                  forClass:_class])
+  if ([[PropertyManager sharedInstance] haveMethod:_method
+                                        forClass:_class])
   {
-    class = [[Manager sharedInstance] findInstance:_class];
+    class = [[PropertyManager sharedInstance] findInstance:_class];
 
     if (class == nil) {
       fprintf(stderr,

@@ -33,14 +33,14 @@
 
 #import "Property.h"
 #import "Utils.h"
-#import "Manager.h"
+#import "PropertyManager.h"
 
 @implementation Property
 
 - (id)init
 {
   if ((self = [super init]) != nil) {
-    [[Manager sharedInstance] addInstance:self];
+    [[PropertyManager sharedInstance] addInstance:self];
   }
 
   return self;
@@ -48,7 +48,7 @@
 
 - (id)free
 {
-  [[Manager sharedInstance] removeInstance:self];
+  [[PropertyManager sharedInstance] removeInstance:self];
 
   return [super free];
 }
