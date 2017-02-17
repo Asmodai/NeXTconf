@@ -53,7 +53,6 @@ char *op_name[] = {
   "OP_LAND",
   "OP_LOR",
   "OP_LXOR",
-  "OP_LNOT",
   "OP_CONCAT",
   "OP_CALL",
   "OP_CALLA",
