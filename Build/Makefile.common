@@ -9,13 +9,13 @@ PROJECT_TYPE = Tool
 LANGUAGE = English
 
 HFILES = Architecture.h    \
-	 Lexer.h           \
+	 Scanner.h         \
 	 List+Debug.h      \
 	 PropertyManager.h \
 	 Number.h          \
 	 Boolean.h         \
 	 Object+Debug.h    \
-	 Parse.h           \
+	 Parser.h          \
 	 Platform.h        \
 	 Pointer.h         \
 	 Selector.h        \
@@ -36,14 +36,14 @@ CFILES = Utils.c   \
 	 snprintf.c
 
 CLASSES = Architecture.m    \
-	  Lexer.m           \
+	  Scanner.m         \
 	  List+Debug.m      \
 	  Main.m            \
 	  PropertyManager.m \
 	  Number.m          \
 	  Boolean.m         \
 	  Object+Debug.m    \
-	  Parse.m           \
+	  Parser.m          \
 	  Platform.m        \
 	  Pointer.m         \
 	  Selector.m        \

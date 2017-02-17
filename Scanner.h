@@ -1,5 +1,5 @@
 /*
- * Lexer.h  --- Lex header.
+ * Scanner.h  --- Lex header.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
@@ -31,8 +31,8 @@
  */
 /* }}} */
 
-#ifndef _LEXER_H_
-#define _LEXER_H_
+#ifndef _SCANNER_H_
+#define _SCANNER_H_
 
 #import <stdio.h>
 
@@ -41,13 +41,17 @@ int lineno = 1;
 #else
 extern int   lineno;
 extern FILE *yyin;
-
-int yylex(void);
 #endif
 
-#endif /* !_LEXER_H_ */
+#ifndef YYLTYPE
+# define YYLTYPE yyltype
+#endif
 
-/* Lexer.h ends here */
+#define YY_DECL      int yylex(YYSTYPE *yylval)
+
+#endif /* !_SCANNER_H_ */
+
+/* Scanner.h ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***

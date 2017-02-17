@@ -37,7 +37,7 @@
 #import <libc.h>
 #import <errno.h>
 
-#include <sys/types.h>
+#import <sys/types.h>
 
 #import "Symbol.h"
 #import "SymbolTable.h"
@@ -46,8 +46,8 @@
 #import "VirtMachine.h"
 #import "Version.h"
 
-#import "Lexer.h"
-#import "Parse.h"
+#import "Scanner.h"
+#import "Parser.h"
 
 #import "PropertyManager.h"
 #import "Architecture.h"
@@ -55,7 +55,7 @@
 
 #import "Utils.h"
 
-extern int yyparse(void);
+extern int yyparse(void *);
 
 SymbolTable *root_symtab;
 SyntaxTree  *root_syntree;
@@ -74,28 +74,37 @@ usage(void)
 int
 main(int argc, char **argv)
 {
-  int             ch    = 0;
-  char           *fname = NULL;
-  IntInstr       *code  = nil;
-  Platform       *plat  = nil;
-  Architecture   *arch  = nil;
-  VirtualMachine *vm    = nil;
+  int             ch      = 0;
+  char           *fname   = NULL;
+  IntInstr       *code    = nil;
+  Platform       *plat    = nil;
+  Architecture   *arch    = nil;
+  VirtualMachine *vm      = nil;
+  SyntaxTree     *syntree = nil;
+  BOOL            cFlag   = NO;
 
   extern int   optind;
   extern char *optarg;
+  extern int   yydebug;
 
   root_symtab  = [[SymbolTable alloc] init];
   root_syntree = [[SyntaxTree alloc] init];
   
-  plat = [[Platform alloc] init];
-  arch = [[Architecture alloc] init];
-  vm   = [[VirtualMachine alloc] init];
+  //syntree = [[SyntaxTree alloc] init];  
+  plat    = [[Platform alloc] init];
+  arch    = [[Architecture alloc] init];
+  vm      = [[VirtualMachine alloc] init];
 
   progname = argv[0];
   yyin     = NULL;
+  //yydebug  = 1;
 
-  while ((ch = getopt(argc, argv, "ivhf:")) != EOF) {
+  while ((ch = getopt(argc, argv, "civhf:")) != EOF) {
     switch (ch) {
+      case 'c':
+        cFlag = YES;
+        break;
+
       case 'v':
         [Version print];
         break;
@@ -131,8 +140,7 @@ main(int argc, char **argv)
     yyin = stdin;
   }
 
-  yyparse();
-
+  yyparse(root_syntree);
   if (errors > 0) {
     error_summary();
     exit(EXIT_FAILURE);
@@ -141,15 +149,18 @@ main(int argc, char **argv)
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  [root_syntree printDebug:"Parsed tokens"];
+  //[root_syntree printDebug:"Parsed tokens"];
   //putchar('\n');
-  printf("\n\n\n");
+  //printf("\n\n\n");
 
   code = [IntInstr generate:root_syntree];
   [code number:1];
 
-  [code printDebug:"Intermediate code"];
-  printf("\n\n\n");
+  if (cFlag) {
+    [code printDebug:"Intermediate code"];
+    printf("\n");
+  }
+
 
   [vm reset];
   [vm read:code];

@@ -39,13 +39,13 @@ YACC_BIN=/usr/local/bin/bison
 
 OBJC_MODE=1
 
-LEX_INPUT=Grammar.l
-LEX_OUTPUT=Lexer.c
-OBJC_LEX_OUTPUT=Lexer.m
+LEX_INPUT=Scanner.l
+LEX_OUTPUT=Scanner.c
+OBJC_LEX_OUTPUT=Scanner.m
 
-YACC_INPUT=Grammar.y
-YACC_OUTPUT=Parse.c
-OBJC_YACC_OUTPUT=Parse.m
+YACC_INPUT=Parser.y
+YACC_OUTPUT=Parser.c
+OBJC_YACC_OUTPUT=Parser.m
 
 # Generate lexer.
 $LEX_BIN -o${LEX_OUTPUT} ${LEX_INPUT}

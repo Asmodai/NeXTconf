@@ -188,6 +188,25 @@ const int children_per_node[] = {
   return [super free];
 }
 
+- (void)copyFrom:(SyntaxTree *)anOther
+{
+  size_t i = 0;
+
+  if (_children) {
+    [_children freeObjects];
+    [_children free];
+  }
+
+  _nodeType = [anOther nodeType];
+  _retType  = [anOther returnType];
+  _symbol   = [anOther symbol];
+  _children = [[List alloc] initCount:DEFAULT_MAX_CHILD_SLOTS];
+
+  for (i = 0; i < [anOther childCount]; i++) {
+    [self setChildAtIndex:i to:[anOther childAtIndex:i]];
+  }
+}
+
 - (void)setNodeType:(STNodeType)type
 {
   _nodeType = type;
@@ -260,6 +279,11 @@ const int children_per_node[] = {
                              andChild1:[self childAtIndex:child]]];
 
   return YES;
+}
+
+- (int)childCount
+{
+  return [_children count];
 }
 
 - (void)checkSyntax

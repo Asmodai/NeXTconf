@@ -1,5 +1,5 @@
 /*
- * Grammar.l  --- Lex tokeniser.
+ * Scanner.l  --- Lex tokeniser.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
@@ -40,18 +40,18 @@
 
 #import "Utils.h"
 #define _IN_LEXER_
-#import "Lexer.h"
-#import "Parse.h"
+#import "Scanner.h"
+#import "Parser.h"
 
 /*
 extern char *strdup(const char *);
 extern int   yywrap(void);
 */
 
-void make_identifier(void);
-void make_string_constant(void);
-void make_integer_constant(void);
-void make_boolean_constant(void);
+void make_identifier(YYSTYPE *, char *);
+void make_string_constant(YYSTYPE *, char *);
+void make_integer_constant(YYSTYPE *, char *);
+void make_boolean_constant(YYSTYPE *, char *);
 void eat_comment(void);
 
 %}
@@ -77,6 +77,7 @@ END_STMT  ;
 "for"      { return FOR;                                              }
 "in"       { return IN;                                               }
 "print"    { return PRINT;                                            }
+"include"  { return INCLUDE;                                          }
 "or"       { return LOGICAL_OR;                                       }
 "xor"      { return LOGICAL_XOR;                                      }
 "and"      { return LOGICAL_AND;                                      }
@@ -92,10 +93,10 @@ END_STMT  ;
 "["        { return OPEN_METH;                                        }
 "]"        { return CLOSE_METH;                                       }
 ":"        { return METH_ARG;                                         }
-{BVALUE}   { make_boolean_constant(); return BOOLEAN;                 }
-{IDENT}    { make_identifier(); return ID;                            }
-{STR}      { make_string_constant(); return STRING;                   }
-{DIGIT}    { make_integer_constant(); return INTEGER;                 }
+{BVALUE}   { make_boolean_constant(yylval, yytext); return BOOLEAN;  }
+{IDENT}    { make_identifier(yylval, yytext); return ID;             }
+{STR}      { make_string_constant(yylval, yytext); return STRING;    }
+{DIGIT}    { make_integer_constant(yylval, yytext); return INTEGER;  }
 "//"       { eat_comment();                                           }
 \n         { lineno++;                                                }
 {WSPACE}   {                                                          }
@@ -121,42 +122,42 @@ eat_comment(void)
  * Make an identifier.
  */
 void
-make_identifier(void)
+make_identifier(YYSTYPE *yylval, char *yytext)
 {
-  yylval.str = strdup(yytext);
+  yylval->str = strdup(yytext);
 }
 
 /*
  * Make a string constant.
  */
 void
-make_string_constant(void)
+make_string_constant(YYSTYPE *yylval, char *yytext)
 {
   int l = 0;
 
   l = strlen(yytext) - 2;
 
-  yylval.str = malloc((l + 1) * sizeof *yylval.str);
-  strncpy(yylval.str, &yytext[1], l);
-  yylval.str[l] = 0;
+  yylval->str = malloc((l + 1) * sizeof *yylval->str);
+  strncpy(yylval->str, &yytext[1], l);
+  yylval->str[l] = 0;
 }
 
 /*
  * Make an integer constant.
  */
 void
-make_integer_constant(void)
+make_integer_constant(YYSTYPE *yylval, char *yytext)
 {
-  yylval.fixnum = atol(yytext);
+  yylval->fixnum = atol(yytext);
 }
 
 void
-make_boolean_constant(void)
+make_boolean_constant(YYSTYPE *yylval, char *yytext)
 {
   if (strncasecmp(yytext, "true", 4) == 0) {
-    yylval.fixnum = (int)YES;
+    yylval->fixnum = (int)YES;
   } else {
-    yylval.fixnum = (int)NO;
+    yylval->fixnum = (int)NO;
   }
 }
 

@@ -31,6 +31,7 @@
 #import <unistd.h>
 #import <libc.h>
 #import <string.h>
+#import <errno.h>
 
 #import <sys/types.h>
 
@@ -39,11 +40,11 @@
 #import "SymbolTable.h"
 #import "PropertyManager.h"
 #import "SyntaxTree.h"
-#import "Lexer.h"
+#import "IntInstr.h"
+#import "Scanner.h"
 #import "Utils.h"
 
 extern SymbolTable *root_symtab;
-extern SyntaxTree  *root_syntree;
 
 void        errorf(char *fmt, ...);
 void        yyerror(char *msg);
@@ -51,10 +52,25 @@ const char *make_symbol_name(void);
 const char *make_immediate_name(void);
 
 /* We want debugging. */
-#define YYDEBUG 1
+#define YYDEBUG 100
 
 /* Tell Yacc/bison to be verbose. */
 #define YYERROR_VERBOSE
+
+/* Set the `yyparse' parameter. */
+#define YYPARSE_PARAM syntree
+
+/* No `yylex' param please. */
+#undef YYLEX_PARAM
+
+/* Nor do we need textual location. */
+#undef YYLSP_NEEDED
+
+#ifndef YYLTYPE
+# define YYLTYPE yyltype
+#endif
+
+#define YY_DECL      int yylex(YYSTYPE *yylval)
 
 /*
  * Insert a number into the root symbol table.
@@ -157,6 +173,7 @@ const char *make_immediate_name(void);
 %token FOR
 %token IN
 %token PRINT
+%token INCLUDE
 %token ASSIGN
 %token EQUAL
 %token NEQUAL
@@ -171,6 +188,7 @@ const char *make_immediate_name(void);
 %type <symbol> identifier string integer boolean
 %type <str>    class_name method_name
 %type <tnode>  program statement_list statement
+%type <tnode>  include_statement
 %type <tnode>  if_statement compound_statement
 %type <tnode>  for_statement expr equal_expr assign_expr
 %type <tnode>  concat_expr simple_expr method_call
@@ -181,10 +199,17 @@ const char *make_immediate_name(void);
 
 %expect 1
 
+%pure_parser
+
 %%
 
 program
-   : statement_list                 { root_syntree = $1;                       }
+   : statement_list {
+        register SyntaxTree *root   = (SyntaxTree *)syntree;
+        register SyntaxTree *parsed = (SyntaxTree *)$1; 
+
+        *root = *parsed;
+     }
    ;
 
 statement_list
@@ -194,12 +219,33 @@ statement_list
 
 statement
    : END_STMT                       { $$ = CTREE(EmptyStmt);                   }
+   | include_statement              { $$ = $1;                                 }
    | expr END_STMT                  { $$ = CTREE1(ExprStmt, $1);               }
    | PRINT expr END_STMT            { $$ = CTREE1(PrintStmt, $2);              }
    | if_statement                   { $$ = $1;                                 }
    | for_statement                  { $$ = $1;                                 }
    | compound_statement             { $$ = $1;                                 }
    | error END_STMT                 { $$ = CTREE(ErrorStmt);                   }
+   ;
+
+include_statement
+   : INCLUDE string {
+       String     *str = [$2 data];
+       SyntaxTree *parsed = [[SyntaxTree alloc] init];
+
+       printf("Including %s\n", [str stringValue]);
+
+       if ((yyin = fopen([str stringValue], "r")) == NULL) {
+         fprintf(stderr, "Could not open '%s': %s\n",
+                 [str stringValue],
+                 strerror(errno));
+         exit(EXIT_FAILURE);
+       }
+
+       yyparse(parsed);
+
+       $$ = parsed;
+     }
    ;
 
 if_statement

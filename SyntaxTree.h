@@ -105,6 +105,11 @@ typedef enum {
 - (id)free;
 
 /*
+ * Copying.
+ */
+- (void)copyFrom:(SyntaxTree *)anOther;
+
+/*
  * Accessors.
  */
 - (void)setNodeType:(STNodeType)type;
@@ -120,6 +125,7 @@ typedef enum {
 /*
  * Utilities.
  */
+- (int)childCount;
 - (BOOL)coerceToString:(int)child;
 - (void)checkSyntax;
 
