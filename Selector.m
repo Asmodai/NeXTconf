@@ -112,19 +112,27 @@
 
 - (id)evaluateWithArg:(id)anArg
 {
-  id class = nil;
+  id           class    = nil;
+  extern char *progname;
 
-  if ([[PropertyManager sharedInstance] haveMethod:_method
-                                        forClass:_class])
+  class = [[PropertyManager sharedInstance] findInstance:_class];
+  if (class == nil) {
+    fprintf(stderr,
+            "%s: Could not find a class named '%s'!",
+            progname,
+            [_class stringValue]);
+    exit(EXIT_FAILURE);
+  }
+
+  if (![[PropertyManager sharedInstance] haveMethod:_method
+                                           forClass:_class])
   {
-    class = [[PropertyManager sharedInstance] findInstance:_class];
-
-    if (class == nil) {
-      fprintf(stderr,
-              "Could not find the class '%s', are you missing something?",
-              [_class stringValue]);
-      exit(EXIT_FAILURE);
-    }
+    fprintf(stderr,
+            "%s: Could not find method `%s' for class `%s'!",
+            progname,
+            [_method stringValue],
+            [_class stringValue]);
+    exit(EXIT_FAILURE);
   }
 
   if ([class respondsTo:_selector]) {
@@ -140,6 +148,9 @@
           "Class '%s' does not respond to method '%s'.\n",
           [_class stringValue],
           [_method stringValue]);
+
+  [self _printDebugInfo:6];
+
   exit(EXIT_FAILURE);
 
   /* Keep compiler happy. */

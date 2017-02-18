@@ -87,6 +87,11 @@
  */
 - (id)findInstance:(String *)aClass;
 
+/*
+ * Instantiating.
+ */
+- (void)instantiateAllClasses;
+
 @end                            // PropertyManager
 
 @interface PropertyManager (Debug)

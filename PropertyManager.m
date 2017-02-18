@@ -34,6 +34,16 @@
 #import "PropertyManager.h"
 #import "Utils.h"
 #import "List+Debug.h"
+#import "Property.h"
+
+#import <objc/Object.h>
+#import <objc/Protocol.h>
+
+#import <objc/objc-class.h>
+#import <objc/objc-runtime.h>
+
+#import <stdio.h>
+#import <stdlib.h>
 
 @implementation PropertyManager
 
@@ -102,6 +112,16 @@
   cls = [[String alloc] initWithString:[[aClass class] name]];
   lst = [_methods valueForKey:cls];
 
+  if ([self haveInstanceOf:cls] == NO) {
+    extern char *progname;
+
+    fprintf(stderr,
+            "%s: Trying to add method `%s' for non-existing class `%s'!",
+            progname,
+            [aMethod stringValue],
+            [cls stringValue]);
+  }
+
   if (lst == nil) {
     lst = [[List alloc] init];
   } else {
@@ -137,23 +157,42 @@
 - (BOOL)haveMethod:(String *)aString
           forClass:(String *)aClass
 {
-  register List *lst = nil;
+  register List   *lst = nil;
+  register size_t  idx = 0;
 
   lst = [_methods valueForKey:aClass];
   if (lst == nil) {
     return NO;
   }
 
-  if ([lst indexOf:aString] == 0) {
-    return NO;
+  for (idx = 0; idx < [lst count]; idx++) {
+    if ([aString isEqual:[lst objectAt:idx]]) {
+      return YES;
+    }
   }
 
-  return YES;
+  return NO;
 }
 
 - (id)findInstance:(String *)aClass
 {
   return [_instances valueForKey:[aClass stringValue]];
+}
+
+- (void)instantiateAllClasses
+{
+  NXHashTable       *classes = objc_getClasses();
+  NXHashState        state   = NXInitHashState(classes);
+  Class              cls     = NULL;
+  static const char *parent  = "Property";
+
+  while (NXNextHashState(classes, &state, (void *)&cls) != 0) {
+    if (strcmp(parent, object_getClassName((id)cls->super_class)) == 0) {
+      [[cls alloc] init];
+    }
+  }
+
+  // Do not free `classes' :)  
 }
 
 @end                            // PropertyManager
