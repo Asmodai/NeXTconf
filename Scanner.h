@@ -36,18 +36,18 @@
 
 #import <stdio.h>
 
+
 #ifdef _IN_LEXER_
+#import "Parser.h"
 int lineno = 1;
 #else
 extern int   lineno;
 extern FILE *yyin;
 #endif
 
-#ifndef YYLTYPE
-# define YYLTYPE yyltype
+#ifndef YY_DECL
+# define YY_DECL      int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)
 #endif
-
-#define YY_DECL      int yylex(YYSTYPE *yylval)
 
 #endif /* !_SCANNER_H_ */
 

@@ -1,12 +1,12 @@
 /* -*- Mode: ObjC -*-
  *
- * EOF.ucs  --- Enterprise Objects Framework detection script.
+ * Zlib.ucs  --- Some title
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Fri, 17 Feb 2017 14:51:26 +0000 (GMT)
+ * Created:    Sat, 18 Feb 2017 21:38:38 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -32,55 +32,65 @@
  */
 /* }}} */
 
-NS_HDR1 = "/usr/include/eoaccess/eoaccess.h";
-NS_HDR2 = "/usr/include/eointerface/eointerface.h";
-OS_HDR1 = "/NextLibrary/Frameworks/EOAccess.framework/Headers/EOAccess.h";
-OS_HDR2 = "/NextLibrary/Frameworks/EOInterface.framework/Headers/EOInterface.h";
-R_HDR1  = "/System/Library/Frameworks/EOAccess.framework/Headers/EOAccess.h";
-R_HDR2  = "/System/Library/Frameworks/EOInterface.framework/Headers/EOInterface.h";
-SYMBOL  = "HAS_EOF";
+NS_HDR1 = "/LocalDeveloper/include/libz.h";
+NS_HDR2 = "/usr/include/libz.h";
+NS_HDR3 = "/usr/local/include/libz.h";
+OS_HDR1 = "/LocalLibrary/Frameworks/Zlib.framework/Headers/zlib.h";
+R_HDR1  = "/Local/Library/Frameworks/Zlib.framework/Headers/zlib.h";
+SYMBOL  = "HAS_ZLIB";
 
-print "Checking for Enterprise Objects:";
+print "Checking for Zlib:";
 
 if ([Platform isOpenStep] == true) {
 
-  if (([Platform platform]            == "Rhapsody") and 
-      ([FileSystem fileExists:R_HDR1] == true)       and
-      ([FileSystem fileExists:R_HDR2] == true))
+  if (([Platform platform]            == "Rhapsody") and
+      ([FileSystem fileExists:R_HDR1] == true))
   {
-    print "     Found EOF for Rhapsody.";
+    print "     Zlib found for Rhapsody.";
     [Header addSymbol:SYMBOL];
   }
 
   if (([Platform platform]             == "OPENSTEP") and
-      ([FileSystem fileExists:OS_HDR1] == true)       and
-      ([FileSystem fileExists:OS_HDR2] == true))
+      ([FileSystem fileExists:OS_HDR1] == true))
   {
-    print "     Found EOF for OPENSTEP.";
+    print "     Zlib found for OPENSTEP.";
     [Header addSymbol:SYMBOL];
+  }
+
+  if ([Header hasSymbol:SYMBOL] == true) {
+    [MakeFile addLibrary:"Zlib"];
   }
 
 } else {
 
-  if (([FileSystem fileExists:NS_HDR1] == true) and
-      ([FileSystem fileExists:NS_HDR2] == true))
-  {
-    print "     Found EOF for NEXTSTEP.";
+  if ([FileSystem fileExists:NS_HDR1] == true) {
     [Header addSymbol:SYMBOL];
+    [MakeFile addLibraryPath:"/LocalDeveloper/Library"];
+  }
+
+  if ([FileSystem fileExists:NS_HDR2] == true) {
+    [Header addSymbol:SYMBOL];
+  }
+
+  if ([FileSystem fileExists:NS_HDR3] == true) {
+    [Header addSymbol:SYMBOL];
+    [MakeFile addLibraryPath:"/usr/local/lib"];
+  }
+
+  if ([Header hasSymbol:SYMBOL] == true) {
+    print "     Zlib found for NEXTSTEP.";
   }
 
 }
 
 if ([Header hasSymbol:SYMBOL] == true) {
-  [MakeFile addLibrary:"EOAccess"];
-  [MakeFile addLibrary:"EOInterface"];
-} else {
-  print "     Enterprise Objects not found.";
+  print "     Zlib not found.";
 }
 
-/* EOF.ucs ends here */
+/* Zlib.ucs ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***
+ * mode: objc ***
  * End: ***
  */

@@ -77,12 +77,13 @@ main(int argc, char **argv)
   int             ch      = 0;
   char           *fname   = NULL;
   IntInstr       *code    = nil;
-  Platform       *plat    = nil;
-  Architecture   *arch    = nil;
+  //Platform       *plat    = nil;
+  //Architecture   *arch    = nil;
   VirtualMachine *vm      = nil;
   SyntaxTree     *syntree = nil;
   BOOL            cFlag   = NO;
   BOOL            tFlag   = NO;
+  BOOL            oFlag   = NO;
 
   extern int   optind;
   extern char *optarg;
@@ -90,15 +91,17 @@ main(int argc, char **argv)
   root_symtab  = [[SymbolTable alloc] init];
   root_syntree = [[SyntaxTree alloc] init];
   
-  plat    = [[Platform alloc] init];
-  arch    = [[Architecture alloc] init];
+  [[PropertyManager sharedInstance] instantiateAllClasses];
+
+  //plat    = [[Platform alloc] init];
+  //arch    = [[Architecture alloc] init];
   vm      = [[VirtualMachine alloc] init];
 
   progname = argv[0];
   yyin     = NULL;
   //yydebug  = 1;
 
-  while ((ch = getopt(argc, argv, "citvhf:")) != EOF) {
+  while ((ch = getopt(argc, argv, "citovhf:")) != EOF) {
     switch (ch) {
       case 'c':
         cFlag = YES;
@@ -109,8 +112,12 @@ main(int argc, char **argv)
         break;
 
       case 'i':
-        [plat print];
-        [arch print];
+        //[plat print];
+        //[arch print];
+        break;
+
+      case 'o':
+        oFlag = YES;
         break;
 
       case 't':
@@ -144,6 +151,17 @@ main(int argc, char **argv)
   }
 
   yyparse(root_syntree);
+
+  if (tFlag) {
+    [root_syntree printDebug:"Parsed tokens"];
+    putchar('\n');
+  }
+
+  if (oFlag) {
+    [[PropertyManager sharedInstance] printDebug:"Managed objects"];
+    putchar('\n');
+  }
+
   if (errors > 0) {
     error_summary();
     exit(EXIT_FAILURE);
@@ -151,11 +169,6 @@ main(int argc, char **argv)
 
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
-
-  if (tFlag) {
-    [root_syntree printDebug:"Parsed tokens"];
-    putchar('\n');
-  }
 
   code = [IntInstr generate:root_syntree];
   [code number:1];
@@ -169,9 +182,6 @@ main(int argc, char **argv)
   [vm reset];
   [vm read:code];
   [vm execute];
-
-  //printf("\n\n");
-  //[Property[Manager sharedInstance] printDebug:"Object manager"];
 
   /*
   printf("\n\n");

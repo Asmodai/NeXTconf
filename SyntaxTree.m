@@ -117,15 +117,19 @@ const int children_per_node[] = {
 @implementation SyntaxTree
 
 + (id)newFromFile:(String *)aFile
+           atLine:(size_t)aLine
 {
   return [SyntaxTree newFromFile:aFile
+                          atLine:aLine
                        withDebug:0];
 }
 
 + (id)newFromFile:(String *)aFile
+           atLine:(size_t)aLine
         withDebug:(int)debugFlag
 {
-  SyntaxTree          *new  = [[SyntaxTree alloc] initWithType:StmtList];
+  SyntaxTree          *new  = [[SyntaxTree alloc] initWithType:StmtList
+                                                        atLine:aLine];
   int                  res  = 0;
   register const char *name;
   extern char         *progname;
@@ -138,7 +142,7 @@ const int children_per_node[] = {
     exit(EXIT_FAILURE);
   }
 
-  name    = [aFile stringValue];
+  name = [aFile stringValue];
 
   if ((yyin = fopen(name, "r")) == NULL) {
     fprintf(stderr, "%s: Could not open '%s': %s\n",
@@ -162,48 +166,57 @@ const int children_per_node[] = {
 - (id)init
 {
   return [self initWithType:EmptyStmt
+                     atLine:0
                   andChild1:nil
                   andChild2:nil
                   andChild3:nil];
 }
 
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
 {
   return [self initWithType:type
+                     atLine:aLine
                   andChild1:nil
                   andChild2:nil
                   andChild3:nil];
 }
 
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1
 {
   return [self initWithType:type
+                     atLine:aLine
                   andChild1:child1
                   andChild2:nil
                   andChild3:nil];
 }
 
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2
 {
   return [self initWithType:type
+                     atLine:aLine
                   andChild1:child1
                   andChild2:child2
                   andChild3:nil];
 }
 
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2
          andChild3:(SyntaxTree *)child3
 {
   if ((self = [super init]) != nil) {
-    _nodeType = type;
-    _retType  = ReturnVoid;
-    _symbol   = nil;
-    _included = nil;
+    _nodeType   = type;
+    _retType    = ReturnVoid;
+    _symbol     = nil;
+    _included   = nil;
+    _lineNumber = aLine;
     
     _children = [[List alloc] initCount:DEFAULT_MAX_CHILD_SLOTS];
 
@@ -297,6 +310,16 @@ const int children_per_node[] = {
   return [_children objectAt:index];
 }
 
+- (void)setLineNumber:(size_t)aLine
+{
+  _lineNumber = aLine;
+}
+
+- (size_t)lineNumber
+{
+  return _lineNumber;
+}
+
 - (BOOL)coerceToString:(int)child
 {
   STRetType ret = ReturnVoid;
@@ -316,6 +339,7 @@ const int children_per_node[] = {
   [self setChildAtIndex:child
                      to:[[SyntaxTree alloc]
                           initWithType:CoerceToString
+                                atLine:_lineNumber
                              andChild1:[self childAtIndex:child]]];
 
   return YES;
@@ -323,6 +347,8 @@ const int children_per_node[] = {
 
 - (void)checkSyntax
 {
+  extern int lineno;
+
   /* First, set the required return type. */
   switch (_nodeType) {
     case StmtList:
@@ -377,7 +403,9 @@ const int children_per_node[] = {
     case IfThenStmt:
     case IfThenElseStmt:
       if ([[_children objectAt:0] returnType] != ReturnBool) {
-        fprintf(stderr, "if: Condition should be boolean.\n");
+        fprintf(stderr,
+                "Line %lu: if: Condition should be boolean.\n",
+                _lineNumber);
       }
       break;
 
@@ -387,16 +415,22 @@ const int children_per_node[] = {
       if (([[_children objectAt:0] returnType] != ReturnBool) &&
           ([[_children objectAt:1] returnType] != ReturnBool))
       {
-        fprintf(stderr, "Logic operator: Both arguments should be boolean.\n");
+        fprintf(stderr,
+                "Line %lu: Logic operator: Both arguments should be boolean.\n",
+                _lineNumber);
       }
       break;
 
     case ConcatExpr:
       if (![self coerceToString:0]) {
-        fprintf(stderr, "+: Cannot coerce first argument to string.\n");
+        fprintf(stderr,
+                "Line %lu: +: Cannot coerce first argument to string.\n",
+                _lineNumber);
       }
       if (![self coerceToString:1]) {
-        fprintf(stderr, "+: Cannot coerce second argument to string.\n");
+        fprintf(stderr,
+                "Line %lu: +: Cannot coerce second argument to string.\n",
+                _lineNumber);
       }
       break;
 
@@ -420,13 +454,15 @@ const int children_per_node[] = {
 
     if (_symbol == nil) {
       fprintf(stderr,
-              "%s: Symbol missing, cannot determine what to include!\n",
+              "Line %lu: %s: Symbol missing, cannot determine what to include!\n",
+              _lineNumber,
               progname);
       exit(EXIT_FAILURE);
     }
 
     file      = [_symbol data];
     _included = [SyntaxTree newFromFile:file
+                                 atLine:_lineNumber
                               withDebug:yydebug];
   }
 }
@@ -439,6 +475,7 @@ const int children_per_node[] = {
 {
   size_t i = 0;
 
+  debug_print(indent, "Line number = %lu\n", _lineNumber);
   debug_print(indent, "Node type   = %s\n", node_types[_nodeType]);
   debug_print(indent, "Return type = %s\n", return_types[_retType]);
 

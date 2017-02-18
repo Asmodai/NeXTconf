@@ -262,9 +262,13 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define YY_AT_BOL() (yy_current_buffer->yy_at_bol)
 
+
+#define YY_USES_REJECT
 typedef unsigned char YY_CHAR;
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 typedef int yy_state_type;
+extern int yylineno;
+int yylineno = 1;
 extern char *yytext;
 #define yytext_ptr yytext
 
@@ -285,16 +289,34 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 
 #define YY_NUM_RULES 33
 #define YY_END_OF_BUFFER 34
-static yyconst short int yy_accept[74] =
+static yyconst short int yy_acclist[127] =
     {   0,
-        0,    0,    0,    0,   34,   32,   31,   30,   32,   32,
-       18,   19,   16,   32,   28,   24,   17,   13,   26,   22,
-       23,   26,   26,   26,   26,   26,   26,   26,   26,   20,
-       21,    3,   33,    3,   31,   15,    0,   27,    1,   29,
-       28,   14,   26,   26,   26,   26,   26,   26,    4,    7,
-       10,   26,   26,   26,    2,   12,   26,   26,    6,   26,
-       26,   26,   11,    5,   26,   26,   26,   25,   26,    8,
-       26,    9,    0
+       34,   32,   33,   31,   32,   33,   30,   33,   32,   33,
+       32,   33,   18,   32,   33,   19,   32,   33,   16,   32,
+       33,   32,   33,   28,   32,   33,   24,   32,   33,   17,
+       32,   33,   13,   32,   33,   26,   32,   33,   22,   32,
+       33,   23,   32,   33,   26,   32,   33,   26,   32,   33,
+       26,   32,   33,   26,   32,   33,   26,   32,   33,   26,
+       32,   33,   26,   32,   33,   26,   32,   33,   20,   32,
+       33,   21,   32,   33,    3,   33,   33,    3,   33,   31,
+       15,   27,    1,   29,   28,   14,   26,   26,   26,   26,
+       26,   26,    4,   26,    7,   26,   10,   26,   26,   26,
+
+       26,    2,   12,   26,   26,   26,    6,   26,   26,   26,
+       26,   11,   26,    5,   26,   26,   26,   26,   25,   26,
+       26,    8,   26,   26,    9,   26
+    } ;
+
+static yyconst short int yy_accept[75] =
+    {   0,
+        1,    1,    1,    1,    1,    2,    4,    7,    9,   11,
+       13,   16,   19,   22,   24,   27,   30,   33,   36,   39,
+       42,   45,   48,   51,   54,   57,   60,   63,   66,   69,
+       72,   75,   77,   78,   80,   81,   82,   82,   83,   84,
+       85,   86,   87,   88,   89,   90,   91,   92,   93,   95,
+       97,   99,  100,  101,  102,  103,  105,  106,  107,  109,
+      110,  111,  112,  114,  116,  117,  118,  119,  121,  122,
+      124,  125,  127,  127
     } ;
 
 static yyconst int yy_ec[256] =
@@ -403,13 +425,16 @@ static yyconst short int yy_chk[157] =
        73,   73,   73,   73,   73,   73
     } ;
 
-static yy_state_type yy_last_accepting_state;
-static char *yy_last_accepting_cpos;
-
-/* The intent behind this definition is that it'll catch
- * any uses of REJECT which flex missed.
- */
-#define REJECT reject_used_but_not_detected
+static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;
+static char *yy_full_match;
+static int yy_lp;
+#define REJECT \
+{ \
+*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \
+yy_cp = yy_full_match; /* restore poss. backed-over text */ \
+++yy_lp; \
+goto find_rule; \
+}
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
@@ -468,9 +493,11 @@ void make_integer_constant(YYSTYPE *, char *);
 void make_boolean_constant(YYSTYPE *, char *);
 void eat_comment(void);
 
+#define YY_USER_ACTION    yylloc->first_line = yylloc->last_line = yylineno;
+
 #define C_COMMENT 1
 
-#line 474 "Scanner.c"
+#line 501 "Scanner.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -621,10 +648,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 66 "Scanner.l"
+#line 70 "Scanner.l"
 
 
-#line 628 "Scanner.c"
+#line 655 "Scanner.c"
 
 	if ( yy_init )
 		{
@@ -663,15 +690,12 @@ YY_DECL
 		yy_bp = yy_cp;
 
 		yy_current_state = yy_start;
+		yy_state_ptr = yy_state_buf;
+		*yy_state_ptr++ = yy_current_state;
 yy_match:
 		do
 			{
 			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
-			if ( yy_accept[yy_current_state] )
-				{
-				yy_last_accepting_state = yy_current_state;
-				yy_last_accepting_cpos = yy_cp;
-				}
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
@@ -679,203 +703,214 @@ yy_match:
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+			*yy_state_ptr++ = yy_current_state;
 			++yy_cp;
 			}
 		while ( yy_base[yy_current_state] != 122 );
 
 yy_find_action:
-		yy_act = yy_accept[yy_current_state];
-		if ( yy_act == 0 )
-			{ /* have to back up */
-			yy_cp = yy_last_accepting_cpos;
-			yy_current_state = yy_last_accepting_state;
-			yy_act = yy_accept[yy_current_state];
+		yy_current_state = *--yy_state_ptr;
+		yy_lp = yy_accept[yy_current_state];
+find_rule: /* we branch to this label when backing up */
+		for ( ; ; ) /* until we find what rule we matched */
+			{
+			if ( yy_lp && yy_lp < yy_accept[yy_current_state + 1] )
+				{
+				yy_act = yy_acclist[yy_lp];
+					{
+					yy_full_match = yy_cp;
+					break;
+					}
+				}
+			--yy_cp;
+			yy_current_state = *--yy_state_ptr;
+			yy_lp = yy_accept[yy_current_state];
 			}
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					++yylineno;
+			}
 
 do_action:	/* This label is used only to access EOF actions. */
 
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
-			case 0: /* must back up */
-			/* undo the effects of YY_DO_BEFORE_ACTION */
-			*yy_cp = yy_hold_char;
-			yy_cp = yy_last_accepting_cpos;
-			yy_current_state = yy_last_accepting_state;
-			goto yy_find_action;
-
 case 1:
 YY_RULE_SETUP
-#line 68 "Scanner.l"
+#line 72 "Scanner.l"
 { BEGIN(C_COMMENT); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 69 "Scanner.l"
+#line 73 "Scanner.l"
 { BEGIN(INITIAL);   }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 70 "Scanner.l"
-{}
+#line 74 "Scanner.l"
+{                   }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 72 "Scanner.l"
+#line 76 "Scanner.l"
 { return IF;                                               }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 73 "Scanner.l"
+#line 77 "Scanner.l"
 { return ELSE;                                             }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 74 "Scanner.l"
+#line 78 "Scanner.l"
 { return FOR;                                              }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 75 "Scanner.l"
+#line 79 "Scanner.l"
 { return IN;                                               }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 76 "Scanner.l"
+#line 80 "Scanner.l"
 { return PRINT;                                            }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 77 "Scanner.l"
+#line 81 "Scanner.l"
 { return INCLUDE;                                          }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 78 "Scanner.l"
+#line 82 "Scanner.l"
 { return LOGICAL_OR;                                       }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 79 "Scanner.l"
+#line 83 "Scanner.l"
 { return LOGICAL_XOR;                                      }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 80 "Scanner.l"
+#line 84 "Scanner.l"
 { return LOGICAL_AND;                                      }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 81 "Scanner.l"
+#line 85 "Scanner.l"
 { return ASSIGN;                                           }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 82 "Scanner.l"
+#line 86 "Scanner.l"
 { return EQUAL;                                            }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 83 "Scanner.l"
+#line 87 "Scanner.l"
 { return NEQUAL;                                           }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 84 "Scanner.l"
+#line 88 "Scanner.l"
 { return CONCAT;                                           }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 85 "Scanner.l"
+#line 89 "Scanner.l"
 { return END_STMT;                                         }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 86 "Scanner.l"
+#line 90 "Scanner.l"
 { return OPEN_PAR;                                         }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 87 "Scanner.l"
+#line 91 "Scanner.l"
 { return CLOSE_PAR;                                        }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 88 "Scanner.l"
+#line 92 "Scanner.l"
 { return BEGIN_CS;                                         }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 89 "Scanner.l"
+#line 93 "Scanner.l"
 { return END_CS;                                           }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 90 "Scanner.l"
+#line 94 "Scanner.l"
 { return OPEN_METH;                                        }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 91 "Scanner.l"
+#line 95 "Scanner.l"
 { return CLOSE_METH;                                       }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 92 "Scanner.l"
+#line 96 "Scanner.l"
 { return METH_ARG;                                         }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 93 "Scanner.l"
+#line 97 "Scanner.l"
 { make_boolean_constant(yylval, yytext); return BOOLEAN;   }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 94 "Scanner.l"
+#line 98 "Scanner.l"
 { make_identifier(yylval, yytext); return ID;              }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 95 "Scanner.l"
+#line 99 "Scanner.l"
 { make_string_constant(yylval, yytext); return STRING;     }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 96 "Scanner.l"
+#line 100 "Scanner.l"
 { make_integer_constant(yylval, yytext); return INTEGER;   }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 97 "Scanner.l"
+#line 101 "Scanner.l"
 { eat_comment();                                           }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 98 "Scanner.l"
+#line 102 "Scanner.l"
 { lineno++;                                                }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 99 "Scanner.l"
+#line 103 "Scanner.l"
 {                                                          }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 100 "Scanner.l"
+#line 104 "Scanner.l"
 { return ERROR_TOKEN;                                      }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 102 "Scanner.l"
+#line 106 "Scanner.l"
 ECHO;
 	YY_BREAK
-#line 876 "Scanner.c"
-case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(C_COMMENT):
-	yyterminate();
+#line 911 "Scanner.c"
+			case YY_STATE_EOF(INITIAL):
+			case YY_STATE_EOF(C_COMMENT):
+				yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1153,15 +1188,12 @@ static yy_state_type yy_get_previous_state()
 	register char *yy_cp;
 
 	yy_current_state = yy_start;
+	yy_state_ptr = yy_state_buf;
+	*yy_state_ptr++ = yy_current_state;
 
 	for ( yy_cp = yytext_ptr + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
 		{
 		register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
-		if ( yy_accept[yy_current_state] )
-			{
-			yy_last_accepting_state = yy_current_state;
-			yy_last_accepting_cpos = yy_cp;
-			}
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
@@ -1169,6 +1201,7 @@ static yy_state_type yy_get_previous_state()
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+		*yy_state_ptr++ = yy_current_state;
 		}
 
 	return yy_current_state;
@@ -1189,14 +1222,8 @@ yy_state_type yy_current_state;
 #endif
 	{
 	register int yy_is_jam;
-	register char *yy_cp = yy_c_buf_p;
 
 	register YY_CHAR yy_c = 1;
-	if ( yy_accept[yy_current_state] )
-		{
-		yy_last_accepting_state = yy_current_state;
-		yy_last_accepting_cpos = yy_cp;
-		}
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
@@ -1205,6 +1232,8 @@ yy_state_type yy_current_state;
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 73);
+	if ( ! yy_is_jam )
+		*yy_state_ptr++ = yy_current_state;
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -1247,6 +1276,8 @@ register char *yy_bp;
 
 	*--yy_cp = (char) c;
 
+	if ( c == '\n' )
+		--yylineno;
 
 	yytext_ptr = yy_bp;
 	yy_hold_char = *yy_cp;
@@ -1323,6 +1354,8 @@ static int input()
 	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
 
+	if ( c == '\n' )
+		++yylineno;
 
 	return c;
 	}
@@ -1759,7 +1792,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 102 "Scanner.l"
+#line 106 "Scanner.l"
 
 
 /*

@@ -4,6 +4,23 @@ typedef union {
   Symbol        *symbol;
   SyntaxTree    *tnode;
 } YYSTYPE;
+
+#ifndef YYLTYPE
+typedef
+  struct yyltype
+    {
+      int timestamp;
+      int first_line;
+      int first_column;
+      int last_line;
+      int last_column;
+      char *text;
+   }
+  yyltype;
+
+#define YYLTYPE yyltype
+#endif
+
 #define	ERROR_TOKEN	258
 #define	IF	259
 #define	ELSE	260

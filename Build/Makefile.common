@@ -9,6 +9,9 @@ PROJECT_TYPE = Tool
 LANGUAGE = English
 
 HFILES = Architecture.h    \
+	 FileSystem.h      \
+	 Header.h          \
+	 MakeFile.h        \
 	 Scanner.h         \
 	 List+Debug.h      \
 	 PropertyManager.h \
@@ -36,6 +39,9 @@ CFILES = Utils.c   \
 	 snprintf.c
 
 CLASSES = Architecture.m    \
+	  FileSystem.m      \
+	  Header.m          \
+	  MakeFile.m        \
 	  Scanner.m         \
 	  List+Debug.m      \
 	  Main.m            \

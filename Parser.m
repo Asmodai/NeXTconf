@@ -5,6 +5,8 @@
 
 #define YYBISON 1  /* Identify Bison output.  */
 
+#define YYLSP_NEEDED
+
 #define	ERROR_TOKEN	258
 #define	IF	259
 #define	ELSE	260
@@ -74,14 +76,13 @@ extern int yylex();
 /* No `yylex' param please. */
 #undef YYLEX_PARAM
 
-/* Nor do we need textual location. */
-#undef YYLSP_NEEDED
-
-#ifndef YYLTYPE
-# define YYLTYPE yyltype
+/* We need locational information. */
+#ifdef YYLSP_NEEDED
+# undef YYLSP_NEEDED
 #endif
+#define YYLSP_NEEDED 1
 
-#define YY_DECL      int yylex(YYSTYPE *yylval)
+#define YY_DECL      int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)
 
 /*
  * Insert a number into the root symbol table.
@@ -142,41 +143,62 @@ extern int yylex();
 /*
  * Create a syntax tree with no child nodes.
  */
-#define CTREE(__a)                       \
-  [[SyntaxTree alloc] initWithType:(__a)]
+#define CTREE(__a, __l)                  \
+  [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l)]
 
 /*
  * Create a syntax tree with 1 child node.
  */
-#define CTREE1(__a, __b)                 \
+#define CTREE1(__a, __b, __l)            \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b)]
 
 /*
  * Create a syntax tree with 2 child nodes.
  */
-#define CTREE2(__a, __b, __c)            \
+#define CTREE2(__a, __b, __c, __l)       \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b) \
                          andChild2:(__c)]
 
 /*
  * Create a syntax tree with 3 child nodes.
  */
-#define CTREE3(__a, __b, __c, __d)       \
+#define CTREE3(__a, __b, __c, __d, __l)  \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b) \
                          andChild2:(__c) \
                          andChild3:(__d)]
 
 
-#line 165 "Parser.y"
+#line 168 "Parser.y"
 typedef union {
   char          *str;
   unsigned long  fixnum;
   Symbol        *symbol;
   SyntaxTree    *tnode;
 } YYSTYPE;
+
+#ifndef YYLTYPE
+typedef
+  struct yyltype
+    {
+      int timestamp;
+      int first_line;
+      int first_column;
+      int last_line;
+      int last_column;
+      char *text;
+   }
+  yyltype;
+
+#define YYLTYPE yyltype
+#endif
+
 #include <stdio.h>
 
 #ifndef __cplusplus
@@ -255,11 +277,11 @@ static const short yyrhs[] = {    31,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   232,   241,   243,   247,   249,   251,   253,   255,   257,   259,
-   261,   265,   270,   272,   282,   286,   291,   295,   297,   299,
-   303,   305,   309,   311,   315,   318,   322,   325,   329,   332,
-   336,   338,   340,   342,   344,   346,   350,   360,   370,   380,
-   384,   388,   406,   426
+   235,   244,   246,   250,   252,   254,   256,   258,   260,   262,
+   264,   268,   276,   278,   288,   295,   300,   304,   306,   308,
+   312,   317,   321,   323,   327,   330,   334,   337,   341,   344,
+   348,   350,   352,   354,   356,   358,   362,   372,   382,   392,
+   396,   400,   418,   444
 };
 #endif
 
@@ -863,7 +885,7 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 233 "Parser.y"
+#line 236 "Parser.y"
 {
                   register SyntaxTree *root   = (SyntaxTree *)syntree;
                   register SyntaxTree *parsed = (SyntaxTree *)yyvsp[0].tnode; 
@@ -872,153 +894,162 @@ case 1:
                 ;
     break;}
 case 2:
-#line 242 "Parser.y"
-{ yyval.tnode = CTREE2(StmtList, yyvsp[-1].tnode, yyvsp[0].tnode); ;
+#line 245 "Parser.y"
+{ yyval.tnode = CTREE2(StmtList, yyvsp[-1].tnode, yyvsp[0].tnode, yylsp[-1].first_line); ;
     break;}
 case 3:
-#line 244 "Parser.y"
-{ yyval.tnode = CTREE(EmptyStmt); ;
+#line 247 "Parser.y"
+{ yyval.tnode = CTREE(EmptyStmt, yylsp[1].first_line); ;
     break;}
 case 4:
-#line 248 "Parser.y"
-{ yyval.tnode = CTREE(EmptyStmt); ;
+#line 251 "Parser.y"
+{ yyval.tnode = CTREE(EmptyStmt, yylsp[0].first_line); ;
     break;}
 case 5:
-#line 250 "Parser.y"
+#line 253 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 6:
-#line 252 "Parser.y"
-{ yyval.tnode = CTREE1(ExprStmt, yyvsp[-1].tnode); ;
+#line 255 "Parser.y"
+{ yyval.tnode = CTREE1(ExprStmt, yyvsp[-1].tnode, yylsp[-1].first_line); ;
     break;}
 case 7:
-#line 254 "Parser.y"
-{ yyval.tnode = CTREE1(PrintStmt, yyvsp[-1].tnode); ;
+#line 257 "Parser.y"
+{ yyval.tnode = CTREE1(PrintStmt, yyvsp[-1].tnode, yylsp[-2].first_line); ;
     break;}
 case 8:
-#line 256 "Parser.y"
+#line 259 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 9:
-#line 258 "Parser.y"
+#line 261 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 10:
-#line 260 "Parser.y"
+#line 263 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 11:
-#line 262 "Parser.y"
-{ yyval.tnode = CTREE(ErrorStmt); ;
+#line 265 "Parser.y"
+{ yyval.tnode = CTREE(ErrorStmt, yylsp[-1].first_line); ;
     break;}
 case 12:
-#line 267 "Parser.y"
-{ yyval.tnode = CTREE(IncludedFile); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
+#line 270 "Parser.y"
+{
+                  yyval.tnode = CTREE(IncludedFile, yylsp[-1].first_line);
+                  [yyval.tnode setSymbol:yyvsp[0].symbol];
+                ;
     break;}
 case 13:
-#line 271 "Parser.y"
-{ yyval.tnode = CTREE2(IfThenStmt, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 277 "Parser.y"
+{ yyval.tnode = CTREE2(IfThenStmt, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-4].first_line); ;
     break;}
 case 14:
-#line 273 "Parser.y"
+#line 279 "Parser.y"
 {
                   if (yyvsp[0].tnode != nil) {
-                    yyval.tnode = CTREE3(IfThenElseStmt, yyvsp[-4].tnode, yyvsp[-2].tnode, yyvsp[0].tnode);
+                    yyval.tnode = CTREE3(IfThenElseStmt, yyvsp[-4].tnode, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-6].first_line);
                   } else {
-                    yyval.tnode = CTREE2(IfThenStmt, yyvsp[-4].tnode, yyvsp[-2].tnode);
+                    yyval.tnode = CTREE2(IfThenStmt, yyvsp[-4].tnode, yyvsp[-2].tnode, yylsp[-6].first_line);
                   }
                 ;
     break;}
 case 15:
-#line 283 "Parser.y"
-{ yyval.tnode = CTREE2(ForInStmt, yyvsp[-2].tnode, yyvsp[0].tnode); [yyval.tnode setSymbol:yyvsp[-5].symbol]; ;
+#line 289 "Parser.y"
+{
+                  yyval.tnode = CTREE2(ForInStmt, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-6].first_line);
+                  [yyval.tnode setSymbol:yyvsp[-5].symbol];
+                ;
     break;}
 case 16:
-#line 288 "Parser.y"
+#line 297 "Parser.y"
 { yyval.tnode = yyvsp[-1].tnode; ;
     break;}
 case 17:
-#line 292 "Parser.y"
+#line 301 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 18:
-#line 296 "Parser.y"
-{ yyval.tnode = CTREE2(EqualExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 305 "Parser.y"
+{ yyval.tnode = CTREE2(EqualExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
     break;}
 case 19:
-#line 298 "Parser.y"
-{ yyval.tnode = CTREE2(NotEqualExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 307 "Parser.y"
+{ yyval.tnode = CTREE2(NotEqualExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
     break;}
 case 20:
-#line 300 "Parser.y"
+#line 309 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 21:
-#line 304 "Parser.y"
-{ yyval.tnode = CTREE1(AssignExpr, yyvsp[0].tnode); [yyval.tnode setSymbol:yyvsp[-2].symbol]; ;
+#line 313 "Parser.y"
+{
+                  yyval.tnode = CTREE1(AssignExpr, yyvsp[0].tnode, yylsp[-2].first_line);
+                  [yyval.tnode setSymbol:yyvsp[-2].symbol];
+                ;
     break;}
 case 22:
-#line 306 "Parser.y"
+#line 318 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 23:
-#line 310 "Parser.y"
-{ yyval.tnode = CTREE2(ConcatExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 322 "Parser.y"
+{ yyval.tnode = CTREE2(ConcatExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
     break;}
 case 24:
-#line 312 "Parser.y"
-{ yyval.tnode = yyvsp[0].tnode; ;
-    break;}
-case 25:
-#line 317 "Parser.y"
-{ yyval.tnode = yyvsp[0].tnode; ;
-    break;}
-case 26:
-#line 319 "Parser.y"
-{ yyval.tnode = CTREE2(LogicalAndExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
-    break;}
-case 27:
 #line 324 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
+case 25:
+#line 329 "Parser.y"
+{ yyval.tnode = yyvsp[0].tnode; ;
+    break;}
+case 26:
+#line 331 "Parser.y"
+{ yyval.tnode = CTREE2(LogicalAndExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
+    break;}
+case 27:
+#line 336 "Parser.y"
+{ yyval.tnode = yyvsp[0].tnode; ;
+    break;}
 case 28:
-#line 326 "Parser.y"
-{ yyval.tnode = CTREE2(LogicalOrExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 338 "Parser.y"
+{ yyval.tnode = CTREE2(LogicalOrExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
     break;}
 case 29:
-#line 331 "Parser.y"
+#line 343 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 30:
-#line 333 "Parser.y"
-{ yyval.tnode = CTREE2(LogicalXorExpr, yyvsp[-2].tnode, yyvsp[0].tnode); ;
+#line 345 "Parser.y"
+{ yyval.tnode = CTREE2(LogicalXorExpr, yyvsp[-2].tnode, yyvsp[0].tnode, yylsp[-2].first_line); ;
     break;}
 case 31:
-#line 337 "Parser.y"
-{ yyval.tnode = CTREE(IdentExpr); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
+#line 349 "Parser.y"
+{ yyval.tnode = CTREE(IdentExpr, yylsp[0].first_line); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
     break;}
 case 32:
-#line 339 "Parser.y"
-{ yyval.tnode = CTREE(StringExpr); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
+#line 351 "Parser.y"
+{ yyval.tnode = CTREE(StringExpr, yylsp[0].first_line); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
     break;}
 case 33:
-#line 341 "Parser.y"
-{ yyval.tnode = CTREE(IntegerExpr); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
+#line 353 "Parser.y"
+{ yyval.tnode = CTREE(IntegerExpr, yylsp[0].first_line); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
     break;}
 case 34:
-#line 343 "Parser.y"
-{ yyval.tnode = CTREE(BooleanExpr); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
+#line 355 "Parser.y"
+{ yyval.tnode = CTREE(BooleanExpr, yylsp[0].first_line); [yyval.tnode setSymbol:yyvsp[0].symbol]; ;
     break;}
 case 35:
-#line 345 "Parser.y"
+#line 357 "Parser.y"
 { yyval.tnode = yyvsp[-1].tnode; ;
     break;}
 case 36:
-#line 347 "Parser.y"
+#line 359 "Parser.y"
 { yyval.tnode = yyvsp[0].tnode; ;
     break;}
 case 37:
-#line 351 "Parser.y"
+#line 363 "Parser.y"
 {
                   yyval.symbol = [root_symtab valueForSymbol:yyvsp[0].str];
                   if (yyval.symbol == nil) {
@@ -1028,7 +1059,7 @@ case 37:
                 ;
     break;}
 case 38:
-#line 361 "Parser.y"
+#line 373 "Parser.y"
 {
                   Number *num = nil;
 
@@ -1038,7 +1069,7 @@ case 38:
                 ;
     break;}
 case 39:
-#line 371 "Parser.y"
+#line 383 "Parser.y"
 {
                   Boolean *bool = nil;
 
@@ -1048,15 +1079,15 @@ case 39:
                 ;
     break;}
 case 40:
-#line 381 "Parser.y"
+#line 393 "Parser.y"
 { yyval.str = yyvsp[0].str; ;
     break;}
 case 41:
-#line 385 "Parser.y"
+#line 397 "Parser.y"
 { yyval.str = yyvsp[0].str; ;
     break;}
 case 42:
-#line 389 "Parser.y"
+#line 401 "Parser.y"
 {
                   Selector *sel = nil;
                   Symbol   *sym = nil;
@@ -1071,17 +1102,23 @@ case 42:
                   sym = [[Symbol alloc] initWithData:sel
                                              andName:[sel stringValue]
                                              andType:SymbolSelector];
-                  yyval.tnode = CTREE(MethodCall);
+                  yyval.tnode = CTREE(MethodCall, yylsp[-3].first_line);
                   [yyval.tnode setSymbol:sym];
                 ;
     break;}
 case 43:
-#line 407 "Parser.y"
+#line 419 "Parser.y"
 {
-                  Selector *sel = nil;
-                  Symbol   *sym = nil;
+                  Selector   *sel  = nil;
+                  Symbol     *sym  = nil;
+                  String     *meth = [[String alloc] initWithString:yyvsp[-3].str];
+                  const char *name = NULL;
 
-                  sel = [[Selector alloc] initWithMethod:yyvsp[-3].str
+                  [meth cat:":"];
+                  name = strdup([meth stringValue]);  
+                  xfree(meth);
+
+                  sel = [[Selector alloc] initWithMethod:name
                                                 forClass:yyvsp[-4].str];
 
                   if ([sel selector] == NULL) {
@@ -1091,12 +1128,12 @@ case 43:
                   sym = [[Symbol alloc] initWithData:sel
                                              andName:[sel stringValue]
                                              andType:SymbolSelector];
-                  yyval.tnode = CTREE1(MethodCall, yyvsp[-1].tnode);
+                  yyval.tnode = CTREE1(MethodCall, yyvsp[-1].tnode, yylsp[-5].first_line);
                   [yyval.tnode setSymbol:sym];
                 ;
     break;}
 case 44:
-#line 427 "Parser.y"
+#line 445 "Parser.y"
 {
                   yyval.symbol = CSYMB(yyvsp[0].str, make_symbol_name(), SymbolString);
                   ISYMB(yyval.symbol);
@@ -1300,7 +1337,7 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 433 "Parser.y"
+#line 451 "Parser.y"
 
 
 /*

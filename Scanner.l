@@ -51,7 +51,11 @@ void make_integer_constant(YYSTYPE *, char *);
 void make_boolean_constant(YYSTYPE *, char *);
 void eat_comment(void);
 
+#define YY_USER_ACTION    yylloc->first_line = yylloc->last_line = yylineno;
+
 %}
+
+%option yylineno
 
 %x C_COMMENT
 
@@ -67,7 +71,7 @@ END_STMT  ;
 
 "/*"            { BEGIN(C_COMMENT); }
 <C_COMMENT>"*/" { BEGIN(INITIAL);   }
-<C_COMMENT>.    {}
+<C_COMMENT>.    {                   }
 
 "if"       { return IF;                                               }
 "else"     { return ELSE;                                             }

@@ -176,6 +176,23 @@ xcalloc(size_t nelem, size_t elsize)
 }
 
 /*
+ * Wrapepr around `free'.
+ */
+void
+xfree(void *ptr)
+{
+#ifndef USE_ZONES
+
+  free(ptr);
+
+#else
+
+  xzonefree(NXDefaultMallocZone(), ptr);
+
+#endif
+}
+
+/*
  * Print debug information to standard output.
  *
  * The output will be preceeded by a given amount of indentation.

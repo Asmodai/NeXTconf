@@ -84,26 +84,33 @@ typedef enum {
   Symbol     *_symbol;          // Symbol.
   List       *_children;        // Children.
   SyntaxTree *_included;        // Included file syntax tree.
+  size_t      _lineNumber;      // Line number.
 }
 
 /*
  * Class methods.
  */
-+ (id)newFromFile:(String *)aFile;
 + (id)newFromFile:(String *)aFile
+           atLine:(size_t)aLine;
++ (id)newFromFile:(String *)aFile
+           atLine:(size_t)aLine
         withDebug:(int)debugFlag;
 
 /*
  * Initialisation.
  */
 - (id)init;
-- (id)initWithType:(STNodeType)type;
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine;
+- (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1;
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2;
 - (id)initWithType:(STNodeType)type
+            atLine:(size_t)aLine
          andChild1:(SyntaxTree *)child1
          andChild2:(SyntaxTree *)child2
          andChild3:(SyntaxTree *)child3;
@@ -126,6 +133,8 @@ typedef enum {
 - (void)setChildAtIndex:(int)index
                      to:(SyntaxTree *)child;
 - (SyntaxTree *)childAtIndex:(int)index;
+- (void)setLineNumber:(size_t)aLine;
+- (size_t)lineNumber;
 
 /*
  * Utilities.

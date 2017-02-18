@@ -65,14 +65,13 @@ extern int yylex();
 /* No `yylex' param please. */
 #undef YYLEX_PARAM
 
-/* Nor do we need textual location. */
-#undef YYLSP_NEEDED
-
-#ifndef YYLTYPE
-# define YYLTYPE yyltype
+/* We need locational information. */
+#ifdef YYLSP_NEEDED
+# undef YYLSP_NEEDED
 #endif
+#define YYLSP_NEEDED 1
 
-#define YY_DECL      int yylex(YYSTYPE *yylval)
+#define YY_DECL      int yylex(YYSTYPE *yylval, YYLTYPE *yylloc)
 
 /*
  * Insert a number into the root symbol table.
@@ -133,29 +132,33 @@ extern int yylex();
 /*
  * Create a syntax tree with no child nodes.
  */
-#define CTREE(__a)                       \
-  [[SyntaxTree alloc] initWithType:(__a)]
+#define CTREE(__a, __l)                  \
+  [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l)]
 
 /*
  * Create a syntax tree with 1 child node.
  */
-#define CTREE1(__a, __b)                 \
+#define CTREE1(__a, __b, __l)            \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b)]
 
 /*
  * Create a syntax tree with 2 child nodes.
  */
-#define CTREE2(__a, __b, __c)            \
+#define CTREE2(__a, __b, __c, __l)       \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b) \
                          andChild2:(__c)]
 
 /*
  * Create a syntax tree with 3 child nodes.
  */
-#define CTREE3(__a, __b, __c, __d)       \
+#define CTREE3(__a, __b, __c, __d, __l)  \
   [[SyntaxTree alloc] initWithType:(__a) \
+                            atLine:(__l) \
                          andChild1:(__b) \
                          andChild2:(__c) \
                          andChild3:(__d)]
@@ -239,19 +242,19 @@ program:        statement_list
         ;
 
 statement_list: statement statement_list
-                { $$ = CTREE2(StmtList, $1, $2); }
+                { $$ = CTREE2(StmtList, $1, $2, @1.first_line); }
         |       /* Empty */
-                { $$ = CTREE(EmptyStmt); }
+                { $$ = CTREE(EmptyStmt, @1.first_line); }
         ;
 
 statement:      END_STMT
-                { $$ = CTREE(EmptyStmt); }
+                { $$ = CTREE(EmptyStmt, @1.first_line); }
         |       include_statement
                 { $$ = $1; }
         |       expr END_STMT
-                { $$ = CTREE1(ExprStmt, $1); }
+                { $$ = CTREE1(ExprStmt, $1, @1.first_line); }
         |       PRINT expr END_STMT
-                { $$ = CTREE1(PrintStmt, $2); }
+                { $$ = CTREE1(PrintStmt, $2, @1.first_line); }
         |       if_statement
                 { $$ = $1; }
         |       for_statement
@@ -259,28 +262,34 @@ statement:      END_STMT
         |       compound_statement
                 { $$ = $1; }
         |       error END_STMT
-                { $$ = CTREE(ErrorStmt); }
+                { $$ = CTREE(ErrorStmt, @1.first_line); }
         ;
 
 include_statement:
                 INCLUDE string
-                { $$ = CTREE(IncludedFile); [$$ setSymbol:$2]; }
+                {
+                  $$ = CTREE(IncludedFile, @1.first_line);
+                  [$$ setSymbol:$2];
+                }
         ;
 
 if_statement:   IF OPEN_PAR expr CLOSE_PAR statement %prec LOWER_THAN_ELSE
-                { $$ = CTREE2(IfThenStmt, $3, $5); }
+                { $$ = CTREE2(IfThenStmt, $3, $5, @1.first_line); }
         |       IF OPEN_PAR expr CLOSE_PAR statement ELSE statement
                 {
                   if ($7 != nil) {
-                    $$ = CTREE3(IfThenElseStmt, $3, $5, $7);
+                    $$ = CTREE3(IfThenElseStmt, $3, $5, $7, @1.first_line);
                   } else {
-                    $$ = CTREE2(IfThenStmt, $3, $5);
+                    $$ = CTREE2(IfThenStmt, $3, $5, @1.first_line);
                   }
                 }
         ;
 
 for_statement:  FOR identifier IN OPEN_PAR expr CLOSE_PAR statement
-                { $$ = CTREE2(ForInStmt, $5, $7); [$$ setSymbol:$2]; }
+                {
+                  $$ = CTREE2(ForInStmt, $5, $7, @1.first_line);
+                  [$$ setSymbol:$2];
+                }
         ;
 
 compound_statement:
@@ -293,21 +302,24 @@ expr:           equal_expr
         ;
 
 equal_expr:     expr EQUAL assign_expr
-                { $$ = CTREE2(EqualExpr, $1, $3); }
+                { $$ = CTREE2(EqualExpr, $1, $3, @1.first_line); }
         |       expr NEQUAL assign_expr 
-                { $$ = CTREE2(NotEqualExpr, $1, $3); }
+                { $$ = CTREE2(NotEqualExpr, $1, $3, @1.first_line); }
         |       assign_expr 
                 { $$ = $1; }
         ;
 
 assign_expr:    identifier ASSIGN assign_expr
-                { $$ = CTREE1(AssignExpr, $3); [$$ setSymbol:$1]; }
+                {
+                  $$ = CTREE1(AssignExpr, $3, @1.first_line);
+                  [$$ setSymbol:$1];
+                }
         |       concat_expr
                 { $$ = $1; }
         ;
 
 concat_expr:    concat_expr CONCAT simple_expr
-                { $$ = CTREE2(ConcatExpr, $1, $3); }
+                { $$ = CTREE2(ConcatExpr, $1, $3, @1.first_line); }
         |       logical_and_expr
                 { $$ = $1; }
         ;
@@ -316,31 +328,31 @@ logical_and_expr:
                 logical_or_expr
                 { $$ = $1; }
         |       logical_and_expr LOGICAL_AND logical_or_expr
-                { $$ = CTREE2(LogicalAndExpr, $1, $3); }
+                { $$ = CTREE2(LogicalAndExpr, $1, $3, @1.first_line); }
         ;
 
 logical_or_expr:
                 logical_xor_expr
                 { $$ = $1; }
         |       logical_or_expr LOGICAL_OR logical_xor_expr
-                { $$ = CTREE2(LogicalOrExpr, $1, $3); }
+                { $$ = CTREE2(LogicalOrExpr, $1, $3, @1.first_line); }
         ;
 
 logical_xor_expr:
                 simple_expr
                 { $$ = $1; }
         |       logical_xor_expr LOGICAL_XOR simple_expr
-                { $$ = CTREE2(LogicalXorExpr, $1, $3); }
+                { $$ = CTREE2(LogicalXorExpr, $1, $3, @1.first_line); }
         ;
 
 simple_expr:    identifier
-                { $$ = CTREE(IdentExpr); [$$ setSymbol:$1]; }
+                { $$ = CTREE(IdentExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       string
-                { $$ = CTREE(StringExpr); [$$ setSymbol:$1]; }
+                { $$ = CTREE(StringExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       integer
-                { $$ = CTREE(IntegerExpr); [$$ setSymbol:$1]; }
+                { $$ = CTREE(IntegerExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       boolean
-                { $$ = CTREE(BooleanExpr); [$$ setSymbol:$1]; }
+                { $$ = CTREE(BooleanExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       OPEN_PAR expr CLOSE_PAR
                 { $$ = $2; }
         |       method_call
@@ -400,15 +412,21 @@ method_call:    OPEN_METH class_name method_name CLOSE_METH
                   sym = [[Symbol alloc] initWithData:sel
                                              andName:[sel stringValue]
                                              andType:SymbolSelector];
-                  $$ = CTREE(MethodCall);
+                  $$ = CTREE(MethodCall, @1.first_line);
                   [$$ setSymbol:sym];
                 }
         |       OPEN_METH class_name method_name METH_ARG simple_expr CLOSE_METH
                 {
-                  Selector *sel = nil;
-                  Symbol   *sym = nil;
+                  Selector   *sel  = nil;
+                  Symbol     *sym  = nil;
+                  String     *meth = [[String alloc] initWithString:$3];
+                  const char *name = NULL;
 
-                  sel = [[Selector alloc] initWithMethod:$3
+                  [meth cat:":"];
+                  name = strdup([meth stringValue]);  
+                  xfree(meth);
+
+                  sel = [[Selector alloc] initWithMethod:name
                                                 forClass:$2];
 
                   if ([sel selector] == NULL) {
@@ -418,7 +436,7 @@ method_call:    OPEN_METH class_name method_name CLOSE_METH
                   sym = [[Symbol alloc] initWithData:sel
                                              andName:[sel stringValue]
                                              andType:SymbolSelector];
-                  $$ = CTREE1(MethodCall, $5);
+                  $$ = CTREE1(MethodCall, $5, @1.first_line);
                   [$$ setSymbol:sym];
                 }
         ;

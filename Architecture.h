@@ -88,6 +88,9 @@
 
 @interface Architecture (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // Architecture (Debug)
