@@ -1,5 +1,93 @@
 # Opcode
 
+## Virtual machine
+
+NeXTconf utilises a stack-based virtual machine to interpret opcode.
+
+You can view the opcode of any script by invoking NeXTconf with the `-c` option.
+
+For example, let's say the file `example` has the code
+```objc
+thePlat = [Platform platform];
+theArch = [Architecture currentArchitecture];
+theProc = [Architecture currentProcessor];
+theVers = [Platform versionString];
+
+print "Platform:     " + thePlat;
+print "Architecture: " + theArch;
+print "Processor:    " + theProc;
+
+if ([Platform isOpenStep] == true) {
+  print "We are OpenStep " + theVers;
+} else {
+  print "We are NOT OpenStep.";
+
+  if ([Platform majorVersion] != 4) {
+    print "Hello, NeXTSTEP 3 user!";
+  } else {
+    print "Wow, what are you using?";
+  }
+}
+```
+then the result of executing `nextconf -cf example` will be
+```
+Intermediate code <IntInstr:0x10143c>
+         1: OP_CALL     platform
+         2: OP_POP      thePlat
+         3: OP_CALL     currentArchitecture
+         4: OP_POP      theArch
+         5: OP_CALL     currentProcessor
+         6: OP_POP      theProc
+         7: OP_CALL     versionString
+         8: OP_POP      theVers
+         9: OP_PUSH     strconst1
+        10: OP_PUSH     thePlat
+        11: OP_CONCAT
+        12: OP_PRINT
+        13: OP_PUSH     strconst2
+        14: OP_PUSH     theArch
+        15: OP_CONCAT
+        16: OP_PRINT
+        17: OP_PUSH     strconst3
+        18: OP_PUSH     theProc
+        19: OP_CONCAT
+        20: OP_PRINT
+        21: OP_CALL     isOpenStep
+        22: OP_PUSH     immedval1
+        23: OP_EQL
+        24: OP_JMPF     31
+        25: OP_PUSH     strconst4
+        26: OP_PUSH     theVers
+        27: OP_CONCAT
+        28: OP_PRINT
+        29: OP_NOP
+        30: OP_JMP      48
+        31: JMPTGT      24
+        32: OP_PUSH     strconst5
+        33: OP_PRINT
+        34: OP_CALL     majorVersion
+        35: OP_PUSH     immedval2
+        36: OP_NEQ
+        37: OP_JMPF     42
+        38: OP_PUSH     strconst6
+        39: OP_PRINT
+        40: OP_NOP
+        41: OP_JMP      46
+        42: JMPTGT      37
+        43: OP_PUSH     strconst7
+        44: OP_PRINT
+        45: OP_NOP
+        46: JMPTGT      41
+        47: OP_NOP
+        48: JMPTGT      30
+        49: OP_NOP
+
+Platform:     OPENSTEP
+Architecture: I386
+Processor:    Intel 486
+We are OpenStep 4.2
+```
+
 ## Opcode table
 
 | Opcode       | Operation                                                             |
