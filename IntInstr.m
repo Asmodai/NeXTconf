@@ -107,6 +107,23 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       blk2 = [IntInstr generate:[root childAtIndex:1]];
       return concatenate(blk1, blk2);
 
+    case IncludedFile:
+      {
+        register SyntaxTree *inclusion = nil;
+
+        [root processIncludedFile];
+        inclusion = [root includedTree];
+
+        if (inclusion) {
+          blk1 = [IntInstr generate:[inclusion childAtIndex:0]];
+          blk2 = [IntInstr generate:[inclusion childAtIndex:1]];
+          return concatenate(blk1, blk2);
+        }
+
+        return [[IntInstr alloc] initWithOpcode:OP_NOP];
+      }
+      break;
+
     case EmptyStmt:
       return [[IntInstr alloc] initWithOpcode:OP_NOP];
 

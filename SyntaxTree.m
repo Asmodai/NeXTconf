@@ -34,10 +34,13 @@
 #import <stdio.h>
 #import <stdlib.h>
 #import <string.h>
+#import <libc.h>
+#import <errno.h>
 
 #import "SyntaxTree.h"
 #import "Utils.h"
 #import "IntInstr.h"
+#import "Scanner.h"
 
 /*
  * Default maximum number of children.
@@ -49,6 +52,7 @@
  */
 const char *node_types[] = {
   "Statement list",
+  "Included file",
   "Empty statement",
   "Expression statement",
   "PRINT statement",
@@ -86,6 +90,7 @@ const char *return_types[] = {
  */
 const int children_per_node[] = {
   2,                            // Statement list
+  0,                            // Included file.
   0,                            // Empty statement
   1,                            // Expression statement
   1,                            // PRINT statement
@@ -110,6 +115,49 @@ const int children_per_node[] = {
 };
 
 @implementation SyntaxTree
+
++ (id)newFromFile:(String *)aFile
+{
+  return [SyntaxTree newFromFile:aFile
+                       withDebug:0];
+}
+
++ (id)newFromFile:(String *)aFile
+        withDebug:(int)debugFlag
+{
+  SyntaxTree          *new  = [[SyntaxTree alloc] initWithType:StmtList];
+  int                  res  = 0;
+  register const char *name;
+  extern char         *progname;
+  extern int           yydebug;
+ 
+  extern int  yyparse();
+ 
+  if (aFile == nil && [aFile length] == 0) {
+    fprintf(stderr, "%s: Unable to parse due to empty file name.\n", progname);
+    exit(EXIT_FAILURE);
+  }
+
+  name    = [aFile stringValue];
+
+  if ((yyin = fopen(name, "r")) == NULL) {
+    fprintf(stderr, "%s: Could not open '%s': %s\n",
+            progname,
+            name,
+            strerror(errno));
+    exit(EXIT_FAILURE);
+  }
+
+  yydebug = debugFlag;
+  res     = yyparse(new);
+
+  if (res != 0 || errors > 0) {
+    error_summary();
+    exit(EXIT_FAILURE);
+  }
+
+  return new;
+}
 
 - (id)init
 {
@@ -155,6 +203,7 @@ const int children_per_node[] = {
     _nodeType = type;
     _retType  = ReturnVoid;
     _symbol   = nil;
+    _included = nil;
     
     _children = [[List alloc] initCount:DEFAULT_MAX_CHILD_SLOTS];
 
@@ -182,29 +231,15 @@ const int children_per_node[] = {
     _children = nil;
   }
 
+  if (_included) {
+    [_included free];
+    _included = nil;
+  }
+
   /* XXX don't free this. */
   _symbol = nil;
 
   return [super free];
-}
-
-- (void)copyFrom:(SyntaxTree *)anOther
-{
-  size_t i = 0;
-
-  if (_children) {
-    [_children freeObjects];
-    [_children free];
-  }
-
-  _nodeType = [anOther nodeType];
-  _retType  = [anOther returnType];
-  _symbol   = [anOther symbol];
-  _children = [[List alloc] initCount:DEFAULT_MAX_CHILD_SLOTS];
-
-  for (i = 0; i < [anOther childCount]; i++) {
-    [self setChildAtIndex:i to:[anOther childAtIndex:i]];
-  }
 }
 
 - (void)setNodeType:(STNodeType)type
@@ -235,6 +270,11 @@ const int children_per_node[] = {
 - (Symbol *)symbol
 {
   return _symbol;
+}
+
+- (SyntaxTree *)includedTree
+{
+  return _included;
 }
 
 - (void)setChildAtIndex:(int)index
@@ -281,16 +321,12 @@ const int children_per_node[] = {
   return YES;
 }
 
-- (int)childCount
-{
-  return [_children count];
-}
-
 - (void)checkSyntax
 {
   /* First, set the required return type. */
   switch (_nodeType) {
     case StmtList:
+    case IncludedFile:
     case EmptyStmt:
     case ExprStmt:
     case PrintStmt:
@@ -370,6 +406,31 @@ const int children_per_node[] = {
   }
 }
 
+- (void)processIncludedFile
+{
+  /*
+   * Because `flex' isn't reentrant, we get to do this here.
+   * This is ugly, and I hate it, but meh, what choice do I have?  I
+   * sure as hell ain't writing an ObjC emitter for flex.
+   */
+  if (_nodeType == IncludedFile) {
+    register String *file = nil;
+    extern int       yydebug;
+    extern char     *progname;
+
+    if (_symbol == nil) {
+      fprintf(stderr,
+              "%s: Symbol missing, cannot determine what to include!\n",
+              progname);
+      exit(EXIT_FAILURE);
+    }
+
+    file      = [_symbol data];
+    _included = [SyntaxTree newFromFile:file
+                              withDebug:yydebug];
+  }
+}
+
 @end                            // SyntaxTree
 
 @implementation SyntaxTree (Debug)
@@ -384,6 +445,11 @@ const int children_per_node[] = {
   if (_symbol) {
     [_symbol printDebug:"symbol ="
              withIndent:(indent + [Object debugIndentLevel])];
+  }
+
+  if (_included) {
+    [_included printDebug:"Included syntax ="
+               withIndent:(indent + [Object debugIndentLevel])];
   }
 
   for (i = 0; i < children_per_node[_nodeType]; i++) {

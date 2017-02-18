@@ -39,6 +39,7 @@
 
 typedef enum {
   StmtList,                     // Statement list.
+  IncludedFile,                 // Included file.
   EmptyStmt,                    // Empty statement.
   ExprStmt,                     // Expression statement.
   PrintStmt,                    // Print statement.
@@ -82,7 +83,15 @@ typedef enum {
   STRetType   _retType;         // Return type.
   Symbol     *_symbol;          // Symbol.
   List       *_children;        // Children.
+  SyntaxTree *_included;        // Included file syntax tree.
 }
+
+/*
+ * Class methods.
+ */
++ (id)newFromFile:(String *)aFile;
++ (id)newFromFile:(String *)aFile
+        withDebug:(int)debugFlag;
 
 /*
  * Initialisation.
@@ -105,11 +114,6 @@ typedef enum {
 - (id)free;
 
 /*
- * Copying.
- */
-- (void)copyFrom:(SyntaxTree *)anOther;
-
-/*
  * Accessors.
  */
 - (void)setNodeType:(STNodeType)type;
@@ -118,6 +122,7 @@ typedef enum {
 - (STRetType)returnType;
 - (void)setSymbol:(Symbol *)symb;
 - (Symbol *)symbol;
+- (SyntaxTree *)includedTree;
 - (void)setChildAtIndex:(int)index
                      to:(SyntaxTree *)child;
 - (SyntaxTree *)childAtIndex:(int)index;
@@ -125,9 +130,9 @@ typedef enum {
 /*
  * Utilities.
  */
-- (int)childCount;
 - (BOOL)coerceToString:(int)child;
 - (void)checkSyntax;
+- (void)processIncludedFile;
 
 @end                            // SyntaxTree
 

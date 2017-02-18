@@ -60,7 +60,7 @@ extern int yyparse(void *);
 SymbolTable *root_symtab;
 SyntaxTree  *root_syntree;
 
-static char *progname = NULL;
+char *progname = NULL;
 
 void
 usage(void)
@@ -85,12 +85,10 @@ main(int argc, char **argv)
 
   extern int   optind;
   extern char *optarg;
-  extern int   yydebug;
 
   root_symtab  = [[SymbolTable alloc] init];
   root_syntree = [[SyntaxTree alloc] init];
   
-  //syntree = [[SyntaxTree alloc] init];  
   plat    = [[Platform alloc] init];
   arch    = [[Architecture alloc] init];
   vm      = [[VirtualMachine alloc] init];
@@ -149,9 +147,9 @@ main(int argc, char **argv)
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  //[root_syntree printDebug:"Parsed tokens"];
+  [root_syntree printDebug:"Parsed tokens"];
   //putchar('\n');
-  //printf("\n\n\n");
+  printf("\n\n\n");
 
   code = [IntInstr generate:root_syntree];
   [code number:1];

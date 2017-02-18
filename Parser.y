@@ -31,7 +31,6 @@
 #import <unistd.h>
 #import <libc.h>
 #import <string.h>
-#import <errno.h>
 
 #import <sys/types.h>
 
@@ -50,6 +49,8 @@ void        errorf(char *fmt, ...);
 void        yyerror(char *msg);
 const char *make_symbol_name(void);
 const char *make_immediate_name(void);
+
+extern int yylex();
 
 /* We want debugging. */
 #define YYDEBUG 100
@@ -230,21 +231,9 @@ statement
 
 include_statement
    : INCLUDE string {
-       String     *str = [$2 data];
-       SyntaxTree *parsed = [[SyntaxTree alloc] init];
-
-       printf("Including %s\n", [str stringValue]);
-
-       if ((yyin = fopen([str stringValue], "r")) == NULL) {
-         fprintf(stderr, "Could not open '%s': %s\n",
-                 [str stringValue],
-                 strerror(errno));
-         exit(EXIT_FAILURE);
-       }
-
-       yyparse(parsed);
-
-       $$ = parsed;
+       /* Meh, `flex' isn't reentrant. */
+       $$ = CTREE(IncludedFile);
+       [$$ setSymbol:$2];
      }
    ;
 
