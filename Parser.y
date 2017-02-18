@@ -24,6 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
+/* }}} */
 %{
 
 #import <stdio.h>
@@ -169,31 +170,55 @@ extern int yylex();
 }
 
 %token ERROR_TOKEN
-%token IF
-%token ELSE
-%token FOR
-%token IN
-%token PRINT
-%token INCLUDE
-%token ASSIGN
-%token EQUAL
-%token NEQUAL
-%token CONCAT
-%token LOGICAL_AND LOGICAL_OR LOGICAL_XOR LOGICAL_NOT
-%token END_STMT OPEN_PAR CLOSE_PAR
-%token OPEN_METH CLOSE_METH METH_ARG
-%token BEGIN_CS END_CS
-%token <str> ID STRING
-%token <fixnum> INTEGER BOOLEAN
+%token IF                "if"
+%token ELSE              "else"
+%token FOR               "for"
+%token IN                "in"
+%token PRINT             "print"
+%token INCLUDE           "include"
+%token ASSIGN            "="
+%token EQUAL             "=="
+%token NEQUAL            "!="
+%token CONCAT            "+"
+%token LOGICAL_AND       "and"
+%token LOGICAL_OR        "or"
+%token LOGICAL_XOR       "xor"
+%token END_STMT          ";"
+%token OPEN_PAR          "("
+%token CLOSE_PAR         ")"
+%token OPEN_METH         "["
+%token CLOSE_METH        "]"
+%token METH_ARG          ":"
+%token BEGIN_CS          "{"
+%token END_CS            "}"
 
-%type <symbol> identifier string integer boolean
-%type <str>    class_name method_name
-%type <tnode>  program statement_list statement
+%token <str>    ID       "identifier"
+%token <str>    STRING   "string"
+%token <fixnum> INTEGER  "integer"
+%token <fixnum> BOOLEAN  "boolean"
+
+%type <symbol> identifier
+%type <symbol> string
+%type <symbol> integer
+%type <symbol> boolean
+%type <str>    class_name
+%type <str>    method_name
+%type <tnode>  program
+%type <tnode>  statement_list
+%type <tnode>  statement
 %type <tnode>  include_statement
-%type <tnode>  if_statement compound_statement
-%type <tnode>  for_statement expr equal_expr assign_expr
-%type <tnode>  concat_expr simple_expr method_call
-%type <tnode>  logical_and_expr logical_or_expr logical_xor_expr
+%type <tnode>  if_statement
+%type <tnode>  compound_statement
+%type <tnode>  for_statement
+%type <tnode>  expr
+%type <tnode>  equal_expr
+%type <tnode>  assign_expr
+%type <tnode>  concat_expr
+%type <tnode>  simple_expr
+%type <tnode>  method_call
+%type <tnode>  logical_and_expr
+%type <tnode>  logical_or_expr
+%type <tnode>  logical_xor_expr
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -204,199 +229,206 @@ extern int yylex();
 
 %%
 
-program
-   : statement_list {
-        register SyntaxTree *root   = (SyntaxTree *)syntree;
-        register SyntaxTree *parsed = (SyntaxTree *)$1; 
+program:        statement_list 
+                {
+                  register SyntaxTree *root   = (SyntaxTree *)syntree;
+                  register SyntaxTree *parsed = (SyntaxTree *)$1; 
 
-        *root = *parsed;
-     }
-   ;
+                  *root = *parsed;
+                }
+        ;
 
-statement_list
-   : statement statement_list       { $$ = CTREE2(StmtList, $1, $2);           }
-   | /* Empty */                    { $$ = CTREE(EmptyStmt);                   }
-   ;
+statement_list: statement statement_list
+                { $$ = CTREE2(StmtList, $1, $2); }
+        |       /* Empty */
+                { $$ = CTREE(EmptyStmt); }
+        ;
 
-statement
-   : END_STMT                       { $$ = CTREE(EmptyStmt);                   }
-   | include_statement              { $$ = $1;                                 }
-   | expr END_STMT                  { $$ = CTREE1(ExprStmt, $1);               }
-   | PRINT expr END_STMT            { $$ = CTREE1(PrintStmt, $2);              }
-   | if_statement                   { $$ = $1;                                 }
-   | for_statement                  { $$ = $1;                                 }
-   | compound_statement             { $$ = $1;                                 }
-   | error END_STMT                 { $$ = CTREE(ErrorStmt);                   }
-   ;
+statement:      END_STMT
+                { $$ = CTREE(EmptyStmt); }
+        |       include_statement
+                { $$ = $1; }
+        |       expr END_STMT
+                { $$ = CTREE1(ExprStmt, $1); }
+        |       PRINT expr END_STMT
+                { $$ = CTREE1(PrintStmt, $2); }
+        |       if_statement
+                { $$ = $1; }
+        |       for_statement
+                { $$ = $1; }
+        |       compound_statement
+                { $$ = $1; }
+        |       error END_STMT
+                { $$ = CTREE(ErrorStmt); }
+        ;
 
-include_statement
-   : INCLUDE string {
-       /* Meh, `flex' isn't reentrant. */
-       $$ = CTREE(IncludedFile);
-       [$$ setSymbol:$2];
-     }
-   ;
+include_statement:
+                INCLUDE string
+                { $$ = CTREE(IncludedFile); [$$ setSymbol:$2]; }
+        ;
 
-if_statement
-   : IF OPEN_PAR expr CLOSE_PAR statement %prec LOWER_THAN_ELSE {
-       $$ = CTREE2(IfThenStmt, $3, $5);
-     }
-   | IF OPEN_PAR expr CLOSE_PAR statement ELSE statement {
-       if ($7 != nil) {
-         $$ = CTREE3(IfThenElseStmt, $3, $5, $7);
-       } else {
-         $$ = CTREE2(IfThenStmt, $3, $5);
-       }
-     }
-   ;
+if_statement:   IF OPEN_PAR expr CLOSE_PAR statement %prec LOWER_THAN_ELSE
+                { $$ = CTREE2(IfThenStmt, $3, $5); }
+        |       IF OPEN_PAR expr CLOSE_PAR statement ELSE statement
+                {
+                  if ($7 != nil) {
+                    $$ = CTREE3(IfThenElseStmt, $3, $5, $7);
+                  } else {
+                    $$ = CTREE2(IfThenStmt, $3, $5);
+                  }
+                }
+        ;
 
-for_statement
-   : FOR identifier IN OPEN_PAR expr CLOSE_PAR statement {
-       $$ = CTREE2(ForInStmt, $5, $7);
-       [$$ setSymbol:$2];
-     }
-   ;
+for_statement:  FOR identifier IN OPEN_PAR expr CLOSE_PAR statement
+                { $$ = CTREE2(ForInStmt, $5, $7); [$$ setSymbol:$2]; }
+        ;
 
-compound_statement
-   : BEGIN_CS statement_list END_CS { $$ = $2;                                 }
-   ;
+compound_statement:
+                BEGIN_CS statement_list END_CS
+                { $$ = $2; }
+        ;
 
-expr
-   : equal_expr                     { $$ = $1;                                 }
-   ;
+expr:           equal_expr
+                { $$ = $1; }
+        ;
 
-equal_expr
-   : expr EQUAL assign_expr         { $$ = CTREE2(EqualExpr, $1, $3);          }
-   | expr NEQUAL assign_expr        { $$ = CTREE2(NotEqualExpr, $1, $3);       }
-   | assign_expr                    { $$ = $1;                                 }
-   ;
+equal_expr:     expr EQUAL assign_expr
+                { $$ = CTREE2(EqualExpr, $1, $3); }
+        |       expr NEQUAL assign_expr 
+                { $$ = CTREE2(NotEqualExpr, $1, $3); }
+        |       assign_expr 
+                { $$ = $1; }
+        ;
 
-assign_expr
-   : identifier ASSIGN assign_expr  { $$ = CTREE1(AssignExpr, $3);
-                                      [$$ setSymbol:$1];                       }
-   | concat_expr                    { $$ = $1;                                 }
-   ;
+assign_expr:    identifier ASSIGN assign_expr
+                { $$ = CTREE1(AssignExpr, $3); [$$ setSymbol:$1]; }
+        |       concat_expr
+                { $$ = $1; }
+        ;
 
-concat_expr
-   : concat_expr CONCAT simple_expr { $$ = CTREE2(ConcatExpr, $1, $3);         }
-   | logical_and_expr               { $$ = $1;                                 }
-   ;
+concat_expr:    concat_expr CONCAT simple_expr
+                { $$ = CTREE2(ConcatExpr, $1, $3); }
+        |       logical_and_expr
+                { $$ = $1; }
+        ;
 
-logical_and_expr
-   : logical_or_expr                { $$ = $1; }
-   | logical_and_expr LOGICAL_AND logical_or_expr {
-       $$ = CTREE2(LogicalAndExpr, $1, $3);
-     }
-   ;
+logical_and_expr:
+                logical_or_expr
+                { $$ = $1; }
+        |       logical_and_expr LOGICAL_AND logical_or_expr
+                { $$ = CTREE2(LogicalAndExpr, $1, $3); }
+        ;
 
-logical_or_expr
-   : logical_xor_expr               { $$ = $1; }
-   | logical_or_expr LOGICAL_OR logical_xor_expr {
-       $$ = CTREE2(LogicalOrExpr, $1, $3);
-     }
-   ;
+logical_or_expr:
+                logical_xor_expr
+                { $$ = $1; }
+        |       logical_or_expr LOGICAL_OR logical_xor_expr
+                { $$ = CTREE2(LogicalOrExpr, $1, $3); }
+        ;
 
-logical_xor_expr
-   : simple_expr                    { $$ = $1; }
-   | logical_xor_expr LOGICAL_XOR simple_expr {
-       $$ = CTREE2(LogicalXorExpr, $1, $3);
-     }
-   ;
+logical_xor_expr:
+                simple_expr
+                { $$ = $1; }
+        |       logical_xor_expr LOGICAL_XOR simple_expr
+                { $$ = CTREE2(LogicalXorExpr, $1, $3); }
+        ;
 
-simple_expr
-   : identifier                     { $$ = CTREE(IdentExpr);
-                                      [$$ setSymbol:$1];                       }
-   | string                         { $$ = CTREE(StringExpr);
-                                      [$$ setSymbol:$1];                       }
-   | integer                        { $$ = CTREE(IntegerExpr);
-                                      [$$ setSymbol:$1];                       }
-   | boolean                        { $$ = CTREE(BooleanExpr);
-                                      [$$ setSymbol:$1];                       } 
-   | OPEN_PAR expr CLOSE_PAR        { $$ = $2;                                 }
-   | method_call                    { $$ = $1;                                 }
-   ;
+simple_expr:    identifier
+                { $$ = CTREE(IdentExpr); [$$ setSymbol:$1]; }
+        |       string
+                { $$ = CTREE(StringExpr); [$$ setSymbol:$1]; }
+        |       integer
+                { $$ = CTREE(IntegerExpr); [$$ setSymbol:$1]; }
+        |       boolean
+                { $$ = CTREE(BooleanExpr); [$$ setSymbol:$1]; }
+        |       OPEN_PAR expr CLOSE_PAR
+                { $$ = $2; }
+        |       method_call
+                { $$ = $1; }
+        ;
 
-identifier
-   : ID {
-       $$ = [root_symtab valueForSymbol:$1];
-       if ($$ == nil) {
-         $$ = CIDENT($1, SymbolObject);
-         IINDENT($$);
-       }
-     }
-   ;
+identifier:     ID
+                {
+                  $$ = [root_symtab valueForSymbol:$1];
+                  if ($$ == nil) {
+                    $$ = CIDENT($1, SymbolObject);
+                    IINDENT($$);
+                  }
+                }
+        ;
 
-integer
-   : INTEGER {
-       Number *num = nil;
+integer:        INTEGER
+                {
+                  Number *num = nil;
 
-       num = [[Number alloc] initWithInt:$1];
-       $$ = CINT(num);
-       IINT($$);
-     }
-   ;
+                  num = [[Number alloc] initWithInt:$1];
+                  $$ = CINT(num);
+                  IINT($$);
+                }
+        ;
 
-boolean
-   : BOOLEAN {
-       Boolean *bool = nil;
+boolean:        BOOLEAN
+                {
+                  Boolean *bool = nil;
 
-       bool = [[Boolean alloc] initWithInt:$1];
-       $$ = CBOOL(bool);
-       IBOOL($$);
-     }
-   ;
+                  bool = [[Boolean alloc] initWithInt:$1];
+                  $$ = CBOOL(bool);
+                  IBOOL($$);
+                }
+        ;
 
-class_name
-   : ID { $$ = $1; }
-   ;
+class_name:     ID
+                { $$ = $1; }
+        ;
 
-method_name
-   : ID { $$ = $1; }
-   ;
+method_name:    ID
+                { $$ = $1; }
+        ;
 
-method_call
-   : OPEN_METH class_name method_name CLOSE_METH {
-      Selector *sel = nil;
-      Symbol   *sym = nil;
+method_call:    OPEN_METH class_name method_name CLOSE_METH
+                {
+                  Selector *sel = nil;
+                  Symbol   *sym = nil;
 
-      sel = [[Selector alloc] initWithMethod:$3
-                                    forClass:$2];
+                  sel = [[Selector alloc] initWithMethod:$3
+                                                forClass:$2];
 
-      if ([sel selector] == NULL) {
-        yyerror("Unknown method call.");
-      }
+                  if ([sel selector] == NULL) {
+                    yyerror("Unknown method call.");
+                  }
 
-      sym = [[Symbol alloc] initWithData:sel
-                                 andName:[sel stringValue]
-                                 andType:SymbolSelector];
-      $$ = CTREE(MethodCall);
-      [$$ setSymbol:sym];
-     }
-   | OPEN_METH class_name method_name METH_ARG simple_expr CLOSE_METH {
-      Selector *sel = nil;
-      Symbol   *sym = nil;
+                  sym = [[Symbol alloc] initWithData:sel
+                                             andName:[sel stringValue]
+                                             andType:SymbolSelector];
+                  $$ = CTREE(MethodCall);
+                  [$$ setSymbol:sym];
+                }
+        |       OPEN_METH class_name method_name METH_ARG simple_expr CLOSE_METH
+                {
+                  Selector *sel = nil;
+                  Symbol   *sym = nil;
 
-      sel = [[Selector alloc] initWithMethod:$3
-                                    forClass:$2];
+                  sel = [[Selector alloc] initWithMethod:$3
+                                                forClass:$2];
 
-      if ([sel selector] == NULL) {
-        yyerror("Unknown method call.");
-      }
+                  if ([sel selector] == NULL) {
+                    yyerror("Unknown method call.");
+                  }
 
-      sym = [[Symbol alloc] initWithData:sel
-                                 andName:[sel stringValue]
-                                 andType:SymbolSelector];
-      $$ = CTREE1(MethodCall, $5);
-      [$$ setSymbol:sym];
-     }
-   ;
+                  sym = [[Symbol alloc] initWithData:sel
+                                             andName:[sel stringValue]
+                                             andType:SymbolSelector];
+                  $$ = CTREE1(MethodCall, $5);
+                  [$$ setSymbol:sym];
+                }
+        ;
 
-string
-   : STRING {
-       $$ = CSYMB($1, make_symbol_name(), SymbolString);
-       ISYMB($$);
-     }
-   ;
+string:         STRING
+                {
+                  $$ = CSYMB($1, make_symbol_name(), SymbolString);
+                  ISYMB($$);
+                }
+        ;
 
 %%
 
@@ -443,7 +475,7 @@ make_immediate_name(void)
 /* Grammar.y ends here */
 /*
  * Local Variables: ***
- * mode: fundamental ***
+ * mode: bison ***
  * indent-tabs-mode: nil ***
  * End: ***
  */

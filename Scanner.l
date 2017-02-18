@@ -24,6 +24,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
+/* }}} */
+
 %{
 
 #import <stdio.h>
@@ -42,11 +44,6 @@
 #define _IN_LEXER_
 #import "Scanner.h"
 #import "Parser.h"
-
-/*
-extern char *strdup(const char *);
-extern int   yywrap(void);
-*/
 
 void make_identifier(YYSTYPE *, char *);
 void make_string_constant(YYSTYPE *, char *);
@@ -93,10 +90,10 @@ END_STMT  ;
 "["        { return OPEN_METH;                                        }
 "]"        { return CLOSE_METH;                                       }
 ":"        { return METH_ARG;                                         }
-{BVALUE}   { make_boolean_constant(yylval, yytext); return BOOLEAN;  }
-{IDENT}    { make_identifier(yylval, yytext); return ID;             }
-{STR}      { make_string_constant(yylval, yytext); return STRING;    }
-{DIGIT}    { make_integer_constant(yylval, yytext); return INTEGER;  }
+{BVALUE}   { make_boolean_constant(yylval, yytext); return BOOLEAN;   }
+{IDENT}    { make_identifier(yylval, yytext); return ID;              }
+{STR}      { make_string_constant(yylval, yytext); return STRING;     }
+{DIGIT}    { make_integer_constant(yylval, yytext); return INTEGER;   }
 "//"       { eat_comment();                                           }
 \n         { lineno++;                                                }
 {WSPACE}   {                                                          }
@@ -164,7 +161,7 @@ make_boolean_constant(YYSTYPE *yylval, char *yytext)
 /* Grammar.l ends here */
 /*
  * Local Variables: ***
- * mode: fundamental ***
+ * mode: flex ***
  * indent-tabs-mode: nil ***
  * End: ***
  */
