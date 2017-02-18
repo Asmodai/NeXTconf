@@ -91,15 +91,15 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 + (IntInstr *)generate:(SyntaxTree *)tree
 {
-  SyntaxTree *root     = tree;
-  IntInstr   *blk1     = nil;
-  IntInstr   *blk2     = nil;
-  IntInstr   *cond     = nil;
-  IntInstr   *jmp2else = nil;
-  IntInstr   *thenpart = nil;
-  IntInstr   *jmp2end  = nil;
-  IntInstr   *elsepart = nil;
-  IntInstr   *endif    = nil;
+  register SyntaxTree *root     = tree;
+  register IntInstr   *blk1     = nil;
+  register IntInstr   *blk2     = nil;
+  IntInstr            *cond     = nil;
+  IntInstr            *jmp2else = nil;
+  IntInstr            *thenpart = nil;
+  IntInstr            *jmp2end  = nil;
+  IntInstr            *elsepart = nil;
+  IntInstr            *endif    = nil;
 
   switch ([root nodeType]) {
     case StmtList:
@@ -324,7 +324,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 - (void)number:(size_t)origin
 {
-  IntInstr *num = self;
+  register IntInstr *num = self;
 
   while (num != nil) {
     [num setLine:origin++];

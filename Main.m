@@ -82,6 +82,7 @@ main(int argc, char **argv)
   VirtualMachine *vm      = nil;
   SyntaxTree     *syntree = nil;
   BOOL            cFlag   = NO;
+  BOOL            tFlag   = NO;
 
   extern int   optind;
   extern char *optarg;
@@ -97,7 +98,7 @@ main(int argc, char **argv)
   yyin     = NULL;
   //yydebug  = 1;
 
-  while ((ch = getopt(argc, argv, "civhf:")) != EOF) {
+  while ((ch = getopt(argc, argv, "citvhf:")) != EOF) {
     switch (ch) {
       case 'c':
         cFlag = YES;
@@ -110,6 +111,10 @@ main(int argc, char **argv)
       case 'i':
         [plat print];
         [arch print];
+        break;
+
+      case 't':
+        tFlag = YES;
         break;
 
       case 'h':
@@ -147,16 +152,17 @@ main(int argc, char **argv)
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  [root_syntree printDebug:"Parsed tokens"];
-  //putchar('\n');
-  printf("\n\n\n");
+  if (tFlag) {
+    [root_syntree printDebug:"Parsed tokens"];
+    putchar('\n');
+  }
 
   code = [IntInstr generate:root_syntree];
   [code number:1];
 
   if (cFlag) {
     [code printDebug:"Intermediate code"];
-    printf("\n");
+    putchar('\n');
   }
 
 
