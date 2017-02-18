@@ -38,6 +38,9 @@
 #import "SymbolTable.h"
 #import "SyntaxTree.h"
 
+/*
+ * These MUST be kept in sync with `op_name` in IntInstr.m!
+ */
 typedef enum {
   OP_NOP,
   OP_PUSH,
