@@ -64,8 +64,13 @@
  */
 - (SEL)selector;
 - (const char *)stringValue;
-- (String *)method;
-- (String *)class;
+- (String *)methodName;
+- (String *)className;
+
+/*
+ * Utility methods.
+ */
+- (int)isValid;
 
 /*
  * Selector calling.
@@ -77,6 +82,9 @@
 
 @interface Selector (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // Selector (Debug)

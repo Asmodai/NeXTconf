@@ -13,6 +13,7 @@ HFILES = Architecture.h    \
 	 Header.h          \
 	 MakeFile.h        \
 	 Scanner.h         \
+	 Constants.h       \
 	 List+Debug.h      \
 	 PropertyManager.h \
 	 Number.h          \
@@ -33,6 +34,7 @@ HFILES = Architecture.h    \
 	 Utils.h           \
 	 Version.h         \
 	 snprintf.h        \
+	 ExtErrno.h        \
 	 version.h
 
 CFILES = Utils.c   \
@@ -43,6 +45,7 @@ CLASSES = Architecture.m    \
 	  Header.m          \
 	  MakeFile.m        \
 	  Scanner.m         \
+	  Constants.m       \
 	  List+Debug.m      \
 	  Main.m            \
 	  PropertyManager.m \
@@ -67,7 +70,7 @@ OTHERSRCS = Makefile.preamble Makefile Makefile.postamble
 
 -include Build/NeXTconf.version
 
-all::
+default: all
 
 distclean: clean
 	@echo "************ Cleaning for distribution ************"

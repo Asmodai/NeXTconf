@@ -39,8 +39,6 @@
  * This class implements a simple stack.
  */
 @interface Stack : List
-{
-}
 
 /*
  * Methods.

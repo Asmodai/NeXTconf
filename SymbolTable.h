@@ -1,5 +1,5 @@
 /*
- * SymbolTable.h  --- Symbol table.
+ * SymbolTable.h  --- Symbol table class interface.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *

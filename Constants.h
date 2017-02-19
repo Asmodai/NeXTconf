@@ -1,11 +1,11 @@
 /*
- * Header.h  --- Header generator interface.
+ * Constants.h  --- Some title
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Sat, 18 Feb 2017 19:11:24 +0000 (GMT)
+ * Created:    Sun, 19 Feb 2017 01:43:45 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -31,50 +31,16 @@
  */
 /* }}} */
 
-#import <objc/Object.h>
-#import "Object+Debug.h"
-
-#import "Property.h"
+#import "Symbol.h"
 #import "String.h"
 #import "Number.h"
 #import "Boolean.h"
 
-/*
- * This class defines an object that stores various flags
- * and information to be translated to a `config' header file.
- */
-@interface Header : Property
-{
-}
+extern Symbol *NilSymbol;
 
-/*
- * Initialisation and destruction.
- */
-- (id)init;
-- (id)free;
+extern void make_constants(void);
 
-/*
- * Accessors.
- */
-- (void)addSymbol:(String *)aSymbol;
-
-/*
- * Predicates.
- */
-- (Boolean *)hasSymbol:(String *)aSymbol;
-
-@end                            // Header
-
-@interface Header (Debug)
-
-/*
- * Debugging.
- */
-- (void)_printDebugInfo:(int)indent;
-
-@end                            // Header (Debug)
-
-/* Header.h ends here */
+/* Constants.h ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***

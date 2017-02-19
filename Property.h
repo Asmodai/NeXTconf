@@ -35,9 +35,13 @@
 #import "Object+Debug.h"
 #import <objc/HashTable.h>
 
+/*
+ * This class defines a base class to be used by property class.
+ *
+ * A `property class' is a class that provides methods accessible
+ * to NeXTconf scripts.
+ */
 @interface Property : Object
-{
-}
 
 /*
  * Initialisation and destruction.

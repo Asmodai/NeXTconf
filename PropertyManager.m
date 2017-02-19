@@ -113,13 +113,12 @@
   lst = [_methods valueForKey:cls];
 
   if ([self haveInstanceOf:cls] == NO) {
-    extern char *progname;
-
-    fprintf(stderr,
-            "%s: Trying to add method `%s' for non-existing class `%s'!",
-            progname,
-            [aMethod stringValue],
-            [cls stringValue]);
+    runtime_warningf(
+      0,
+      "Trying to add method `%s' for non-existing class `%s'!",
+      [aMethod stringValue],
+      [cls stringValue]
+    );
   }
 
   if (lst == nil) {

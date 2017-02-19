@@ -60,7 +60,10 @@ typedef enum {
   JMPTGT
 } Opcode;
 
-/* Intermediate representation. */
+/*
+ * This class represents an `intermediate representation' instruction
+ * which is passed to the VM for translation into opcode.
+ */
 @interface IntInstr : Object
 {
   size_t    _lineNo;

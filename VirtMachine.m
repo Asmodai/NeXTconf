@@ -33,6 +33,11 @@
 
 #import "VirtMachine.h"
 #import "Selector.h"
+#import "ExtErrno.h"
+#import "Constants.h"
+
+#import <stdio.h>
+#import <string.h>
 
 static
 id
@@ -65,6 +70,48 @@ resolveSymbol(id symb, id argSymb)
           result = [sel evaluateWithArg:arg];
         } else {
           result = [sel evaluate];
+        }
+
+        if (result == nil) {
+          switch (errno) {
+            case EXT_ENOCLASS:
+              runtime_errorf(
+                0,
+                "Could not find a class named `%s'.",
+                [[sel className] stringValue]
+              );
+              break;
+
+            case EXT_ENOMETH:
+              runtime_warningf(
+                0,
+                "Could not find method `%s' for class `%s'.",
+                [[sel methodName] stringValue],
+                [[sel className] stringValue]
+              );
+              break;
+
+            case EXT_ENORESP:
+              runtime_warningf(
+                0,
+                "Class `%s' does not respond to `%s'.",
+                [[sel className] stringValue],
+                [[sel methodName] stringValue]
+              );
+              break;
+
+            default:
+              runtime_errorf(
+                0,
+                "Call to `%s' in class `%s' failed: %s.",
+                [[sel methodName] stringValue],
+                [[sel className] stringValue],
+                strerror(errno)
+              );
+              break;
+          }
+
+          result = NilSymbol;
         }
       }
 

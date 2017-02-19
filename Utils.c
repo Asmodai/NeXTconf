@@ -204,11 +204,11 @@ debug_print(size_t indent, const char *fmt, ...)
   size_t  i  = 0;
   
   for (i = 0; i < indent; ++i) {
-    fputc(' ', stderr);
+    fputc(' ', stdout);
   }
 
   va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
+  vfprintf(stdout, fmt, ap);
   va_end(ap);
 }
 
@@ -319,6 +319,48 @@ errorf(char *fmt, ...)
 
   errors++;
   fprintf(stderr, "Line %d: ", lineno);
+
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+
+  fprintf(stderr, "\n");
+}
+
+void
+runtime_errorf(size_t lineNo, char *fmt, ...)
+{
+  va_list ap;
+  
+  fprintf(stderr, "Error");
+
+  if (lineNo > 0) {
+    fprintf(stderr, " on line %lu", lineNo);
+  }
+
+  fprintf(stderr, ": ");
+
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+
+  fprintf(stderr, "\n");
+
+  exit(EXIT_FAILURE);
+}
+
+void
+runtime_warningf(size_t lineNo, char *fmt, ...)
+{
+  va_list ap;
+
+  fprintf(stderr, "Warning");
+
+  if (lineNo > 0) {
+    fprintf(stderr, " on line %lu", lineNo);
+  }
+
+  fprintf(stderr, ": ");
 
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);

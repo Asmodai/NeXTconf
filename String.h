@@ -29,7 +29,8 @@
 /*
  * This class is not meant as a replacement for MiscString or NSString,
  * but just as a simple string implementation that can be used on any
- * NeXT platform without having to have 
+ * NeXT platform without having to have either OpenStep's foundation or
+ * MiscKit.
  */
 /* }}} */
 

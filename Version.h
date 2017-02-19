@@ -1,5 +1,5 @@
 /*
- * Version.h  --- Program version interface.
+ * Version.h  --- Program version class interface.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
@@ -42,8 +42,6 @@
  * The data here is generated at compile-time by a script.
  */
 @interface Version : Object
-{
-}
 
 /*
  * Class methods.

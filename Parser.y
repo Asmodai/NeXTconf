@@ -35,6 +35,7 @@
 
 #import <sys/types.h>
 
+#import "String.h"
 #import "Symbol.h"
 #import "Selector.h"
 #import "SymbolTable.h"
@@ -43,6 +44,7 @@
 #import "IntInstr.h"
 #import "Scanner.h"
 #import "Utils.h"
+#import "ExtErrno.h"
 
 extern SymbolTable *root_symtab;
 
@@ -50,6 +52,7 @@ void        errorf(char *fmt, ...);
 void        yyerror(char *msg);
 const char *make_symbol_name(void);
 const char *make_immediate_name(void);
+Symbol     *make_method_call(const char *, const char *, BOOL);
 
 extern int yylex();
 
@@ -399,45 +402,13 @@ method_name:    ID
 
 method_call:    OPEN_METH class_name method_name CLOSE_METH
                 {
-                  Selector *sel = nil;
-                  Symbol   *sym = nil;
-
-                  sel = [[Selector alloc] initWithMethod:$3
-                                                forClass:$2];
-
-                  if ([sel selector] == NULL) {
-                    yyerror("Unknown method call.");
-                  }
-
-                  sym = [[Symbol alloc] initWithData:sel
-                                             andName:[sel stringValue]
-                                             andType:SymbolSelector];
                   $$ = CTREE(MethodCall, @1.first_line);
-                  [$$ setSymbol:sym];
+                  [$$ setSymbol:make_method_call($2, $3, NO)];
                 }
         |       OPEN_METH class_name method_name METH_ARG simple_expr CLOSE_METH
                 {
-                  Selector   *sel  = nil;
-                  Symbol     *sym  = nil;
-                  String     *meth = [[String alloc] initWithString:$3];
-                  const char *name = NULL;
-
-                  [meth cat:":"];
-                  name = strdup([meth stringValue]);  
-                  xfree(meth);
-
-                  sel = [[Selector alloc] initWithMethod:name
-                                                forClass:$2];
-
-                  if ([sel selector] == NULL) {
-                    yyerror("Unknown method call.");
-                  }
-
-                  sym = [[Symbol alloc] initWithData:sel
-                                             andName:[sel stringValue]
-                                             andType:SymbolSelector];
                   $$ = CTREE1(MethodCall, $5, @1.first_line);
-                  [$$ setSymbol:sym];
+                  [$$ setSymbol:make_method_call($2, $3, YES)];
                 }
         ;
 
@@ -449,6 +420,75 @@ string:         STRING
         ;
 
 %%
+
+/*
+ * Create a selector.
+ */
+Symbol *
+make_method_call(const char *aClass,
+                 const char *aMethod,
+                 BOOL        withArg)
+{
+  Selector   *sel   = nil;
+  Symbol     *sym   = nil;
+  String     *meth  = nil;
+  const char *name  = NULL;
+  String     *msg   = nil;
+  int         valid = 0;
+
+  meth = [[String alloc] initWithString:aMethod];
+
+  if (withArg == YES) {
+    [meth cat:":"];
+  }
+
+  name = strdup([meth stringValue]);
+  [meth free];
+
+  sel = [[Selector alloc] initWithMethod:name
+                                forClass:aClass];
+
+  if ([sel selector] == NULL) {
+    yyerror("Could not create selector!");
+  }
+
+  valid = [sel isValid];
+  switch (valid) {
+    case EXT_ENOCLASS:
+      msg = [[String alloc]
+              initFromFormat:"Could not find a class named `%s'.",
+                             aClass];
+      break;
+
+    case EXT_ENOMETH:
+      msg = [[String alloc]
+              initFromFormat:"Could not find method `%s' for class `%s'.",
+                             name,
+                             aClass];
+      break;
+
+    case EXT_ENORESP:
+      msg = [[String alloc]
+              initFromFormat:"Class `%s' does not respond to `%s'.",
+                             aClass,
+                             name];
+      break;
+
+    default:
+      break;
+  }
+
+  if (msg != nil) {
+    yyerror((char *)[msg stringValue]);
+    [msg free];
+  }
+
+  sym = [[Symbol alloc] initWithData:sel
+                             andName:[sel stringValue]
+                             andType:SymbolSelector];
+
+  return sym;
+}
 
 /*
  * Make a name for a symbol.

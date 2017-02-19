@@ -1,5 +1,5 @@
 /*
- * SyntaxTree.h  --- Syntax tree.
+ * SyntaxTree.h  --- Syntax tree class interface.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *

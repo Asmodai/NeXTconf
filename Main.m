@@ -54,11 +54,11 @@
 #import "Platform.h"
 
 #import "Utils.h"
+#import "Constants.h"
 
 extern int yyparse(void *);
 
 SymbolTable *root_symtab;
-SyntaxTree  *root_syntree;
 
 char *progname = NULL;
 
@@ -77,29 +77,25 @@ main(int argc, char **argv)
   int             ch      = 0;
   char           *fname   = NULL;
   IntInstr       *code    = nil;
-  //Platform       *plat    = nil;
-  //Architecture   *arch    = nil;
   VirtualMachine *vm      = nil;
   SyntaxTree     *syntree = nil;
   BOOL            cFlag   = NO;
   BOOL            tFlag   = NO;
   BOOL            oFlag   = NO;
 
-  extern int   optind;
+  //extern int   optind;
   extern char *optarg;
 
-  root_symtab  = [[SymbolTable alloc] init];
-  root_syntree = [[SyntaxTree alloc] init];
-  
+  make_constants();
+
   [[PropertyManager sharedInstance] instantiateAllClasses];
 
-  //plat    = [[Platform alloc] init];
-  //arch    = [[Architecture alloc] init];
-  vm      = [[VirtualMachine alloc] init];
-
+  root_symtab = [[SymbolTable alloc] init];
+  syntree     = [[SyntaxTree alloc] init];
+  vm          = [[VirtualMachine alloc] init];
+  
   progname = argv[0];
   yyin     = NULL;
-  //yydebug  = 1;
 
   while ((ch = getopt(argc, argv, "citovhf:")) != EOF) {
     switch (ch) {
@@ -112,8 +108,25 @@ main(int argc, char **argv)
         break;
 
       case 'i':
-        //[plat print];
-        //[arch print];
+        {
+          String       *name = nil;
+          Architecture *arch = nil;
+          Platform     *plat = nil;
+
+          name = [[String alloc] initWithString:"Architecture"];
+          arch = [[PropertyManager sharedInstance] findInstance:name];
+          if (arch) {
+            [arch print];
+          }
+          xfree(name);
+          
+          name = [[String alloc] initWithString:"Platform"];
+          plat = [[PropertyManager sharedInstance] findInstance:name];
+          if (plat) {
+            [plat print];
+          }
+          xfree(name);          
+        }
         break;
 
       case 'o':
@@ -139,7 +152,7 @@ main(int argc, char **argv)
   }
 
   if ((yyin = fopen(fname, "r")) == NULL) {
-    fprintf(stderr, "%s: Could not open '%s': %s\n",
+    fprintf(stderr, "%s: Could not open '%s': %s.\n",
             progname,
             fname,
             strerror(errno));
@@ -150,10 +163,10 @@ main(int argc, char **argv)
     yyin = stdin;
   }
 
-  yyparse(root_syntree);
+  yyparse(syntree);
 
   if (tFlag) {
-    [root_syntree printDebug:"Parsed tokens"];
+    [syntree printDebug:"Parsed tokens"];
     putchar('\n');
   }
 
@@ -170,14 +183,13 @@ main(int argc, char **argv)
   //[root_symtab printDebug:"Symbols"];
   //putchar('\n');
 
-  code = [IntInstr generate:root_syntree];
+  code = [IntInstr generate:syntree];
   [code number:1];
 
   if (cFlag) {
     [code printDebug:"Intermediate code"];
     putchar('\n');
   }
-
 
   [vm reset];
   [vm read:code];

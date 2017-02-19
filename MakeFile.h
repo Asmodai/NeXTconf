@@ -39,6 +39,10 @@
 #import "Number.h"
 #import "Boolean.h"
 
+/*
+ * This class defines an object that stores various flags
+ * and information that is then written to a Makefile.
+ */
 @interface MakeFile : Property
 {
 }

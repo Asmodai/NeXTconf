@@ -1,11 +1,11 @@
 /*
- * Header.h  --- Header generator interface.
+ * ExtErrno.h  --- Custom `errno' values.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Sat, 18 Feb 2017 19:11:24 +0000 (GMT)
+ * Created:    Sun, 19 Feb 2017 01:32:05 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -31,53 +31,22 @@
  */
 /* }}} */
 
-#import <objc/Object.h>
-#import "Object+Debug.h"
+#ifndef _EXTERRNO_H_
+#define _EXTERRNO_H_
 
-#import "Property.h"
-#import "String.h"
-#import "Number.h"
-#import "Boolean.h"
+#include <errno.h>
 
-/*
- * This class defines an object that stores various flags
- * and information to be translated to a `config' header file.
- */
-@interface Header : Property
-{
-}
+#define EXT_EISEMPTY   200      /* Thing is empty. */
+#define EXT_EPARSER    201      /* Parser error. */
+#define EXT_ENOCLASS   202      /* Class not found. */
+#define EXT_ENOMETH    203      /* Method not found. */
+#define EXT_ENORESP    204      /* Thing does not respond to method. */
 
-/*
- * Initialisation and destruction.
- */
-- (id)init;
-- (id)free;
+#endif /* !_EXTERRNO_H_ */
 
-/*
- * Accessors.
- */
-- (void)addSymbol:(String *)aSymbol;
-
-/*
- * Predicates.
- */
-- (Boolean *)hasSymbol:(String *)aSymbol;
-
-@end                            // Header
-
-@interface Header (Debug)
-
-/*
- * Debugging.
- */
-- (void)_printDebugInfo:(int)indent;
-
-@end                            // Header (Debug)
-
-/* Header.h ends here */
+/* ExtErrno.h ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***
- * mode: objc ***
  * End: ***
  */

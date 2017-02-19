@@ -263,8 +263,7 @@ get_os_version(void)
     const platform_t *platform = NULL;
 
     if (get_os_version() == NO) {
-      fprintf(stderr, "Could not get kernel version from Mach.\n");
-      exit(EXIT_FAILURE);
+      runtime_errorf(0, "Could not get kernel version from Mach.");
     }
 
     platform = get_platform(_major_version, _minor_version);

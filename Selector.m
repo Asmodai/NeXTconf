@@ -35,6 +35,7 @@
 #import "PropertyManager.h"
 #import "Utils.h"
 #import "snprintf.h"
+#import "ExtErrno.h"
 
 #import <stdio.h>
 #import <stdlib.h>
@@ -95,14 +96,36 @@
   return sel_getName(_selector);
 }
 
-- (String *)method
+- (String *)methodName
 {
-  return [_method copy];
+  return _method;
 }
 
-- (String *)class
+- (String *)className
 {
-  return [_class copy];
+  return _class;
+}
+
+- (int)isValid
+{
+  id class = nil;
+
+  class = [[PropertyManager sharedInstance] findInstance:_class];
+  if (class == nil) {
+    return EXT_ENOCLASS;
+  }
+
+  if (![[PropertyManager sharedInstance] haveMethod:_method
+                                           forClass:_class])
+  {
+    return EXT_ENOMETH;
+  }
+
+  if (![class respondsTo:_selector]) {
+    return EXT_ENORESP;
+  }
+
+  return 0;
 }
 
 - (id)evaluate
@@ -112,49 +135,22 @@
 
 - (id)evaluateWithArg:(id)anArg
 {
-  id           class    = nil;
-  extern char *progname;
+  int valid = 0;
+  id  class = nil;
+
+  if ((valid = [self isValid]) != 0) {
+    errno = valid;
+    return nil;
+  }
 
   class = [[PropertyManager sharedInstance] findInstance:_class];
-  if (class == nil) {
-    fprintf(stderr,
-            "%s: Could not find a class named '%s'!",
-            progname,
-            [_class stringValue]);
-    exit(EXIT_FAILURE);
+
+  if (anArg == nil) {
+    return [class perform:_selector];
   }
 
-  if (![[PropertyManager sharedInstance] haveMethod:_method
-                                           forClass:_class])
-  {
-    fprintf(stderr,
-            "%s: Could not find method `%s' for class `%s'!",
-            progname,
-            [_method stringValue],
-            [_class stringValue]);
-    exit(EXIT_FAILURE);
-  }
-
-  if ([class respondsTo:_selector]) {
-    if (anArg == nil) {
-      return [class perform:_selector];
-    }
-
-    return [class perform:_selector
-                     with:anArg];
-  }
-
-  fprintf(stderr,
-          "Class '%s' does not respond to method '%s'.\n",
-          [_class stringValue],
-          [_method stringValue]);
-
-  [self _printDebugInfo:6];
-
-  exit(EXIT_FAILURE);
-
-  /* Keep compiler happy. */
-  return nil;
+  return [class perform:_selector
+                   with:anArg];
 }
 
 

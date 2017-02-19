@@ -1,5 +1,5 @@
 /*
- * FileSystem.h  --- Some title
+ * FileSystem.h  --- File System class interface.
  *
  * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
@@ -39,6 +39,10 @@
 #import "Number.h"
 #import "Boolean.h"
 
+/*
+ * This class defines methods that allow scripts to interact with
+ * the underlaying file system.
+ */
 @interface FileSystem : Property
 
 /*

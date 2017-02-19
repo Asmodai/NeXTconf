@@ -37,6 +37,9 @@
 
 @interface List (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // List (Debug)

@@ -41,6 +41,7 @@
 #import "Utils.h"
 #import "IntInstr.h"
 #import "Scanner.h"
+#import "ExtErrno.h"
 
 /*
  * Default maximum number of children.
@@ -132,24 +133,20 @@ const int children_per_node[] = {
                                                         atLine:aLine];
   int                  res  = 0;
   register const char *name;
-  extern char         *progname;
   extern int           yydebug;
  
   extern int  yyparse();
  
   if (aFile == nil && [aFile length] == 0) {
-    fprintf(stderr, "%s: Unable to parse due to empty file name.\n", progname);
-    exit(EXIT_FAILURE);
+    errno = EXT_EISEMPTY;
+    return nil;
   }
 
   name = [aFile stringValue];
 
   if ((yyin = fopen(name, "r")) == NULL) {
-    fprintf(stderr, "%s: Could not open '%s': %s\n",
-            progname,
-            name,
-            strerror(errno));
-    exit(EXIT_FAILURE);
+    /* Callee gets to check errno. */
+    return nil;
   }
 
   yydebug = debugFlag;
@@ -157,7 +154,8 @@ const int children_per_node[] = {
 
   if (res != 0 || errors > 0) {
     error_summary();
-    exit(EXIT_FAILURE);
+    errno = EXT_EPARSER;
+    return nil;
   }
 
   return new;
@@ -347,8 +345,6 @@ const int children_per_node[] = {
 
 - (void)checkSyntax
 {
-  extern int lineno;
-
   /* First, set the required return type. */
   switch (_nodeType) {
     case StmtList:
@@ -403,9 +399,8 @@ const int children_per_node[] = {
     case IfThenStmt:
     case IfThenElseStmt:
       if ([[_children objectAt:0] returnType] != ReturnBool) {
-        fprintf(stderr,
-                "Line %lu: if: Condition should be boolean.\n",
-                _lineNumber);
+        runtime_warningf(_lineNumber,
+                         "IF: Condition should be boolean.");
       }
       break;
 
@@ -415,22 +410,19 @@ const int children_per_node[] = {
       if (([[_children objectAt:0] returnType] != ReturnBool) &&
           ([[_children objectAt:1] returnType] != ReturnBool))
       {
-        fprintf(stderr,
-                "Line %lu: Logic operator: Both arguments should be boolean.\n",
-                _lineNumber);
+        runtime_warningf(_lineNumber,
+                         "LOGIC: Both arguments should be boolean.");
       }
       break;
 
     case ConcatExpr:
       if (![self coerceToString:0]) {
-        fprintf(stderr,
-                "Line %lu: +: Cannot coerce first argument to string.\n",
-                _lineNumber);
+        runtime_warningf(_lineNumber,
+                         "+: Cannot coerce first argument to string.");
       }
       if (![self coerceToString:1]) {
-        fprintf(stderr,
-                "Line %lu: +: Cannot coerce second argument to string.\n",
-                _lineNumber);
+        runtime_warningf(_lineNumber,
+                         "+: Cannot coerce second argument to string.");
       }
       break;
 
@@ -450,20 +442,35 @@ const int children_per_node[] = {
   if (_nodeType == IncludedFile) {
     register String *file = nil;
     extern int       yydebug;
-    extern char     *progname;
 
     if (_symbol == nil) {
-      fprintf(stderr,
-              "Line %lu: %s: Symbol missing, cannot determine what to include!\n",
-              _lineNumber,
-              progname);
-      exit(EXIT_FAILURE);
+      runtime_errorf(_lineNumber,
+                     "Symbol missing, cannot determine what to include!");
     }
 
     file      = [_symbol data];
     _included = [SyntaxTree newFromFile:file
                                  atLine:_lineNumber
                               withDebug:yydebug];
+
+    if (_included == nil) {
+      switch (errno) {
+        case EXT_EISEMPTY:      // 'file' == nil or empty.
+          runtime_errorf(_lineNumber,
+                         "File name to include is empty!");
+          break;
+
+        case EXT_EPARSER:       // Parser errors.
+          exit(EXIT_FAILURE);
+          break;
+
+        default:                // Something else!
+          runtime_errorf(_lineNumber,
+                         "Could not include file '%s': %s",
+                         [file stringValue],
+                         strerror(errno));
+      }
+    }
   }
 }
 

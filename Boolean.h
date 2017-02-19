@@ -75,6 +75,9 @@
 
 @interface Boolean (Debug)
 
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // Boolean (Debug)

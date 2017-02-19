@@ -121,6 +121,9 @@ extern size_t errors;
 void errorf(char *, ...);
 void error_summary(void);
 
+void runtime_errorf(size_t, char *, ...);
+void runtime_warningf(size_t, char *, ...);
+
 void yyerror(char *);
 int  yywrap(void);
 

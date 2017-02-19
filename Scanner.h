@@ -36,6 +36,11 @@
 
 #import <stdio.h>
 
+/* This is coming from sys/tty.h ! */
+#ifdef ECHO
+# undef ECHO
+# define ECHO
+#endif
 
 #ifdef _IN_LEXER_
 #import "Parser.h"

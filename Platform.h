@@ -1,5 +1,5 @@
 /*
- * Platform.h  --- Platform detection.
+ * Platform.h  --- Platform detection interface.
  *
  * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
  *
