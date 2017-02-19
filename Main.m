@@ -82,6 +82,7 @@ main(int argc, char **argv)
   BOOL            cFlag   = NO;
   BOOL            tFlag   = NO;
   BOOL            oFlag   = NO;
+  BOOL            sFlag   = NO;
 
   //extern int   optind;
   extern char *optarg;
@@ -97,7 +98,7 @@ main(int argc, char **argv)
   progname = argv[0];
   yyin     = NULL;
 
-  while ((ch = getopt(argc, argv, "citovhf:")) != EOF) {
+  while ((ch = getopt(argc, argv, "citosvhf:")) != EOF) {
     switch (ch) {
       case 'c':
         cFlag = YES;
@@ -131,6 +132,10 @@ main(int argc, char **argv)
 
       case 'o':
         oFlag = YES;
+        break;
+
+      case 's':
+        sFlag = YES;
         break;
 
       case 't':
@@ -180,8 +185,10 @@ main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
-  //[root_symtab printDebug:"Symbols"];
-  //putchar('\n');
+  if (sFlag) {
+    [root_symtab printDebug:"Symbols"];
+    putchar('\n');
+  }
 
   code = [IntInstr generate:syntree];
   [code number:1];
@@ -194,12 +201,6 @@ main(int argc, char **argv)
   [vm reset];
   [vm read:code];
   [vm execute];
-
-  /*
-  printf("\n\n");
-  [root_symtab printDebug:"Symbols"];
-  putchar('\n');
-  */
 
   return errors ? 1 : 0;
 }
