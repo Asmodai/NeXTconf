@@ -1,4 +1,4 @@
-Release 0.91  Copyleft ã2017 by Paul Ward.  All Rights Reserved.
+Release 0.93  Copyleft (c)2017 by Paul Ward.  All Rights Reserved.
 
 #Version
 

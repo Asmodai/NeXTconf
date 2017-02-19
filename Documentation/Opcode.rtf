@@ -3,7 +3,7 @@
 \paperh10940
 \margl40
 \margr40
-\f0\b0\i0\ulnone\ql\fs24\fi0\li0\gray0\fc0\cf0\up0\dn0 Release 0.91  Copyleft 
+\f0\b0\i0\ulnone\ql\fs24\fi0\li0\gray0\fc0\cf0\up0\dn0 Release 0.93  Copyleft 
 \f1 ã
 \f0 2017 by Paul Ward.  All Rights Reserved.\
 \
@@ -160,8 +160,7 @@ The result of executing `nextconf -cf example' will be\
 \f2 	Jump to a jump target.\
 
 \f3 OP_JMPF
-\f2 	Jump to a target if `
-false' is popped from the stack.\
+\f2 	Jump to a target if `false' is popped from the stack.\
 
 \f3 OP_EQL
 \f2 	Generic equality test.\
@@ -170,16 +169,13 @@ false' is popped from the stack.\
 \f2 	Generic non-equality test.\
 
 \f3 OP_LAND
-\f2 	Logical `
-AND' test.\
+\f2 	Logical `AND' test.\
 
 \f3 OP_LOR
-\f2 	Logical `
-OR' test.\
+\f2 	Logical `OR' test.\
 
 \f3 OP_LXOR
-\f2 	Logical `
-XOR' test.\
+\f2 	Logical `XOR' test.\
 
 \f3 OP_CONCAT
 \f2 	Concatenate two things.\
@@ -211,51 +207,42 @@ XOR' test.\
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_PUSH
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pushes an object to the stack.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pushes an object to the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_POP
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops an object from the stack.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops an object from the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_PRINT
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops an object from the stack and then prints it out to standard output.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops an object from the stack and then prints it out to standard output.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_JMP
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode jumps to specific instruction line number.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode jumps to specific instruction line number.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_JMPF
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops an object from the stack and compares it to `
-false'.  If the object is `
-false', then it jumps to the specific instruction line number.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops an object from the stack and compares it to `false'.  If the object is `false', then it jumps to the specific instruction line number.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_EQL
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops two objects from the stack and compares them for equality.  If the objects are equal, then `
-true' is pushed to the stack; otherwise `false` is pushed instead.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops two objects from the stack and compares them for equality.  If the objects are equal, then `true' is pushed to the stack; otherwise `false` is pushed instead.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
@@ -264,36 +251,28 @@ true' is pushed to the stack; otherwise `false` is pushed instead.
 
 \fs28 This opcode is the inverse of `
 \f3\fs24 OP_EQL
-\f0\fs28 ', pushing `
-true' if the two objects are not equal, and pushing `
-false' if they are equal.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\f0\fs28 ', pushing `true' if the two objects are not equal, and pushing `false' if they are equal.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_LAND
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops two objects from the stack and performs a logical `
-AND' on them, such at `object1 
-AND object2`.  The results of the test are pushed to the stack.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops two objects from the stack and performs a logical `AND' on them, such at `object1 AND object2`.  The results of the test are pushed to the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_LOR
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 OR object2`.  The results of the test are pushed to the stack.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 OR object2`.  The results of the test are pushed to the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
 \pard\fs28\fi-380\li2480\fc0\cf0 OP_LXOR
 \pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
 
-\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 XOR object2`.  The results of the test are pushed to the stack.
-\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 XOR object2`.  The results of the test are pushed to the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 
