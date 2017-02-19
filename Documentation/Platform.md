@@ -34,40 +34,40 @@ but would evaluate to the following on OPENSTEP 4.0 PR 1:
 
 ### isOpenStep
 
-(Boolean)isOpenStep
+(Boolean)*isOpenStep*
 
 Returns true if the platform is an implementation of the OpenStep specification.
 
 
 ### majorVersion
 
-(Number)majorVersion
+(Number)*majorVersion*
 
 Returns the major version number.
 
 ### minorVersion
 
-(Number)minorVersion
+(Number)*minorVersion*
 
 Returns the minor version number.
 
 
 ### platform
 
-(String)platform
+(String)*platform*
 
 Returns the product name, e.g. `NEXTSTEP 3.x`.
 
 
 ### product
 
-(String)hasM68K
+(String)*hasM68K*
 
 Returns the platform name, e.g. `NEXTSTEP`.
 
 
 ### versionString
 
-(String)versionString
+(String)*versionString*
 
 Returns the version string, e.g. `3.3`.

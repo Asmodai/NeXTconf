@@ -1,0 +1,333 @@
+{\rtf0\ansi{\fonttbl\f0\fnil Times-Roman;\f1\ftech Symbol;\f2\fswiss Helvetica;\f3\fmodern Courier;\f4\fmodern Ohlfs;}
+\paperw14480
+\paperh10940
+\margl40
+\margr40
+\f0\b0\i0\ulnone\ql\fs24\fi0\li0\gray0\fc0\cf0\up0\dn0 Release 0.91  Copyleft 
+\f1 ã
+\f0 2017 by Paul Ward.  All Rights Reserved.\
+\
+
+\f2\b\fs56\li2100 Opcode\
+
+\fs52\li1360 \
+
+\fs36 Virtual Machine\
+
+\fs14 \
+
+\pard\tx2480\tx2860\tx3240\f0\b0\fs28\li2100\fc0\cf0 NeXTconf utilises a stack-based virtual machine to interpret opcode.\
+\
+You can view the opcode of any script by invoking NeXTconf with the `-c' option.\
+\
+For example, let's say the file `example' has the code\
+\
+
+\pard\tx520\tx1060\tx1600\tx2120\tx2660\tx3200\tx3720\tx4260\tx4800\tx5320\f3\fs24\fc0\cf0 				thePlat = [Platform platform];\
+				theArch = [Architecture currentArchitecture];\
+				theProc = [Architecture currentProcessor];\
+				theVers = [Platform versionString];\
+\
+				print "Platform:     " + thePlat;				print "Architecture: " + theArch;\
+				print "Processor:    " + theProc;\
+\
+				if ([Platform isOpenStep] == true) \{\
+				  print "We are OpenStep " + theVers;\
+				\} else \{\
+				  print "We are NOT OpenStep.";\
+\
+				  if ([Platform majorVersion] != 4) \{\
+				    print "Hello, NeXTSTEP 3 user!";\
+				  \} else \{\
+				    print "Wow, what are you using?";\
+				  \}\
+				\}
+\f2 \
+
+\pard\tx2480\tx2860\tx3240\f0\fs28\li2100\fc0\cf0 \
+The result of executing `nextconf -cf example' will be\
+
+\f3 \
+
+\pard\tx520\tx1060\tx1600\tx2120\tx2660\tx3200\tx3720\tx4260\tx4800\tx5320\fs24\fc0\cf0 				Intermediate code <IntInstr:0x10143c>\
+				         1: OP_CALL     platform            ;
+\f2  Invoke `platform` method.
+\f3 \
+				         2: OP_POP      thePlat             ;
+\f2  Pop returned value into `thePlat`.
+\f3 \
+				         3: OP_CALL     currentArchitecture\
+				         4: OP_POP      theArch\
+				         5: OP_CALL     currentProcessor\
+				         6: OP_POP      theProc\
+ 				         7: OP_CALL     versionString\
+ 				         8: OP_POP      theVers\
+				         9: OP_PUSH     strconst1           ;
+\f2  Push `strconst1` symbol to stack.
+\f3 \
+				        10: OP_PUSH     thePlat             ;
+\f2  Push `thePlat` object to stack.
+\f3 \
+				        11: OP_CONCAT                       ;
+\f2  Concatenate from stack and push new value.
+\f3 \
+				        12: OP_PRINT                        ;
+\f2  Pop from stack and print.
+\f3  \
+				        13: OP_PUSH     strconst2				        14: OP_PUSH     theArch\
+  				        15: OP_CONCAT\
+ 				        16: OP_PRINT\
+  				        17: OP_PUSH     strconst3\
+ 				        18: OP_PUSH     theProc\
+ 				        19: OP_CONCAT\
+ 				        20: OP_PRINT\
+				        21: OP_CALL     isOpenStep          ;
+\f2  Invoke `isOpenStep` method.
+\f3 				        22: OP_PUSH     immedval1           ;
+\f2  Push `immedval1` symbol to stack.
+\f3 \
+ 				        23: OP_EQL                          ;
+\f2  Test if they are equal and push result.
+\f3 \
+ 				        24: OP_JMPF     31                  ;
+\f2  Pop result, compare to `false`, jump to 31 if so.
+\f3 \
+ 			 	        25: OP_PUSH     strconst4\
+ 				        26: OP_PUSH     theVers\
+ 				        27: OP_CONCAT\
+ 				        28: OP_PRINT\
+				        29: OP_NOP\
+
+\pard\tx520\tx1060\tx1600\tx2120\tx2660\tx3200\tx3720\tx4260\tx4800\tx5320\fc0\cf0 				        30: OP_JMP      48                  ;
+\f2  Jump to 48.
+\f3 \
+				        31: JMPTGT      24                  ;
+\f2  Jump target from `OP_JMPF' on line 24.
+\f3 \
+				        32: OP_PUSH     strconst5\
+				        33: OP_PRINT\
+ 				        34: OP_CALL     majorVersion        ;
+\f2  Invoke `majorVersion` method.
+\f3 \
+				        35: OP_PUSH     immedval2           ;
+\f2  Push `immedval2` symbol to stack.
+\f3 \
+ 				        36: OP_NEQ                          ;
+\f2  Test if they are not equal and push result.
+\f3 \
+ 				        37: OP_JMPF     42                  ;
+\f2  Pop result, compare to `false`, jump to 42 if so.
+\f3 \
+ 				        38: OP_PUSH     strconst6\
+				        39: OP_PRINT\
+				        40: OP_NOP						        41: OP_JMP      46\
+				        42: JMPTGT      37\
+ 				        43: OP_PUSH     strconst7\
+ 				        44: OP_PRINT\
+				        45: OP_NOP\
+				        46: JMPTGT      41\
+				        47: OP_NOP\
+				        48: JMPTGT      30\
+				        49: OP_NOP\
+\
+				Platform:     OPENSTEP\
+				Architecture: I386\
+				Processor:    Intel 486\
+				We are OpenStep 4.2
+\f2\b\fs36 \
+\
+
+\pard\li1360\fc0\cf0 Opcode table\
+
+\b0\fs24\fi-380\li2480 \
+
+\pard\tx5740\b\fi-380\li2480\fc0\cf0 Opcode	Operation
+\b0 \
+
+\f3 OP_NOP
+\f2 	No operation.\
+
+\f3 OP_PUSH
+\f2 	Push to the stack.\
+
+\f3 OP_POP
+\f2 	Pop from the stack.\
+
+\f3 OP_PRINT
+\f2 	Print something to standard output.\
+
+\f3 OP_JMP
+\f2 	Jump to a jump target.\
+
+\f3 OP_JMPF
+\f2 	Jump to a target if `
+false' is popped from the stack.\
+
+\f3 OP_EQL
+\f2 	Generic equality test.\
+
+\f3 OP_NEQ
+\f2 	Generic non-equality test.\
+
+\f3 OP_LAND
+\f2 	Logical `
+AND' test.\
+
+\f3 OP_LOR
+\f2 	Logical `
+OR' test.\
+
+\f3 OP_LXOR
+\f2 	Logical `
+XOR' test.\
+
+\f3 OP_CONCAT
+\f2 	Concatenate two things.\
+
+\f3 OP_CALL
+\f2 	Calls an object's method.\
+
+\f3 OP_CALLA
+\f2 	Calls an object's method with an argument.\
+
+\f3 OP_BLN2STR
+\f2 	Convert a boolean to a string.\
+
+\f3 JMPTGT
+\f2 	A label for jumps ± is never evaluated.\
+
+\b\fs52 \
+
+\fs36\fi0\li1360 Opcode descriptions\
+\
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_NOP
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode does absolutely nothing.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_PUSH
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pushes an object to the stack.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_POP
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops an object from the stack.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_PRINT
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops an object from the stack and then prints it out to standard output.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_JMP
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode jumps to specific instruction line number.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_JMPF
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops an object from the stack and compares it to `
+false'.  If the object is `
+false', then it jumps to the specific instruction line number.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_EQL
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and compares them for equality.  If the objects are equal, then `
+true' is pushed to the stack; otherwise `false` is pushed instead.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_NEQ
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode is the inverse of `
+\f3\fs24 OP_EQL
+\f0\fs28 ', pushing `
+true' if the two objects are not equal, and pushing `
+false' if they are equal.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_LAND
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and performs a logical `
+AND' on them, such at `object1 
+AND object2`.  The results of the test are pushed to the stack.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_LOR
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 OR object2`.  The results of the test are pushed to the stack.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_LXOR
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and performs a logical inclusive `OR` on them, such that `object1 XOR object2`.  The results of the test are pushed to the stack.
+\pard\tx2480\tx2860\tx3240\li2100\fc0\cf0 \
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_CONCAT
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and concatenates them, pushing the result to the stack.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_CALL
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode calls the method named in its immediate value, pushing the result of the call to the stack.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_CALLA
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops an object from the stack and then calls the method named in its immediate value using the object as an argument.  The result of the call is pushed to the stack.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_BLN2STR
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops an object from the stack, converts it to a boolean value, and then pushes the boolean to the stack.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 JMPTGT
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 The virtual machine treats this as an `OP_NOP` instruction.\
+
+}

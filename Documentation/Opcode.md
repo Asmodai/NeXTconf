@@ -6,7 +6,7 @@ NeXTconf utilises a stack-based virtual machine to interpret opcode.
 
 You can view the opcode of any script by invoking NeXTconf with the `-c` option.
 
-For example, let's say the file `example` has the code
+For example, let's say the file `example` has the code:
 ```objc
 thePlat = [Platform platform];
 theArch = [Architecture currentArchitecture];
@@ -29,7 +29,7 @@ if ([Platform isOpenStep] == true) {
   }
 }
 ```
-then the result of executing `nextconf -cf example` will be
+The result of executing `nextconf -cf example` will be
 ```
 Intermediate code <IntInstr:0x10143c>
          1: OP_CALL     platform            ; Invoke `platform` method.
@@ -65,7 +65,7 @@ Intermediate code <IntInstr:0x10143c>
         31: JMPTGT      24                  ; Jump target from `OP_JMPF' on line 24.
         32: OP_PUSH     strconst5
         33: OP_PRINT
-        34: OP_CALL     majorVersion        ; Invoke `majorVersion` method
+        34: OP_CALL     majorVersion        ; Invoke `majorVersion` method.
         35: OP_PUSH     immedval2           ; Push `immedval2` symbol to stack.
         36: OP_NEQ                          ; Test if they are not equal and push result.
         37: OP_JMPF     42                  ; Pop result, compare to `false`, jump to 42 if so.
