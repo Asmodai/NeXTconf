@@ -32,18 +32,18 @@ if ([Platform isOpenStep] == true) {
 then the result of executing `nextconf -cf example` will be
 ```
 Intermediate code <IntInstr:0x10143c>
-         1: OP_CALL     platform
-         2: OP_POP      thePlat
+         1: OP_CALL     platform            ; Invoke `platform` method.
+         2: OP_POP      thePlat             ; Pop returned value into `thePlat`.
          3: OP_CALL     currentArchitecture
          4: OP_POP      theArch
          5: OP_CALL     currentProcessor
          6: OP_POP      theProc
          7: OP_CALL     versionString
          8: OP_POP      theVers
-         9: OP_PUSH     strconst1
-        10: OP_PUSH     thePlat
-        11: OP_CONCAT
-        12: OP_PRINT
+         9: OP_PUSH     strconst1           ; Push `strconst1` symbol to stack.
+        10: OP_PUSH     thePlat             ; Push `thePlat` object to stack.
+        11: OP_CONCAT                       ; Concatenate from stack and push new value.
+        12: OP_PRINT                        ; Pop from stack and print. 
         13: OP_PUSH     strconst2
         14: OP_PUSH     theArch
         15: OP_CONCAT
@@ -52,23 +52,23 @@ Intermediate code <IntInstr:0x10143c>
         18: OP_PUSH     theProc
         19: OP_CONCAT
         20: OP_PRINT
-        21: OP_CALL     isOpenStep
-        22: OP_PUSH     immedval1
-        23: OP_EQL
-        24: OP_JMPF     31
+        21: OP_CALL     isOpenStep          ; Invoke `isOpenStep` method.
+        22: OP_PUSH     immedval1           ; Push `immedval1` symbol to stack.
+        23: OP_EQL                          ; Test if they are equal and push result.
+        24: OP_JMPF     31                  ; Pop result, compare to `false`, jump to 31 if so.
         25: OP_PUSH     strconst4
         26: OP_PUSH     theVers
         27: OP_CONCAT
         28: OP_PRINT
         29: OP_NOP
-        30: OP_JMP      48
-        31: JMPTGT      24
+        30: OP_JMP      48                  ; Jump to 48.
+        31: JMPTGT      24                  ; Jump target from `OP_JMPF' on line 24.
         32: OP_PUSH     strconst5
         33: OP_PRINT
-        34: OP_CALL     majorVersion
-        35: OP_PUSH     immedval2
-        36: OP_NEQ
-        37: OP_JMPF     42
+        34: OP_CALL     majorVersion        ; Invoke `majorVersion` method
+        35: OP_PUSH     immedval2           ; Push `immedval2` symbol to stack.
+        36: OP_NEQ                          ; Test if they are not equal and push result.
+        37: OP_JMPF     42                  ; Pop result, compare to `false`, jump to 42 if so.
         38: OP_PUSH     strconst6
         39: OP_PRINT
         40: OP_NOP
@@ -87,6 +87,8 @@ Architecture: I386
 Processor:    Intel 486
 We are OpenStep 4.2
 ```
+
+Comments have been added by me to this document to highlight some opcode patterns.
 
 ## Opcode table
 
