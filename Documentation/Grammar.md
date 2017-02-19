@@ -1,3 +1,4 @@
+```yacc
 program:        statements
         ;
 
@@ -83,3 +84,4 @@ boolean:        BOOLEAN
 
 string:         STRING
         ;
+```
