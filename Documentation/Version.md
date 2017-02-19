@@ -10,26 +10,26 @@ The `Version' object holds version information about NeXTconf itself.  It can be
 
 ### version
 
-(Number)*version*
+(Number)**version**
 
 Returns the current version numbers encoded as a single numeric value.
 
-The algorithm used is:  (/major/ * 100000000) + (/minor/ * 1000000) + /build/. 
+The algorithm used is:  (*major* * 100000000) + (*minor* * 1000000) + *build*. 
 
 ### major
 
-(Number)*major*
+(Number)**major**
 
 Returns the major version number.
 
 ### minor
 
-(Number)*minor*
+(Number)**minor**
 
 Returns the minor version number.
 
 ### build
 
-(Number)*build*
+(Number)**build**
 
 Returns the build number.
