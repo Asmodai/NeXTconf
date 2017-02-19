@@ -35,6 +35,7 @@
 
 #import "Property.h"
 #import "Number.h"
+#import "Boolean.h"
 
 /* Pull in version information. */
 #import "version.h"
@@ -70,6 +71,8 @@
 - (Number *)major;
 - (Number *)minor;
 - (Number *)build;
+- (Boolean *)isGreaterThan:(Number *)aVersion;
+- (Boolean *)isGreaterThanOrEqualTo:(Number *)aVersion;
 
 @end                            // Version
 

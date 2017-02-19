@@ -97,6 +97,8 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
     ADD_PROPERTY_METHOD("major");
     ADD_PROPERTY_METHOD("minor");
     ADD_PROPERTY_METHOD("build");
+    ADD_PROPERTY_METHOD("isGreaterThan:");
+    ADD_PROPERTY_METHOD("isGreaterThanOrEqualTo:");
   }
 
   return self;
@@ -149,6 +151,36 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   }
 
   return vers;  
+}
+
+- (Boolean *)isGreaterThan:(Number *)aVersion
+{
+  register unsigned long  ourVer   = __Version;
+  register unsigned long  otherVer = 0;
+  register BOOL           ret      = NO;
+
+  if ([aVersion respondsTo:@selector(intValue)]) {
+    otherVer = [aVersion intValue];
+
+    ret = (otherVer > ourVer) ? YES : NO;
+  }
+
+  return [[Boolean alloc] initWithBool:ret];
+}
+
+- (Boolean *)isGreaterThanOrEqualTo:(Number *)aVersion
+{
+  register unsigned long  ourVer   = __Version;
+  register unsigned long  otherVer = 0;
+  register BOOL           ret      = NO;
+
+  if ([aVersion respondsTo:@selector(intValue)]) {
+    otherVer = [aVersion intValue];
+
+    ret = (otherVer >= ourVer) ? YES : NO;
+  }
+
+  return [[Boolean alloc] initWithBool:ret];
 }
 
 @end                            // Version

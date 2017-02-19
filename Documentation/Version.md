@@ -33,3 +33,15 @@ Returns the minor version number.
 (Number)**build**
 
 Returns the build number.
+
+### isGreaterThan:
+
+(Boolean)**isGreaterThan:**(Number)*aVersion*
+
+Returns true if the supplied version is greater than the current NeXTconf version.  This uses the encoded version number returned by **version**.
+
+### isGreaterThanOrEqualTo:
+
+(Boolean)**isGreaterThanOrEqualTo:**(Number)*aVersion*
+
+Returns true if the supplied version is greater than or equal to the current NeXTconf version.  This uses the encoded version number returned by **version**.
