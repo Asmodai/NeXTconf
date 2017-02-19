@@ -67,7 +67,7 @@ if ([Platform isOpenStep] == true) {
 } else {
 
   if ([FileSystem fileExists:NS_HDR1] == true) {
-    print "     Founbd MiscKit for NEXTSTEP.";
+    print "     Found MiscKit for NEXTSTEP.";
     [Header addSymbol:SYMBOL];
     [MakeFile addLibrary:"MiscKit"];
   }

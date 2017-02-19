@@ -115,6 +115,7 @@
                        key:(void *)&key
                      value:(void *)&val])
     {
+      putchar('\n');
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         debug_print(indent, "Key = %s\n", key);
         [val printDebug:key

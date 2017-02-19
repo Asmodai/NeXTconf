@@ -498,6 +498,7 @@ const int children_per_node[] = {
 
   for (i = 0; i < children_per_node[_nodeType]; i++) {
     if ([_children objectAt:i]) {
+      putchar('\n');
       [[_children objectAt:i] printDebug:"child ="
                               withIndent:(indent + [Object debugIndentLevel])];
     }
