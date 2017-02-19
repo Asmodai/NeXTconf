@@ -57,6 +57,7 @@
  * Accessors.
  */
 - (void)addLibrary:(String *)aLibrary;
+- (void)addLibraryPath:(String *)aPath;
 
 /*
  * Predicates.

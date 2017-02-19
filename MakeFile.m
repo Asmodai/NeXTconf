@@ -41,6 +41,7 @@
 {
   if ((self = [super init]) != nil) {
     ADD_PROPERTY_METHOD("addLibrary:");
+    ADD_PROPERTY_METHOD("addLibraryPath:");
   }
 
   return self;
@@ -55,13 +56,17 @@
 {
 }
 
+- (void)addLibraryPath:(String *)aPath
+{
+}
+
 @end                            // MakeFile
 
 @implementation MakeFile (Debug)
 
 - (void)_printDebugInfo:(int)indent
 {
-  debug_print(indent, "Object does nothing yet.");
+  debug_print(indent, "Object does nothing yet.\n");
 }
 
 @end                            // MakeFile (Debug)

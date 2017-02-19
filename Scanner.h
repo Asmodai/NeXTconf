@@ -36,9 +36,13 @@
 
 #import <stdio.h>
 
-/* This is coming from sys/tty.h ! */
+/*
+ * This tries to deal with spurious printing on Rhapsody.
+ */
 #ifdef ECHO
 # undef ECHO
+# define ECHO
+#else
 # define ECHO
 #endif
 

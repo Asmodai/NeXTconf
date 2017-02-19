@@ -215,13 +215,14 @@
                              key:(void *)&ikey
                            value:(void *)&val])
     {
-      debug_print(indent + 2, "Key = %s\n", ikey);
+      putchar('\n');
+      debug_print(indent + 2, "Key = `%s'\n", ikey);
 
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         [val printDebug:ikey
              withIndent:(indent + 2 + [Object debugIndentLevel])];
       } else {
-        debug_print(indent + 2, "Value = %s\n", [[val class] name]);
+        debug_print(indent + 2, "Value = `%s'\n", [[val class] name]);
       }
     }
   }
@@ -229,6 +230,7 @@
   if (_methods) {
     state = [_methods initState];
 
+    putchar('\n');
     debug_print(indent, "Methods:\n");
     debug_print(indent + 2, "Num elements = %d\n", [_methods count]);
 
@@ -236,13 +238,14 @@
                            key:(void *)&mkey
                          value:(void *)&val])
     {
-      debug_print(indent + 2, "Key = %s\n", [mkey stringValue]);
+      putchar('\n');
+      debug_print(indent + 2, "Key = `%s'\n", [mkey stringValue]);
 
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         [val printDebug:[mkey stringValue]
              withIndent:(indent + 2 + [Object debugIndentLevel])];
       } else {
-        debug_print(indent + 2, "Value = %s\n", [[val class] name]);
+        debug_print(indent + 2, "Value = `%s'\n", [[val class] name]);
       }
     }
   }

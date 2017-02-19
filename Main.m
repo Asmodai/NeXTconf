@@ -81,7 +81,6 @@ main(int argc, char **argv)
   SyntaxTree     *syntree = nil;
   BOOL            cFlag   = NO;
   BOOL            tFlag   = NO;
-  BOOL            oFlag   = NO;
   BOOL            sFlag   = NO;
 
   //extern int   optind;
@@ -131,7 +130,7 @@ main(int argc, char **argv)
         break;
 
       case 'o':
-        oFlag = YES;
+        [[PropertyManager sharedInstance] printDebug:"Managed objects"];
         break;
 
       case 's':
@@ -172,11 +171,6 @@ main(int argc, char **argv)
 
   if (tFlag) {
     [syntree printDebug:"Parsed tokens"];
-    putchar('\n');
-  }
-
-  if (oFlag) {
-    [[PropertyManager sharedInstance] printDebug:"Managed objects"];
     putchar('\n');
   }
 

@@ -68,7 +68,7 @@
 
 - (void)_printDebugInfo:(int)indent
 {
-  debug_print(indent, "Object does nothing yet.");
+  debug_print(indent, "Object does nothing yet.\n");
 }
 
 @end                            // Header (Debug)

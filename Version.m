@@ -34,6 +34,7 @@
 #import <stdio.h>
 
 #import "Version.h"
+#import "PropertyManager.h"
 
 /* So we can run `strings' on the binary. */
 const char VERSIONSTR[]      = __VersionStr;
@@ -89,7 +90,80 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
          BUILDSYSFULL);
 }
 
-@end
+- (id)init
+{
+  if ((self = [super init]) != nil) {
+    ADD_PROPERTY_METHOD("version");
+    ADD_PROPERTY_METHOD("major");
+    ADD_PROPERTY_METHOD("minor");
+    ADD_PROPERTY_METHOD("build");
+  }
+
+  return self;
+}
+
+- (id)free
+{
+  return [super free];
+}
+
+- (Number *)version
+{
+  static Number *vers = nil;
+
+  if (vers == nil) {
+    [[Number alloc] initWithInt:__Version];
+  }
+
+  return vers;
+}
+
+- (Number *)major
+{
+  static Number *vers = nil;
+
+  if (vers == nil) {
+    [[Number alloc] initWithInt:__VersionMajor];
+  }
+
+  return vers;
+}
+
+- (Number *)minor
+{
+  static Number *vers = nil;
+
+  if (vers == nil) {
+    [[Number alloc] initWithInt:__VersionMinor];
+  }
+
+  return vers;
+}
+
+- (Number *)build
+{
+  static Number *vers = nil;
+
+  if (vers == nil) {
+    [[Number alloc] initWithInt:__VersionBuild];
+  }
+
+  return vers;  
+}
+
+@end                            // Version
+
+@implementation Version (Debug)
+
+- (void)_printDebugInfo:(int)indent
+{
+  debug_print(indent, "Version: %d\n", __Version);
+  debug_print(indent, "Major:   %d\n", __VersionMajor);
+  debug_print(indent, "Minor:   %d\n", __VersionMinor);
+  debug_print(indent, "Build:   %d\n", __VersionBuild);
+}
+
+@end                            // Version (Debug)
 
 /* Version.m ends here */
 /*

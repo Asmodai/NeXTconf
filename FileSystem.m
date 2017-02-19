@@ -91,7 +91,7 @@
 
 - (void)_printDebugInfo:(int)indent
 {
-  debug_print(indent, "Object just provides functions.");
+  debug_print(indent, "Object just provides functions.\n");
 }
 
 @end                            // FileSystem (Debug)

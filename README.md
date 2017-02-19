@@ -31,6 +31,12 @@ the below commands:
     wof               gnumake
     rhapsody          make
 
+In order to build for multiple platforms, you can use the following:
+
+    NeXTSTEP          TARGET_ARCHS="i386 m68k sparc hppa" make
+    OPENSTEP          TARGET_ARCHS="i386 m68k sparc" gnumake
+    wof               RC_ARCHS="i386 m68k sparc" gnumake
+    rhapsody          RC_ARCHS="i386 ppc" make
 
 # Generating the grammar
 

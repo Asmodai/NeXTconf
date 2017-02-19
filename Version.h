@@ -33,6 +33,9 @@
 
 #import <objc/Object.h>
 
+#import "Property.h"
+#import "Number.h"
+
 /* Pull in version information. */
 #import "version.h"
 
@@ -41,7 +44,7 @@
  *
  * The data here is generated at compile-time by a script.
  */
-@interface Version : Object
+@interface Version : Property
 
 /*
  * Class methods.
@@ -54,7 +57,30 @@
 + (const char *)builtByString;
 + (void)print;
 
-@end
+/*
+ * Initialisation and destruction.
+ */
+- (id)init;
+- (id)free;
+
+/*
+ * Instance methods.
+ */
+- (Number *)version;
+- (Number *)major;
+- (Number *)minor;
+- (Number *)build;
+
+@end                            // Version
+
+@interface Version (Debug)
+
+/*
+ * Debugging.
+ */
+- (void)_printDebugInfo:(int)indent;
+
+@end                            // Version (Debug)
 
 /* Version.h ends here */
 /*
