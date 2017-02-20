@@ -95,6 +95,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 + (IntInstr *)generate:(SyntaxTree *)tree
 {
+  register IntInstr *(*func)(id, SEL, SyntaxTree *);
   register SyntaxTree *root     = tree;
   register IntInstr   *blk1     = nil;
   register IntInstr   *blk2     = nil;
@@ -104,9 +105,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   IntInstr            *jmp2end  = nil;
   IntInstr            *elsepart = nil;
   IntInstr            *endif    = nil;
-  IntInstr          *(*func)(id, SEL, SyntaxTree *);
 
-  /* Woah. */
   func = (IntInstr *(*)(id, SEL, SyntaxTree *))
     [IntInstr methodFor:@selector(generate:)];
 
