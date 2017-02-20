@@ -61,15 +61,19 @@ const char *node_types[] = {
   "IF..THEN..ELSE statement",
   "FOR..IN statement",
   "Error statement",
-  "Equals",
-  "Not Equals",
-  "Assign",
-  "Concatenate",
-  "Logical AND",
-  "Logical OR",
-  "Logical XOR",
+  "Equals expression",
+  "Not-Equals expression",
+  "Assign expression",
+  "Numeric addition expression",
+  "Numeric subtraction expression",
+  "Numeric multiplication expression",
+  "Numeric division expression",
+  "Concatenate expression",
+  "Logical AND expression",
+  "Logical OR expression",
+  "Logical XOR expression",
   "Identifier",
-  "Integer constant",
+  "Number constant",
   "String constant",
   "Boolean constant",
   "Coercion to string",
@@ -108,7 +112,7 @@ const int children_per_node[] = {
   2,                            // Logical XOR
   2,                            // Logical NOT
   0,                            // Identifier
-  0,                            // Integer constant
+  0,                            // Number constant
   0,                            // String constant
   0,                            // Boolean constant
   1,                            // Coerce to string
@@ -326,12 +330,10 @@ const int children_per_node[] = {
     ret = [[_children objectAt:child] returnType];
   }
 
-  if (ret == ReturnString) {
-    return YES;
-  }
-
-  if (ret != ReturnBool) {
-    return NO;
+  switch (ret) {
+    case ReturnVoid:   return NO;  break;
+    case ReturnString: return YES; break;
+    default:                       break;
   }
 
   [self setChildAtIndex:child
@@ -374,7 +376,14 @@ const int children_per_node[] = {
       _retType = ReturnString;
       break;
 
-    case IntegerExpr:
+    case NumberExpr:
+      _retType = ReturnNumber;
+      break;
+
+    case AddExpr:
+    case SubExpr:
+    case MulExpr:
+    case DivExpr:
       _retType = ReturnNumber;
       break;
 
@@ -418,11 +427,11 @@ const int children_per_node[] = {
     case ConcatExpr:
       if (![self coerceToString:0]) {
         runtime_warningf(_lineNumber,
-                         "+: Cannot coerce first argument to string.");
+                         ".: Cannot coerce first argument to string.");
       }
       if (![self coerceToString:1]) {
         runtime_warningf(_lineNumber,
-                         "+: Cannot coerce second argument to string.");
+                         ".: Cannot coerce second argument to string.");
       }
       break;
 

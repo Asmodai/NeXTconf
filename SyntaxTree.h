@@ -50,12 +50,16 @@ typedef enum {
   EqualExpr,                    // Equal expression.
   NotEqualExpr,                 // Not-Equal expression.
   AssignExpr,                   // Assign expression.
+  AddExpr,                      // Numeric addition expression.
+  SubExpr,                      // Numeric subtraction expression.
+  MulExpr,                      // Numeric multiplication expression.
+  DivExpr,                      // Numeric division expression.
   ConcatExpr,                   // Concatenation expression.
   LogicalAndExpr,               // Logical `and' expression.
   LogicalOrExpr,                // Logical `or' expression.
   LogicalXorExpr,               // Logical `xor' expression.
   IdentExpr,                    // Identifier expression.
-  IntegerExpr,                  // Integer constant expression.
+  NumberExpr,                   // Integer constant expression.
   StringExpr,                   // String constant expression.
   BooleanExpr,                  // Boolean constant expression.
   CoerceToString,               // Coerce a boolean to a string.

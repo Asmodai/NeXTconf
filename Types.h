@@ -1,11 +1,11 @@
 /*
- * snprintf.h  --- Portable `snprintf'.
+ * Types.h  --- Some title
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Fri, 30 Oct 2015 01:26:12 +0000 (GMT)
+ * Created:    Sun, 19 Feb 2017 20:50:03 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -31,13 +31,37 @@
  */
 /* }}} */
 
-#include <sys/types.h>
-#include <libc.h>
+#ifndef _TYPES_H_
+#define _TYPES_H_
 
-int vsnprintf(char *, size_t, const char *, va_list);
-int snprintf(char *, size_t, const char *, ...);
+/*
+ * Common types.
+ */
+typedef unsigned long  long_t;
+typedef float          float_t;
 
-/* snprintf.h ends here */
+/*
+ * Numeric value types.
+ */
+typedef enum {
+  Integer = 1,
+  Float
+} NumberType;
+
+/*
+ * Internal numeric representation.
+ */
+typedef struct {
+  NumberType type;
+  union {
+    float_t  _f;
+    long_t   _i;
+  } _n;
+} number_t;
+
+#endif /* !_TYPES_H_ */
+
+/* Types.h ends here */
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***

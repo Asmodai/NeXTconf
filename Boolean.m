@@ -55,7 +55,7 @@ const char *falseCStr = "false";
   return self;
 }
 
-- (id)initWithInt:(int)value
+- (id)initWithInt:(long_t)value
 {
   if ((self = [super init]) != nil) {
     _value = (value > 0) ? YES : NO;
@@ -83,9 +83,9 @@ const char *falseCStr = "false";
   return falseCStr;
 }
 
-- (int)intValue
+- (long_t)intValue
 {
-  return (int)_value;
+  return (long_t)_value;
 }
 
 - (void)setValueFromBool:(BOOL)aValue

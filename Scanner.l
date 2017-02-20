@@ -44,10 +44,12 @@
 #define _IN_LEXER_
 #import "Scanner.h"
 #import "Parser.h"
+#import "Types.h"
 
 void make_identifier(YYSTYPE *, char *);
 void make_string_constant(YYSTYPE *, char *);
 void make_integer_constant(YYSTYPE *, char *);
+void make_float_constant(YYSTYPE *, char *);
 void make_boolean_constant(YYSTYPE *, char *);
 void eat_comment(void);
 
@@ -62,6 +64,7 @@ void eat_comment(void);
 BVALUE    (true|false)
 LETTER    [a-zA-Z_]
 DIGIT     [0-9]+
+FPNUM     [-+]?{DIGIT}*\.?{DIGIT}+([eE][-+]?{DIGIT}+)?
 IDENT     {LETTER}({LETTER}|{DIGIT})*
 STR       \"[^\"]*\"
 WSPACE    [ \t]+
@@ -85,7 +88,7 @@ END_STMT  ;
 "="        { return ASSIGN;                                           }
 "=="       { return EQUAL;                                            }
 "!="       { return NEQUAL;                                           }
-"+"        { return CONCAT;                                           }
+"."        { return CONCAT;                                           }
 ";"        { return END_STMT;                                         }
 "("        { return OPEN_PAR;                                         }
 ")"        { return CLOSE_PAR;                                        }
@@ -94,12 +97,17 @@ END_STMT  ;
 "["        { return OPEN_METH;                                        }
 "]"        { return CLOSE_METH;                                       }
 ":"        { return METH_ARG;                                         }
+"+"        { return ARITH_ADD;                                        }
+"-"        { return ARITH_SUB;                                        }
+"*"        { return ARITH_MUL;                                        }
+"/"        { return ARITH_DIV;                                        }
 {BVALUE}   { make_boolean_constant(yylval, yytext); return BOOLEAN;   }
 {IDENT}    { make_identifier(yylval, yytext); return ID;              }
 {STR}      { make_string_constant(yylval, yytext); return STRING;     }
 {DIGIT}    { make_integer_constant(yylval, yytext); return INTEGER;   }
+{FPNUM}    { make_float_constant(yylval, yytext); return FLOAT;       }
 "//"       { eat_comment();                                           }
-\n         { lineno++;                                                }
+\n         { lineno = yylineno;                                       }
 {WSPACE}   {                                                          }
 .          { return ERROR_TOKEN;                                      }
 
@@ -152,6 +160,18 @@ make_integer_constant(YYSTYPE *yylval, char *yytext)
   yylval->fixnum = atol(yytext);
 }
 
+/*
+ * Make a floating-point constant.
+ */
+void
+make_float_constant(YYSTYPE *yylval, char *yytext)
+{
+  yylval->flonum = (float_t)atof(yytext);
+}
+
+/*
+ * Make a boolean constant.
+ */
 void
 make_boolean_constant(YYSTYPE *yylval, char *yytext)
 {
@@ -166,6 +186,7 @@ make_boolean_constant(YYSTYPE *yylval, char *yytext)
 /*
  * Local Variables: ***
  * mode: flex ***
+ * fill-column: 79 ***
  * indent-tabs-mode: nil ***
  * End: ***
  */

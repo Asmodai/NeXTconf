@@ -46,6 +46,7 @@
 #import <sys/types.h>
 
 #import "Utils.h"
+#import "Types.h"
 
 /*
  * Simple string class implementation.  This is partially based on the
@@ -132,7 +133,8 @@ caseSensitive:(BOOL)sense;
               fromZone:(NXZone *)zone;
 - (const char *)stringValue;
 - (NXAtom)uniqueStringValue;
-- (int)intValue;
+- (long_t)intValue;
+- (float_t)floatValue;
 
 /*
  * Equality.

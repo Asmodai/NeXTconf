@@ -45,6 +45,7 @@
 #import "Scanner.h"
 #import "Utils.h"
 #import "ExtErrno.h"
+#import "Types.h"
 
 extern SymbolTable *root_symtab;
 
@@ -79,7 +80,7 @@ extern int yylex();
 /*
  * Insert a number into the root symbol table.
  */
-#define IINT(__a)                   \
+#define INUM(__a)                   \
   [root_symtab insertSymbol:(__a)]
 
 /*
@@ -101,9 +102,9 @@ extern int yylex();
   [root_symtab insertSymbol:(__a)]
 
 /*
- * Create an integer symbol.
+ * Create a number symbol.
  */
-#define CINT(__a)                                                  \
+#define CNUM(__a)                                                  \
   [[Symbol alloc] initWithData:(__a)                               \
                        andName:(const char *)make_immediate_name() \
                        andType:SymbolNumber];
@@ -169,10 +170,11 @@ extern int yylex();
 %}
 
 %union {
-  char          *str;
-  unsigned long  fixnum;
-  Symbol        *symbol;
-  SyntaxTree    *tnode;
+  char        *str;
+  long_t      fixnum;
+  float_t     flonum;
+  Symbol     *symbol;
+  SyntaxTree *tnode;
 }
 
 %token ERROR_TOKEN
@@ -185,7 +187,7 @@ extern int yylex();
 %token ASSIGN            "="
 %token EQUAL             "=="
 %token NEQUAL            "!="
-%token CONCAT            "+"
+%token CONCAT            "."
 %token LOGICAL_AND       "and"
 %token LOGICAL_OR        "or"
 %token LOGICAL_XOR       "xor"
@@ -197,15 +199,21 @@ extern int yylex();
 %token METH_ARG          ":"
 %token BEGIN_CS          "{"
 %token END_CS            "}"
+%token ARITH_ADD         "+"
+%token ARITH_SUB         "-"
+%token ARITH_MUL         "*"
+%token ARITH_DIV         "/"
 
 %token <str>    ID       "identifier"
 %token <str>    STRING   "string"
 %token <fixnum> INTEGER  "integer"
 %token <fixnum> BOOLEAN  "boolean"
+%token <flonum> FLOAT    "float"
 
 %type <symbol> identifier
 %type <symbol> string
 %type <symbol> integer
+%type <symbol> float
 %type <symbol> boolean
 %type <str>    class_name
 %type <str>    method_name
@@ -219,6 +227,7 @@ extern int yylex();
 %type <tnode>  expr
 %type <tnode>  equal_expr
 %type <tnode>  assign_expr
+%type <tnode>  arith_expr
 %type <tnode>  concat_expr
 %type <tnode>  simple_expr
 %type <tnode>  method_call
@@ -317,6 +326,18 @@ assign_expr:    identifier ASSIGN assign_expr
                   $$ = CTREE1(AssignExpr, $3, @1.first_line);
                   [$$ setSymbol:$1];
                 }
+        |       arith_expr
+                { $$ = $1; }
+        ;
+
+arith_expr:     arith_expr ARITH_ADD concat_expr
+                { $$ = CTREE2(AddExpr, $1, $3, @1.first_line); }
+        |       arith_expr ARITH_SUB concat_expr
+                { $$ = CTREE2(SubExpr, $1, $3, @1.first_line); }
+        |       arith_expr ARITH_MUL concat_expr
+                { $$ = CTREE2(MulExpr, $1, $3, @1.first_line); }
+        |       arith_expr ARITH_DIV concat_expr
+                { $$ = CTREE2(DivExpr, $1, $3, @1.first_line); }
         |       concat_expr
                 { $$ = $1; }
         ;
@@ -353,7 +374,9 @@ simple_expr:    identifier
         |       string
                 { $$ = CTREE(StringExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       integer
-                { $$ = CTREE(IntegerExpr, @1.first_line); [$$ setSymbol:$1]; }
+                { $$ = CTREE(NumberExpr, @1.first_line); [$$ setSymbol:$1]; }
+        |       float
+                { $$ = CTREE(NumberExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       boolean
                 { $$ = CTREE(BooleanExpr, @1.first_line); [$$ setSymbol:$1]; }
         |       OPEN_PAR expr CLOSE_PAR
@@ -376,9 +399,19 @@ integer:        INTEGER
                 {
                   Number *num = nil;
 
-                  num = [[Number alloc] initWithInt:$1];
-                  $$ = CINT(num);
-                  IINT($$);
+                  num = [[Number alloc] initWithInt:(long_t)$1];
+                  $$ = CNUM(num);
+                  INUM($$);
+                }
+        ;
+
+float:          FLOAT
+                {
+                  Number *num = nil;
+
+                  num = [[Number alloc] initWithFloat:(float_t)$1];
+                  $$ = CNUM(num);
+                  INUM($$);
                 }
         ;
 
@@ -534,6 +567,7 @@ make_immediate_name(void)
 /*
  * Local Variables: ***
  * mode: bison ***
+ * fill-column: 79 ***
  * indent-tabs-mode: nil ***
  * End: ***
  */

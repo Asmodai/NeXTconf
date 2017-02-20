@@ -35,6 +35,7 @@
 #import "Object+Debug.h"
 
 #import "String.h"
+#import "Types.h"
 
 /*
  * This class defines a Boolean datatype.
@@ -49,7 +50,7 @@
  */
 - (id)init;
 - (id)initWithBool:(BOOL)value;
-- (id)initWithInt:(int)value;
+- (id)initWithInt:(long_t)value;
 
 /*
  * Destruction.
@@ -61,7 +62,7 @@
  */
 - (BOOL)boolValue;
 - (const char *)stringValue;
-- (int)intValue;
+- (long_t)intValue;
 - (void)setValueFromBool:(BOOL)aValue;
 - (void)setValueFromString:(const char *)aString;
 - (void)setValueFromInt:(int)aValue;

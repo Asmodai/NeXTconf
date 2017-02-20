@@ -1,8 +1,9 @@
 typedef union {
-  char          *str;
-  unsigned long  fixnum;
-  Symbol        *symbol;
-  SyntaxTree    *tnode;
+  char        *str;
+  long_t      fixnum;
+  float_t     flonum;
+  Symbol     *symbol;
+  SyntaxTree *tnode;
 } YYSTYPE;
 
 #ifndef YYLTYPE
@@ -43,9 +44,14 @@ typedef
 #define	METH_ARG	277
 #define	BEGIN_CS	278
 #define	END_CS	279
-#define	ID	280
-#define	STRING	281
-#define	INTEGER	282
-#define	BOOLEAN	283
-#define	LOWER_THAN_ELSE	284
+#define	ARITH_ADD	280
+#define	ARITH_SUB	281
+#define	ARITH_MUL	282
+#define	ARITH_DIV	283
+#define	ID	284
+#define	STRING	285
+#define	INTEGER	286
+#define	BOOLEAN	287
+#define	FLOAT	288
+#define	LOWER_THAN_ELSE	289
 

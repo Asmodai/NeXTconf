@@ -44,12 +44,47 @@
 #include <sys/dir.h>
 #include <sys/stat.h>
 
+#include <streams/streams.h>
+
 #include "Utils.h"
+
 
 /*
  * Used by `errrorf'.
  */
 size_t errors = 0;
+
+int
+vsnprintf(char *buf, size_t siz, const char *fmt, va_list params)
+{
+  NXStream *stream = NULL;
+  long      l      = 0;
+
+  stream = NXOpenMemory(NULL, 0, NX_READWRITE);
+  NXVPrintf(stream, fmt, params);
+  NXFlush(stream);
+  NXSeek(stream, 0, NX_FROMEND);
+  l = NXTell(stream);
+  NXSeek(stream, 0, NX_FROMSTART);
+  NXRead(stream, buf, siz);
+  buf[siz] = '\0';
+  NXCloseMemory(stream, NX_FREEBUFFER);
+
+  return siz;
+}
+
+int
+snprintf(char *buf, size_t siz, const char *fmt, ...)
+{
+  va_list ap;
+  int     res = 0;
+
+  va_start(ap, fmt);
+  res = vsnprintf(buf, siz, fmt, ap);
+  va_end(ap);
+
+  return res;
+}
 
 /*
  * Wrapper around `NXZoneMalloc'.

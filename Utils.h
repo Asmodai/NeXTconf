@@ -96,6 +96,9 @@
 /*
  * Function prototypes.
  */
+int vsnprintf(char *, size_t, const char *, va_list);
+int snprintf(char *, size_t, const char *, ...);
+
 void *xzonemalloc(NXZone *, size_t);
 void *xzoneralloc(NXZone *, void *, size_t);
 void *xzonecealloc(NXZone *, size_t, size_t);

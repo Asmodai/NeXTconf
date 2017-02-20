@@ -50,6 +50,10 @@ char *op_name[] = {
   "OP_JMPF",
   "OP_EQL",
   "OP_NEQ",
+  "OP_ADD",
+  "OP_SUB",
+  "OP_MUL",
+  "OP_DIV",
   "OP_LAND",
   "OP_LOR",
   "OP_LXOR",
@@ -220,8 +224,32 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LXOR]);
       return concatenate(blk1, blk2);
 
+    case AddExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_ADD]);
+      return concatenate(blk1, blk2);
+
+    case SubExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_SUB]);
+      return concatenate(blk1, blk2);
+
+    case MulExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_MUL]);
+      return concatenate(blk1, blk2);
+
+    case DivExpr:
+      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_DIV]);
+      return concatenate(blk1, blk2);
+
     case IdentExpr:
-    case IntegerExpr:
+    case NumberExpr:
     case StringExpr:
     case BooleanExpr:
       blk1 = [[IntInstr alloc] initWithOpcode:OP_PUSH];

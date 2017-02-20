@@ -114,7 +114,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   static Number *vers = nil;
 
   if (vers == nil) {
-    [[Number alloc] initWithInt:__Version];
+    vers = [[Number alloc] initWithInt:__Version];
   }
 
   return vers;
@@ -125,7 +125,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   static Number *vers = nil;
 
   if (vers == nil) {
-    [[Number alloc] initWithInt:__VersionMajor];
+    vers = [[Number alloc] initWithInt:__VersionMajor];
   }
 
   return vers;
@@ -136,7 +136,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   static Number *vers = nil;
 
   if (vers == nil) {
-    [[Number alloc] initWithInt:__VersionMinor];
+    vers = [[Number alloc] initWithInt:__VersionMinor];
   }
 
   return vers;
@@ -147,7 +147,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   static Number *vers = nil;
 
   if (vers == nil) {
-    [[Number alloc] initWithInt:__VersionBuild];
+    vers = [[Number alloc] initWithInt:__VersionBuild];
   }
 
   return vers;  
@@ -162,7 +162,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   if ([aVersion respondsTo:@selector(intValue)]) {
     otherVer = [aVersion intValue];
 
-    ret = (otherVer > ourVer) ? YES : NO;
+    ret = (ourVer > otherVer) ? YES : NO;
   }
 
   return [[Boolean alloc] initWithBool:ret];
@@ -177,7 +177,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   if ([aVersion respondsTo:@selector(intValue)]) {
     otherVer = [aVersion intValue];
 
-    ret = (otherVer >= ourVer) ? YES : NO;
+    ret = (ourVer >= otherVer) ? YES : NO;
   }
 
   return [[Boolean alloc] initWithBool:ret];

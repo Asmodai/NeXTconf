@@ -33,20 +33,22 @@
 
 #import <objc/Object.h>
 #import "Object+Debug.h"
+#import "Types.h"
 
 /*
  * Numeric data class.
  */
 @interface Number : Object
 {
-  unsigned int _number;         // The number.
+  number_t   _number;           // The number.
 }
 
 /*
  * Initialisation methods.
  */
 - (id)init;
-- (id)initWithInt:(int)value;
+- (id)initWithInt:(long_t)value;
+- (id)initWithFloat:(float_t)value;
 - (id)initWithString:(const char *)string;
 
 /*
@@ -59,8 +61,18 @@
  */
 - (const char *)stringValue;
 - (void)setValueFromString:(const char *)string;
-- (int)intValue;
-- (void)setValueFromInt:(int)value;
+- (long_t)intValue;
+- (float_t)floatValue;
+- (void)setValueFromInt:(long_t)value;
+- (void)setValueFromFloat:(float_t)value;
+
+/*
+ * Arithmetic methods.
+ */
+- (Number *)add:(Number *)aNumber;
+- (Number *)subtract:(Number *)aNumber;
+- (Number *)multiply:(Number *)aNumber;
+- (Number *)divide:(Number *)aNumber;
 
 /*
  * Comparison methods.

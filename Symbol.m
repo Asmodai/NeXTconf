@@ -39,7 +39,6 @@
 
 #import "Symbol.h"
 #import "Utils.h"
-#import "snprintf.h"
 
 /*
  * This MUST match `SymbolType' in Symbol.h.

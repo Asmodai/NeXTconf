@@ -39,7 +39,6 @@
 
 #import <objc/objc-runtime.h>
 
-#import "snprintf.h"
 #import "String.h"
 #import "Utils.h"
 
@@ -358,13 +357,22 @@
   return NXUniqueString(_buffer);
 }
 
-- (int)intValue
+- (long_t)intValue
 {
   if (!_buffer) {
     return 0;
   }
 
-  return atoi(_buffer);
+  return (long_t)atoi(_buffer);
+}
+
+- (float_t)floatValue
+{
+  if (!_buffer) {
+    return 0.0;
+  }
+
+  return (float_t)atof(_buffer);
 }
 
 - (BOOL)isEqual:(id)anObject

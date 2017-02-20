@@ -66,6 +66,9 @@ resolveSymbol(id symb, id argSymb)
       {
         register Selector *sel = (Selector *)result;
 
+        /* Clear errno. */
+        errno = 0;
+
         if (argSymb != nil) {
           result = [sel evaluateWithArg:arg];
         } else {
@@ -74,6 +77,10 @@ resolveSymbol(id symb, id argSymb)
 
         if (result == nil) {
           switch (errno) {
+            case 0:
+              result = NilSymbol;
+              break;
+
             case EXT_ENOCLASS:
               runtime_errorf(
                 0,
@@ -214,21 +221,29 @@ resolveSymbol(id symb, id argSymb)
 
   for (i = 0; i < _count; i++) {
     switch ([cinstr opcode]) {
-      case OP_NOP:     ADD_ISN1(i, OP_NOP);                              break;
+      /* All these use the same opcode in the VM. */
+      case OP_NOP:
+      case OP_PRINT:
+      case OP_EQL:
+      case OP_NEQ:
+      case OP_ADD:
+      case OP_SUB:
+      case OP_MUL:
+      case OP_DIV:
+      case OP_CONCAT:
+      case OP_LAND:
+      case OP_LOR:
+      case OP_LXOR:
+      case OP_BLN2STR:
+        ADD_ISN1(i, [cinstr opcode]);
+        break;
+        
       case OP_PUSH:    ADD_ISN2(i, OP_PUSH, [cinstr symbol]);            break;
       case OP_POP:     ADD_ISN2(i, OP_POP, [cinstr symbol]);             break;
-      case OP_PRINT:   ADD_ISN1(i, OP_PRINT);                            break;
       case OP_JMP:     ADD_ISN2(i, OP_JMP, [[cinstr target] line] - i);  break;
       case OP_JMPF:    ADD_ISN2(i, OP_JMPF, [[cinstr target] line] - i); break;
-      case OP_EQL:     ADD_ISN1(i, OP_EQL);                              break;
-      case OP_NEQ:     ADD_ISN1(i, OP_NEQ);                              break;
-      case OP_CONCAT:  ADD_ISN1(i, OP_CONCAT);                           break;
-      case OP_LAND:    ADD_ISN1(i, OP_LAND);                             break;
-      case OP_LOR:     ADD_ISN1(i, OP_LOR);                              break;
-      case OP_LXOR:    ADD_ISN1(i, OP_LXOR);                             break;
       case OP_CALL:    ADD_ISN2(i, OP_CALL, [cinstr symbol]);            break;
       case OP_CALLA:   ADD_ISN2(i, OP_CALLA, [cinstr symbol]);           break;
-      case OP_BLN2STR: ADD_ISN1(i, OP_BLN2STR);                          break;
       case JMPTGT:     ADD_ISN1(i, OP_NOP);                              break;
     }
 
@@ -296,6 +311,30 @@ resolveSymbol(id symb, id argSymb)
         [stack pushObject:[Symbol newFromString:
                                     [[[String alloc] init]
                                       concatenate:j, i, nil]]];
+        break;
+
+      case OP_ADD:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        [stack pushObject:[Symbol newFromNumber:[j add:i]]];
+        break;
+
+      case OP_SUB:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        [stack pushObject:[Symbol newFromNumber:[j subtract:i]]];
+        break;
+
+      case OP_MUL:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        [stack pushObject:[Symbol newFromNumber:[j multiply:i]]];
+        break;
+
+      case OP_DIV:
+        i = resolveSymbol([stack popObject], nil);
+        j = resolveSymbol([stack popObject], nil);
+        [stack pushObject:[Symbol newFromNumber:[j divide:i]]];
         break;
 
       case OP_LAND:
@@ -366,5 +405,6 @@ resolveSymbol(id symb, id argSymb)
 /*
  * Local Variables: ***
  * indent-tabs-mode: nil ***
+ * fill-column: 79 ***
  * End: ***
  */

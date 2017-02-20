@@ -46,7 +46,6 @@
 #import "PropertyManager.h"
 #import "Architecture.h"
 #import "Utils.h"
-#import "snprintf.h"
 
 /*
  * Location for 'specs' files.

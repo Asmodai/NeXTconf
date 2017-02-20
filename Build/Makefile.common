@@ -33,12 +33,11 @@ HFILES = Architecture.h    \
 	 VirtMachine.h     \
 	 Utils.h           \
 	 Version.h         \
-	 snprintf.h        \
 	 ExtErrno.h        \
 	 version.h
 
-CFILES = Utils.c   \
-	 snprintf.c
+CFILES = Utils.c           \
+	 Types.h
 
 CLASSES = Architecture.m    \
 	  FileSystem.m      \

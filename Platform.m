@@ -44,7 +44,6 @@
 #import "PropertyManager.h"
 #import "Platform.h"
 #import "Utils.h"
-#import "snprintf.h"
 
 /**
  * Maximum number of characters in a line.
@@ -347,8 +346,8 @@ get_os_version(void)
 - (void)print
 {
   fprintf(stdout, "Platform Information\n");
-  fprintf(stdout, "\tMajor version: %d\n", [_major intValue]);
-  fprintf(stdout, "\tMinor version: %d\n", [_minor intValue]);
+  fprintf(stdout, "\tMajor version: %lu\n", [_major intValue]);
+  fprintf(stdout, "\tMinor version: %lu\n", [_minor intValue]);
   fprintf(stdout, "\tProduct name:  %s\n", [_product stringValue]);
   fprintf(stdout, "\tPlatform name: %s\n", [_platform stringValue]);
   fprintf(stdout, "\tIs OpenStep:   %s\n", [_OpenStep stringValue]);
