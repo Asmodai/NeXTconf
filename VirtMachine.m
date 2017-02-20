@@ -253,18 +253,18 @@ resolveSymbol(id symb, id argSymb)
 
 - (void)execute
 {
-  register id    (*popObj)(id, SEL);
-  register id    (*pushObj)(id, SEL, id);
-  register Stack  *stack                 = [[Stack alloc] init];
-  register size_t  ip                    = 0;
-  register size_t  ipc                   = 0;
-  register id      i                     = nil;
-  register id      j                     = nil;
-  id               k                     = nil;
-  int              op                    = 0;
-  BOOL             b                     = NO;
-  SEL              popSel                = @selector(popObject);
-  SEL              pushSel               = @selector(pushObject:);
+  register id     (*popObj)(id, SEL);
+  register id     (*pushObj)(id, SEL, id);
+  register Stack   *stack                 = [[Stack alloc] init];
+  register size_t   ip                    = 0;
+  register size_t   ipc                   = 0;
+  register id       i                     = nil;
+  register id       j                     = nil;
+  id                k                     = nil;
+  int               op                    = 0;
+  BOOL              b                     = NO;
+  SEL               popSel                = @selector(popObject);
+  SEL               pushSel               = @selector(pushObject:);
 
   popObj  = (id (*)(id, SEL))[stack methodFor:popSel];
   pushObj = (id (*)(id, SEL, id))[stack methodFor:pushSel];
