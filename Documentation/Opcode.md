@@ -1,9 +1,7 @@
 Release 0.93  Copyleft (c)2017 by Paul Ward.  All Rights Reserved.
 
 # Opcode
-
 ## Virtual machine
-
 NeXTconf utilises a stack-based virtual machine to interpret opcode.
 
 You can view the opcode of any script by invoking NeXTconf with the `-c` option.
@@ -93,7 +91,6 @@ We are OpenStep 4.2
 Comments have been added by me to this document to highlight some opcode patterns.
 
 ## Opcode table
-
 | Opcode       | Operation                                                             |
 |:-------------|:----------------------------------------------------------------------|
 | `OP_NOP`     | No operation.                                                         |
@@ -118,7 +115,6 @@ Comments have been added by me to this document to highlight some opcode pattern
 | `JMPTGT`     | A label for jumps. Is never evaluated.                                |
 
 ## Opcode descriptions
-
 ### `OP_NOP`
 This opcode does absolutely nothing.
 

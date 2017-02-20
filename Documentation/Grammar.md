@@ -36,10 +36,17 @@ equal_expr:     expr "==" assign_expr
         ;
 
 assign_expr:    identifier "=" assign_expr
+        |       arith_expr
+        ;
+
+arith_expr:     arith_expr "+" concat_expr
+        |       arith_expr "-" concat_expr
+        |       arith_expr "*" concat_expr
+        |       arith_expr "/" concat_expr
         |       concat_expr
         ;
 
-concat_expr:    concat_expr "+" simple_expr
+concat_expr:    concat_expr "." simple_expr
         |       logical_and_expr
         ;
 
