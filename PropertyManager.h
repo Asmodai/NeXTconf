@@ -55,10 +55,11 @@
 + (id)sharedInstance;
 
 /*
- * Initialisation.
+ * Initialisation and destruction.
  */
-- (id)init;
-- (id)_initFromShared_;
+- (id)init;                     // Please do not call this.
+- (id)_init_;                   // Please do not call this.
+- (id)free;
 
 /*
  * Class instances.

@@ -39,6 +39,10 @@
 
 #import "Symbol.h"
 
+#define ADD_SYMBOL(__s)         \
+  [[SymbolTable sharedInstance] \
+    insertSymbol:(__s)]
+
 /*
  * This class implements a table of symbols.
  *
@@ -53,9 +57,15 @@
 }
 
 /*
+ * Singleton methods.
+ */
++ (id)sharedInstance;
+
+/*
  * Initialisation and destruction.
  */
-- (id)init;
+- (id)init;                     // Please do not call this.
+- (id)_init_;                   // Please do not call this.
 - (id)free;
 
 /*
@@ -64,9 +74,13 @@
 - (size_t)count;
 
 /*
- * Accessors.
+ * Predicates.
  */
 - (BOOL)isSymbol:(const char *)key;
+
+/*
+ * Accessors.
+ */
 - (Symbol *)valueForSymbol:(const char *)symbol;
 - (Symbol *)insertSymbol:(Symbol *)value;
 - (Symbol *)removeSymbol:(const char *)symbol;

@@ -47,8 +47,6 @@
 #import "ExtErrno.h"
 #import "Types.h"
 
-extern SymbolTable *root_symtab;
-
 void        errorf(char *fmt, ...);
 void        yyerror(char *msg);
 const char *make_symbol_name(void);
@@ -80,26 +78,20 @@ extern int yylex();
 /*
  * Insert a number into the root symbol table.
  */
-#define INUM(__a)                   \
-  [root_symtab insertSymbol:(__a)]
-
-/*
- * Insert a boolean into the root symbol table.
- */
-#define IBOOL(__a)                  \
-  [root_symtab insertSymbol:(__a)]
+#define INUM(__a)                                   \
+  [[SymbolTable sharedInstance] insertSymbol:(__a)]
 
 /*
  * Insert an identifier into the root symbol table.
  */
-#define IINDENT(__a)                \
-  [root_symtab insertSymbol:(__a)]
+#define IINDENT(__a)                                \
+  [[SymbolTable sharedInstance] insertSymbol:(__a)]
 
 /*
  * Insert a symbol into the root symbol table.
  */
-#define ISYMB(__a)                  \
-  [root_symtab insertSymbol:(__a)]
+#define ISYMB(__a)                                  \
+  [[SymbolTable sharedInstance] insertSymbol:(__a)]
 
 /*
  * Create a number symbol.
@@ -108,14 +100,6 @@ extern int yylex();
   [[Symbol alloc] initWithData:(__a)                               \
                        andName:(const char *)make_immediate_name() \
                        andType:SymbolNumber];
-
-/*
- * Create a boolean symbol.
- */
-#define CBOOL(__a)                                                 \
-  [[Symbol alloc] initWithData:(__a)                               \
-                       andName:(const char *)make_immediate_name() \
-                       andType:SymbolBoolean];
 
 /*
  * Create an identifier symbol.
@@ -387,7 +371,7 @@ simple_expr:    identifier
 
 identifier:     ID
                 {
-                  $$ = [root_symtab valueForSymbol:$1];
+                  $$ = [[SymbolTable sharedInstance] valueForSymbol:$1];
                   if ($$ == nil) {
                     $$ = CIDENT($1, SymbolObject);
                     IINDENT($$);
@@ -417,11 +401,14 @@ float:          FLOAT
 
 boolean:        BOOLEAN
                 {
-                  Boolean *bool = nil;
+                  extern Symbol *TrueSymbol;
+                  extern Symbol *FalseSymbol;
 
-                  bool = [[Boolean alloc] initWithInt:$1];
-                  $$ = CBOOL(bool);
-                  IBOOL($$);
+                  if ($1 == YES) {
+                    $$ = TrueSymbol;
+                  } else {
+                    $$ = FalseSymbol;
+                  }
                 }
         ;
 

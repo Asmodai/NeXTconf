@@ -31,23 +31,50 @@
  */
 /* }}} */
 
+#import "SymbolTable.h"
 #import "Symbol.h"
 #import "String.h"
 #import "Number.h"
 #import "Boolean.h"
 #import "Utils.h"
 
-static const char *NilCName = "(nil)";
+static const char *NilCName   = "nil";
+static const char *TrueCName  = "true";
+static const char *FalseCName = "false";
 
-String *NilName   = nil;
-Symbol *NilSymbol = nil;
+NilObject *NilValue     = nil;
+Boolean   *BooleanTrue  = nil;
+Boolean   *BooleanFalse = nil;
+
+Symbol *NilSymbol   = nil;
+Symbol *TrueSymbol  = nil;
+Symbol *FalseSymbol = nil;
 
 void
 make_constants(void)
 {
-  NilName = [[String alloc] initWithString:NilCName];
-  
-  NilSymbol = [Symbol newFromString:NilName];
+  NilValue     = [[NilObject alloc] init];
+  BooleanTrue  = [[Boolean alloc] initWithBool:YES];
+  BooleanFalse = [[Boolean alloc] initWithBool:NO];
+
+  NilSymbol = [[Symbol alloc] initWithData:NilValue
+                                   andName:NilCName
+                                   andType:SymbolNil];
+
+  TrueSymbol  = [[Symbol alloc] initWithData:BooleanTrue
+                                     andName:TrueCName
+                                     andType:SymbolBoolean];
+  FalseSymbol = [[Symbol alloc] initWithData:BooleanFalse
+                                     andName:FalseCName
+                                     andType:SymbolBoolean];
+
+  [NilSymbol setReadOnly:YES];
+  [TrueSymbol setReadOnly:YES];
+  [FalseSymbol setReadOnly:YES];
+
+  ADD_SYMBOL(NilSymbol);
+  ADD_SYMBOL(TrueSymbol);
+  ADD_SYMBOL(FalseSymbol);
 }
 
 /* Constants.m ends here */

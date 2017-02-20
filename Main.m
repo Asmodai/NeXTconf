@@ -45,20 +45,15 @@
 #import "IntInstr.h"
 #import "VirtMachine.h"
 #import "Version.h"
-
 #import "Scanner.h"
 #import "Parser.h"
-
 #import "PropertyManager.h"
 #import "Architecture.h"
 #import "Platform.h"
-
 #import "Utils.h"
-#import "Constants.h"
+
 
 extern int yyparse(void *);
-
-SymbolTable *root_symtab;
 
 char *progname = NULL;
 
@@ -86,13 +81,10 @@ main(int argc, char **argv)
   //extern int   optind;
   extern char *optarg;
 
-  make_constants();
-
   [[PropertyManager sharedInstance] instantiateAllClasses];
 
-  root_symtab = [[SymbolTable alloc] init];
-  syntree     = [[SyntaxTree alloc] init];
-  vm          = [[VirtualMachine alloc] init];
+  syntree = [[SyntaxTree alloc] init];
+  vm      = [[VirtualMachine alloc] init];
   
   progname = argv[0];
   yyin     = NULL;
@@ -180,7 +172,7 @@ main(int argc, char **argv)
   }
 
   if (sFlag) {
-    [root_symtab printDebug:"Symbols"];
+    [[SymbolTable sharedInstance] printDebug:"Symbols"];
     putchar('\n');
   }
 

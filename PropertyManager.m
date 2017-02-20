@@ -52,7 +52,7 @@
   static PropertyManager *instance = nil;
 
   if (instance == nil) {
-    instance = [[self alloc] _initFromShared_];
+    instance = [[self alloc] _init_];
   }
 
   return instance;
@@ -65,8 +65,7 @@
   return nil;
 }
 
-
-- (id)_initFromShared_
+- (id)_init_
 {
   if ((self = [super init]) != nil) {
     _instances = [[HashTable alloc] initKeyDesc:"*"];

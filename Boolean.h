@@ -46,15 +46,11 @@
 }
 
 /*
- * Initialisation.
+ * Initialisation and destruction.
  */
 - (id)init;
 - (id)initWithBool:(BOOL)value;
 - (id)initWithInt:(long_t)value;
-
-/*
- * Destruction.
- */
 - (id)free;
 
 /*

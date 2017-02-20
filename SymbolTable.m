@@ -35,13 +35,33 @@
 
 #import "SymbolTable.h"
 #import "Utils.h"
+#import "Constants.h"
 
 /* Default hash table capacity. */
 #define DEFAULT_HASHTABLE_CAPACITY   32
 
 @implementation SymbolTable
 
++ (id)sharedInstance
+{
+  static SymbolTable *instance = nil;
+
+  if (instance == nil) {
+    instance = [[self alloc] _init_];
+    make_constants();
+  }
+
+  return instance;
+}
+
 - (id)init
+{
+  [Object error:"Please do not call SymbolTable's init method directly."];
+
+  return nil;
+}
+
+- (id)_init_
 {
   if ((self = [super init]) != nil) {
     _tbl = [[HashTable alloc] initKeyDesc:"%"
@@ -116,6 +136,7 @@
                      value:(void *)&val])
     {
       putchar('\n');
+
       if ([val respondsTo:@selector(printDebug:withIndent:)]) {
         debug_print(indent, "Key = %s\n", key);
         [val printDebug:key

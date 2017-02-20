@@ -63,6 +63,8 @@ static const char default_symbol_type[] = "<invalid>";
  */
 static const char default_symbol_name[] = "<unnamed>";
 
+static const char nil_symbol_value[] = "nil";
+
 static 
 const char *
 name_for_symbol_type(SymbolType type)
@@ -73,6 +75,49 @@ name_for_symbol_type(SymbolType type)
 
   return default_symbol_type;
 }
+
+@implementation NilObject
+
+- (id)init
+{
+  self = [super init];
+
+  return self;
+}
+
+- (id)free
+{
+  return [super free];
+}
+
+- (const char *)stringValue
+{
+  return (const char *)nil_symbol_value;
+}
+
+- (BOOL)isEqual:(id)anObject
+{
+  if (anObject == self) {
+    return YES;
+  }
+
+  if (anObject == nil) {
+    return YES;
+  }
+
+  return NO;
+}
+
+@end                            // Nil
+
+@implementation NilObject (Debug)
+
+- (void)_printDebugInfo:(int)indent
+{
+  debug_print(indent, "nil value\n");
+}
+
+@end                            // Nil (Debug)
 
 @implementation Symbol
 

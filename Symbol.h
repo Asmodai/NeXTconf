@@ -50,6 +50,24 @@ typedef enum {
   SYMBOL_TYPE_MAX
 } SymbolType;
 
+@interface NilObject : Object
+
+- (id)init;
+- (id)free;
+
+- (const char *)stringValue;
+
+@end                            // Nil
+
+@interface NilObject (Debug)
+
+/*
+ * Debugging.
+ */
+- (void)_printDebugInfo:(int)indent;
+
+@end                            // Nil (Debug)
+
 /*
  * This class implements a symbol.
  *
