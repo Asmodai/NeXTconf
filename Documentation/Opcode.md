@@ -148,19 +148,19 @@ pushed instead.
 This opcode is the inverse of `OP_EQL`, pushing `true` if the two objects are
 not equal, and pushing `false` if they are equal.
 
-### OP_ADD
+### `OP_ADD`
 This opcode pops two objects from the stack and attempts to add them together,
 pushing the result back to the stack.
 
-### OP_SUB
+### `OP_SUB`
 This opcode pops two objects from the stack and attempts to subtract them,
 pushing the result back to the stack.
 
-### OP_MUL
+### `OP_MUL`
 This opcode pops two objects from the stack and attempts to multiply them,
 pushing the result back to the stack.
 
-### OP_DIV
+### `OP_DIV`
 This opcode pops two objects from the stack and attempts to divide them,
 pushing the result back to the stack.
 
