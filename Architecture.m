@@ -105,9 +105,6 @@ detect_hardware(String *machine, String *processor)
 
     [machine setStringValue:mach];
     [processor setStringValue:proc];
-
-    xfree(mach);
-    xfree(proc);
   }
 }
 
