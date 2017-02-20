@@ -168,6 +168,18 @@ The result of executing `nextconf -cf example' will be\
 \f3 OP_NEQ
 \f2 	Generic non-equality test.\
 
+\f3 OP_ADD
+\f2 	Numeric addition.\
+
+\f3 OP_SUB
+\f2 	Numeric subtraction.\
+
+\f3 OP_MUL
+\f2 	Numeric Multiplication.\
+
+\f3 OP_DIV
+\f2 	Numeric division.\
+
 \f3 OP_LAND
 \f2 	Logical `AND' test.\
 
@@ -252,6 +264,31 @@ The result of executing `nextconf -cf example' will be\
 \fs28 This opcode is the inverse of `
 \f3\fs24 OP_EQL
 \f0\fs28 ', pushing `true' if the two objects are not equal, and pushing `false' if they are equal.\
+\
+
+\f2\b OP_ADD
+\f0\b0\fs14 \
+
+\fs28 This opcode pops two objects from the stack and attempts to add them together, pushing the result back to the stack.\
+
+\pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
+
+\pard\fs28\fi-380\li2480\fc0\cf0 OP_SUB
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and attempts to subtract them, pushing the result back to the stack.\
+\
+
+\pard\f2\b\fi-380\li2480\fc0\cf0 OP_MUL
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and attempts to multiply them, pushing the result back to the stack.\
+\
+
+\pard\f2\b\fi-380\li2480\fc0\cf0 OP_DIV
+\pard\tx2480\tx2860\tx3240\f0\b0\fs14\li2100\fc0\cf0 \
+
+\fs28 This opcode pops two objects from the stack and attempts to divide them, pushing the result back to the stack.\
 
 \pard\tx5740\f2\b\fs36\li1360\fc0\cf0 \
 

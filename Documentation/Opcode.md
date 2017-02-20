@@ -104,6 +104,10 @@ Comments have been added by me to this document to highlight some opcode pattern
 | `OP_JMPF`    | Jump to a jump target if `false` is popped from the stack.            |
 | `OP_EQL`     | Generic equality test.                                                |
 | `OP_NEQ`     | Generic non-equality test.                                            |
+| `OP_ADD`     | Numeric addition.                                                     |
+| `OP_SUB`     | Numeric subtraction.                                                  |
+| `OP_MUL`     | Numeric multiplication.                                               |
+| `OP_DIV`     | Numeric division.                                                     |
 | `OP_LAND`    | Logical `AND` test.                                                   |
 | `OP_LOR`     | Logical _inclusive_ `OR` test.                                        |
 | `OP_LXOR`    | Logical _exclusive_ `OR` test.                                        |
@@ -143,6 +147,22 @@ pushed instead.
 ### `OP_NEQ`
 This opcode is the inverse of `OP_EQL`, pushing `true` if the two objects are
 not equal, and pushing `false` if they are equal.
+
+### OP_ADD
+This opcode pops two objects from the stack and attempts to add them together,
+pushing the result back to the stack.
+
+### OP_SUB
+This opcode pops two objects from the stack and attempts to subtract them,
+pushing the result back to the stack.
+
+### OP_MUL
+This opcode pops two objects from the stack and attempts to multiply them,
+pushing the result back to the stack.
+
+### OP_DIV
+This opcode pops two objects from the stack and attempts to divide them,
+pushing the result back to the stack.
 
 ### `OP_LAND`
 This opcode pops two objects from the stack and performs a logical `AND` on
