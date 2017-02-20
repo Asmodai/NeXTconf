@@ -1,0 +1,193 @@
+/*
+ * Test-Number.ucs  --- Number class tests.
+ *
+ * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ *
+ * Author:     Paul Ward <asmodai@gmail.com>
+ * Maintainer: Paul Ward <asmodai@gmail.com>
+ * Created:    Sun, 19 Feb 2017 23:37:02 +0000 (GMT)
+ * Keywords:   
+ * URL:        Not distributed yet.
+ */
+/* {{{ License: */
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ */
+/* }}} */
+/* {{{ Commentary: */
+/*
+ *
+ */
+/* }}} */
+
+print "";
+print "Number class tests";
+print "";
+
+include "Common.ucs";
+
+Integer = 5;
+Float   = 1.2;
+
+AddIntToFloat   = Float   + Integer;
+AddIntToInt     = Integer + Integer;
+AddFloatToInt   = Integer + Float;
+AddFloatToFloat = Float   + Float;
+
+SubIntAndInt    = Integer - Integer;
+SubIntAndFloat  = Integer - Float;
+
+MulIntAndInt    = Integer * Integer;
+MulIntAndFloat  = Integer * Float;
+
+DivIntAndInt    = Integer / Integer;
+DivIntAndFloat  = Integer / 0.5;     /* Precision :( */
+
+Total = Total + 1;
+print "Does integer equality work? " . Integer . " == 5";
+if (Integer == 5) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does float equality work? " . Float . " == 1.2";
+if (Float == 1.2) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does float RHS equality work? " . Integer . " == 5.0";
+if (Integer == 5.0) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does float LHS equality work? " . "5.0 == " . Integer;
+if (5.0 == Integer) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-to-Float addition work? " . AddIntToFloat . " == 6.2";
+if (AddIntToFloat == 6.2) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-to-Int addition work? " . AddIntToInt . " == 10";;
+if (AddIntToInt == 10) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Float-to-Int addition work? " . AddFloatToInt . " == 6.2";
+if (AddFloatToInt == 6.2) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Float-to-Float addition work? " . AddFloatToFloat . " == 2.4";
+if (AddFloatToFloat == 2.4) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-and-Int subtraction work? " . SubIntAndInt . " == 0";
+if (SubIntAndInt == 0) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+
+Total = Total + 1;
+print "Does Int-and-Float subtraction work? " . SubIntAndFloat . " == 3.8";
+if (SubIntAndFloat == 3.8) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-and-Int multiplication work? " . MulIntAndInt . " == 25";
+if (MulIntAndInt == 25) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-and-Float multiplication work? " . MulIntAndFloat . " == 6.0";
+if (MulIntAndFloat == 6) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-and-Int division work? " . DivIntAndInt . " == 1.0";
+if (DivIntAndInt == 1) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+Total = Total + 1;
+print "Does Int-and-Float division work? " . DivIntAndFloat . " == 10";
+if (DivIntAndFloat == 10) {
+  print Yes;
+  Passed = Passed + 1;
+} else {
+  print No;
+}
+
+include "Finish.ucs";
+
+/* Test-Number.ucs ends here */
+/*
+ * Local Variables: ***
+ * indent-tabs-mode: nil ***
+ * fill-column: 79 ***
+ * mode: objc ***
+ * End: ***
+ */
