@@ -104,11 +104,19 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   IntInstr            *jmp2end  = nil;
   IntInstr            *elsepart = nil;
   IntInstr            *endif    = nil;
+  IntInstr          *(*func)(id, SEL, SyntaxTree *);
+
+  /* Woah. */
+  func = (IntInstr *(*)(id, SEL, SyntaxTree *))
+    [IntInstr methodFor:@selector(generate:)];
+
+#define _INVOKE(__a) \
+  (*func)(self, @selector(generate:), (__a))
 
   switch ([root nodeType]) {
     case StmtList:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       return concatenate(blk1, blk2);
 
     case IncludedFile:
@@ -119,8 +127,8 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
         inclusion = [root includedTree];
 
         if (inclusion) {
-          blk1 = [IntInstr generate:[inclusion childAtIndex:0]];
-          blk2 = [IntInstr generate:[inclusion childAtIndex:1]];
+          blk1 = _INVOKE([inclusion childAtIndex:0]);
+          blk2 = _INVOKE([inclusion childAtIndex:1]);
           return concatenate(blk1, blk2);
         }
 
@@ -135,14 +143,14 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return [IntInstr generate:[root childAtIndex:0]];
 
     case PrintStmt:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk1 = _INVOKE([root childAtIndex:0]);
       blk2 = [[IntInstr alloc] initWithOpcode:OP_PRINT];
       return concatenate(blk1, blk2);
 
     case IfThenStmt:
-      cond     = [IntInstr generate:[root childAtIndex:0]];
+      cond     = _INVOKE([root childAtIndex:0]);
       jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMPF];
-      thenpart = [IntInstr generate:[root childAtIndex:1]];
+      thenpart = _INVOKE([root childAtIndex:1]);
       endif    = [[IntInstr alloc] initWithOpcode:JMPTGT];
       [endif setTarget:jmp2end];
       [jmp2end setTarget:endif];
@@ -152,10 +160,10 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return cond;
 
     case IfThenElseStmt:
-      cond     = [IntInstr generate:[root childAtIndex:0]];
+      cond     = _INVOKE([root childAtIndex:0]);
       jmp2else = [[IntInstr alloc] initWithOpcode:OP_JMPF];
-      thenpart = [IntInstr generate:[root childAtIndex:1]];
-      elsepart = prefixJT([IntInstr generate:[root childAtIndex:2]], jmp2else);
+      thenpart = _INVOKE([root childAtIndex:1]);
+      elsepart = prefixJT(_INVOKE([root childAtIndex:2]), jmp2else);
       [jmp2else setTarget:elsepart];
       jmp2end  = [[IntInstr alloc] initWithOpcode:OP_JMP];
       endif    = [[IntInstr alloc] initWithOpcode:JMPTGT];
@@ -173,7 +181,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
     case MethodCall:
       if ([root childAtIndex:0] != nil) {
-        blk1 = [IntInstr generate:[root childAtIndex:0]];
+        blk1 = _INVOKE([root childAtIndex:0]);
         blk2 = [[IntInstr alloc] initWithOpcode:OP_CALLA];
         [blk2 setSymbol:[root symbol]];
         return concatenate(blk1, blk2);
@@ -184,8 +192,8 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
     case NotEqualExpr:
     case EqualExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk1, blk2);
       return concatenate(blk1,
                          [[IntInstr alloc]
@@ -195,56 +203,56 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
                                : OP_EQL]);
 
     case AssignExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk1 = _INVOKE([root childAtIndex:0]);
       blk2 = [[IntInstr alloc] initWithOpcode:OP_POP];
       [blk2 setSymbol:[root symbol]];
       return concatenate(blk1, blk2);
 
     case ConcatExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk1, blk2);
       return concatenate(blk1, [[IntInstr alloc] initWithOpcode:OP_CONCAT]);
 
     case LogicalAndExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LAND]);
       return concatenate(blk1, blk2);
 
     case LogicalOrExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LOR]);
       return concatenate(blk1, blk2);
 
     case LogicalXorExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_LXOR]);
       return concatenate(blk1, blk2);
 
     case AddExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_ADD]);
       return concatenate(blk1, blk2);
 
     case SubExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_SUB]);
       return concatenate(blk1, blk2);
 
     case MulExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_MUL]);
       return concatenate(blk1, blk2);
 
     case DivExpr:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
-      blk2 = [IntInstr generate:[root childAtIndex:1]];
+      blk1 = _INVOKE([root childAtIndex:0]);
+      blk2 = _INVOKE([root childAtIndex:1]);
       concatenate(blk2, [[IntInstr alloc] initWithOpcode:OP_DIV]);
       return concatenate(blk1, blk2);
 
@@ -257,13 +265,16 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return blk1;
 
     case CoerceToString:
-      blk1 = [IntInstr generate:[root childAtIndex:0]];
+      blk1 = _INVOKE([root childAtIndex:0]);
       blk2 = [[IntInstr alloc] initWithOpcode:OP_BLN2STR];
       return concatenate(blk1, blk2);
 
     default:
       return [[IntInstr alloc] initWithOpcode:OP_NOP];
   }
+
+#undef _INVOKE
+
 }
 
 - (id)init

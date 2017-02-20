@@ -253,14 +253,24 @@ resolveSymbol(id symb, id argSymb)
 
 - (void)execute
 {
-  register size_t  ip    = 0;
-  register size_t  ipc   = 0;
-  register Stack  *stack = [[Stack alloc] init];
-  register id      i     = nil;
-  register id      j     = nil;
-  register id      k     = nil;
-  register BOOL    b     = NO;
-  register int     op    = 0;
+  register id    (*popObj)(id, SEL);
+  register id    (*pushObj)(id, SEL, id);
+  register size_t  ip                    = 0;
+  register size_t  ipc                   = 0;
+  register id      i                     = nil;
+  register id      j                     = nil;
+  register id      k                     = nil;
+  int              op                    = 0;
+  Stack           *stack                 = [[Stack alloc] init];
+  BOOL             b                     = NO;
+  SEL              popSel                = @selector(popObject);
+  SEL              pushSel               = @selector(pushObject:);
+
+  popObj  = (id (*)(id, SEL))[stack methodFor:popSel];
+  pushObj = (id (*)(id, SEL, id))[stack methodFor:pushSel];
+
+#define STACK_POP        (*popObj)(stack, popSel)
+#define STACK_PUSH(__a)  (*pushObj)(stack, pushSel, (__a))
 
   while (ip < _count) {
     ipc = 1;
@@ -271,15 +281,15 @@ resolveSymbol(id symb, id argSymb)
         break;
 
       case OP_PUSH:
-        [stack pushObject:(id)[[_instrs objectAt:ip] operand]];
+        STACK_PUSH((id)[[_instrs objectAt:ip] operand]);
         break;
 
       case OP_POP:
-        [(Symbol *)[[_instrs objectAt:ip] operand] setData:(id)[stack popObject]];
+        [(Symbol *)[[_instrs objectAt:ip] operand] setData:(id)STACK_POP];
         break;
 
       case OP_PRINT:
-        i = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
         fprintf(stdout, "%s\n", [i stringValue]);
         break;
 
@@ -288,7 +298,7 @@ resolveSymbol(id symb, id argSymb)
         break;
 
       case OP_JMPF:
-        i = [stack popObject];
+        i = STACK_POP;
 
         if ([[i data] boolValue] == NO) {
           ipc = [[_instrs objectAt:ip] operand];
@@ -297,82 +307,82 @@ resolveSymbol(id symb, id argSymb)
 
       case OP_NEQ:
       case OP_EQL:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
         k = [[Boolean alloc] init];
         b = [i isEqual:j];
         [k setValueFromBool:(op == OP_EQL) ? b : !b];
-        [stack pushObject:[Symbol newFromBoolean:k]];
+        STACK_PUSH([Symbol newFromBoolean:k]);
         break;
 
       case OP_CONCAT:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
-        [stack pushObject:[Symbol newFromString:
-                                    [[[String alloc] init]
-                                      concatenate:j, i, nil]]];
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
+        k = [Symbol newFromString:[[[String alloc] init] 
+                                    concatenate:j, i, nil]];
+        STACK_PUSH(k);
         break;
 
       case OP_ADD:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
-        [stack pushObject:[Symbol newFromNumber:[j add:i]]];
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
+        STACK_PUSH([Symbol newFromNumber:[j add:i]]);
         break;
 
       case OP_SUB:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
-        [stack pushObject:[Symbol newFromNumber:[j subtract:i]]];
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
+        STACK_PUSH([Symbol newFromNumber:[j subtract:i]]);
         break;
 
       case OP_MUL:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
-        [stack pushObject:[Symbol newFromNumber:[j multiply:i]]];
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
+        STACK_PUSH([Symbol newFromNumber:[j multiply:i]]);
         break;
 
       case OP_DIV:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
-        [stack pushObject:[Symbol newFromNumber:[j divide:i]]];
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
+        STACK_PUSH([Symbol newFromNumber:[j divide:i]]);
         break;
 
       case OP_LAND:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
         k = [[Boolean alloc] init];
-        b = [i boolValue] && [j boolValue];
+        b = [j boolValue] && [i boolValue];
         [k setValueFromBool:b];
-        [stack pushObject:[Symbol newFromBoolean:k]];
+        STACK_PUSH([Symbol newFromBoolean:k]);
         break;
 
       case OP_LOR:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
         k = [[Boolean alloc] init];
-        b = [i boolValue] || [j boolValue];
+        b = [j boolValue] || [i boolValue];
         [k setValueFromBool:b];
-        [stack pushObject:[Symbol newFromBoolean:k]];
+        STACK_PUSH([Symbol newFromBoolean:k]);
         break;
 
       case OP_LXOR:
-        i = resolveSymbol([stack popObject], nil);
-        j = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
+        j = resolveSymbol(STACK_POP, nil);
         k = [[Boolean alloc] init];
-        b = !([i boolValue]) != !([j boolValue]);
+        b = !([j boolValue]) != !([i boolValue]);
         [k setValueFromBool:b];
-        [stack pushObject:[Symbol newFromBoolean:k]];
+        STACK_PUSH([Symbol newFromBoolean:k]);
         break;
 
       case OP_CALL:
         i = (Symbol *)[[_instrs objectAt:ip] operand];
-        [stack pushObject:resolveSymbol(i, nil)];
+        STACK_PUSH(resolveSymbol(i, nil));
         break;
 
       case OP_CALLA:
-        i = resolveSymbol([stack popObject], nil);
+        i = resolveSymbol(STACK_POP, nil);
         j = (Symbol *)[[_instrs objectAt:ip] operand];
-        [stack pushObject:resolveSymbol(j, i)];
+        STACK_PUSH(resolveSymbol(j, i));
         break;
 
       case OP_BLN2STR:
@@ -384,6 +394,9 @@ resolveSymbol(id symb, id argSymb)
 
     ip += ipc;
   }
+
+#undef STACK_POP
+#undef STACK_PUSH
 }
 
 - (void)reset
