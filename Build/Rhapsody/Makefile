@@ -12,7 +12,7 @@ DEBUG_LIBS = $(LIBS)
 PROF_LIBS = $(LIBS)
 
 
-FRAMEWORKS = -framework Foundation
+FRAMEWORKS = -framework Foundation -framework AppKit
 
 
 NEXTSTEP_OBJCPLUS_COMPILER = /usr/bin/cc

@@ -41,7 +41,7 @@
 #    OTHER_LFLAGS, LOCAL_LFLAGS:  additional flags passed to lex
 
 OTHER_CFLAGS = -O2 -pipe
-OTHER_LDFLAGS = 
+OTHER_LDFLAGS =
 
 # These variables provide hooks enabling you to add behavior at almost every 
 # stage of the make:

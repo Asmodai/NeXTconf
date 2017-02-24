@@ -93,9 +93,16 @@ main(int argc, char **argv)
   BOOL            cFlag   = NO;
   BOOL            tFlag   = NO;
   BOOL            sFlag   = NO;
+  int i = 0;
 
   //extern int   optind;
   extern char *optarg;
+
+  printf("Args:\n");
+  for (i = 0; i < argc; i++) {
+    printf("[%d] %s\n", i, argv[i]);
+  }
+              
 
   [[PropertyManager sharedInstance] instantiateAllClasses];
 
