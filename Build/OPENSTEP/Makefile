@@ -13,7 +13,7 @@ DEBUG_LIBS = $(LIBS)
 PROF_LIBS = $(LIBS)
 
 
-FRAMEWORKS = -framework Foundation
+FRAMEWORKS = -framework Foundation -framework AppKit
 
 
 -include Makefile.preamble

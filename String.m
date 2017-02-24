@@ -42,6 +42,8 @@
 #import "String.h"
 #import "Utils.h"
 
+#import "version.h"
+
 /*
  * Map NXToLower and NXToUpper to standard C library stuff.
  */
@@ -49,6 +51,8 @@
 # import <ctype.h>
 # define NXToLower    tolower
 # define NXToUpper    toupper
+#else
+# import <appkit/NXCType.h>
 #endif
 
 #define MIN_STRING_BUFFER_SIZE    15

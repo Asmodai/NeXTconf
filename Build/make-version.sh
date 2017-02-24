@@ -38,6 +38,18 @@
 # }}}
 
 # ==================================================================
+# {{{ Dependency detection:
+
+if [ ! -f /bin/uname -a ! -f /usr/bin/uname ]
+then
+    echo "You need an implementation of 'uname' to use this script"
+    exit 1
+fi
+
+# }}}
+# ==================================================================
+
+# ==================================================================
 # {{{ Variables et al:
 
 #
@@ -105,6 +117,7 @@ _version=`echo "(${_major}*100000000)+(${_minor}*1000000)+${_build}" | bc`
 # {{{ Build the header:
 
 _verStr="${_major}.${_minor} (build ${_build}, `date -u`)"
+_copyright="Copyright (c) 2015-`date | awk '{print \$6}'` Paul Ward"
 
 cat >>$_header_file <<EOF
 /*
@@ -115,6 +128,7 @@ cat >>$_header_file <<EOF
 #define _version_h_
 
 #ifndef ${_product}_VERSION_DEFINED
+# define __Copyright       "${_copyright}.  All rights reserved."
 # define __Version          ${_version}
 # define __VersionStr      "${_product} ${_verStr}"
 # define __VersionShortStr "${_product} ${_major}.${_minor}"
@@ -126,7 +140,7 @@ cat >>$_header_file <<EOF
 # define __BuildSysFull    "`uname -srm`"
 # define __BuildArch       "`(arch || mach || machine) 2>/dev/null`"
 # define __BuildDate       "`date -u`"
-# define __BuildHost       "${HOSTNAME}"
+# define __BuildHost       "`hostname`"
 # define __BuiltBy         "${USER}"
 # define ${_product}_VERSION_DEFINED
 

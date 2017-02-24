@@ -95,16 +95,16 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
 
 + (IntInstr *)generate:(SyntaxTree *)tree
 {
-  register IntInstr *(*func)(id, SEL, SyntaxTree *);
-  register SyntaxTree *root     = tree;
-  register IntInstr   *blk1     = nil;
-  register IntInstr   *blk2     = nil;
-  IntInstr            *cond     = nil;
-  IntInstr            *jmp2else = nil;
-  IntInstr            *thenpart = nil;
-  IntInstr            *jmp2end  = nil;
-  IntInstr            *elsepart = nil;
-  IntInstr            *endif    = nil;
+  register IntInstr   *(*func)(id, SEL, SyntaxTree *);
+  register SyntaxTree   *root     = tree;
+  register IntInstr     *blk1     = nil;
+  register IntInstr     *blk2     = nil;
+  IntInstr              *cond     = nil;
+  IntInstr              *jmp2else = nil;
+  IntInstr              *thenpart = nil;
+  IntInstr              *jmp2end  = nil;
+  IntInstr              *elsepart = nil;
+  IntInstr              *endif    = nil;
 
   func = (IntInstr *(*)(id, SEL, SyntaxTree *))
     [IntInstr methodFor:@selector(generate:)];
@@ -139,7 +139,7 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
       return [[IntInstr alloc] initWithOpcode:OP_NOP];
 
     case ExprStmt:
-      return [IntInstr generate:[root childAtIndex:0]];
+      return _INVOKE([root childAtIndex:0]);
 
     case PrintStmt:
       blk1 = _INVOKE([root childAtIndex:0]);
@@ -273,7 +273,6 @@ prefixJT(IntInstr *blk, IntInstr *refInstr)
   }
 
 #undef _INVOKE
-
 }
 
 - (id)init

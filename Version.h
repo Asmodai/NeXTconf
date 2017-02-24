@@ -50,12 +50,15 @@
 /*
  * Class methods.
  */
++ (const char *)copyright;
 + (const char *)versionString;
 + (const char *)versionShortString;
 + (const char *)buildString;
 + (const char *)buildSystemString;
 + (const char *)buildDateString;
 + (const char *)builtByString;
++ (void)printToBuffer:(char *)buf
+             withSize:(size_t)size;
 + (void)print;
 
 /*

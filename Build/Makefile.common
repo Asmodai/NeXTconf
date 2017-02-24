@@ -8,6 +8,17 @@ PROJECTVERSION = 0.1
 PROJECT_TYPE = Tool
 LANGUAGE = English
 
+# This is for the debugger.
+APPICON = AppIcon.tiff
+ICONSECTIONS = -sectcreate __ICON app AppIcon.tiff \
+	       -sectcreate __TIFF app AppIcon.tiff
+ICONHEADER = nextconf.iconheader
+
+APPICONFLAGS =  -sectcreate __ICON __header $(ICONHEADER) \
+		-segprot __ICON r r                       \
+	        -segprot __TIFF r r                       \
+	        $(ICONSECTIONS)
+
 HFILES = Architecture.h    \
 	 FileSystem.h      \
 	 Header.h          \
@@ -63,7 +74,10 @@ CLASSES = Architecture.m    \
 	  SyntaxTree.m      \
 	  IntInstr.m        \
 	  VirtMachine.m     \
-	  Version.m
+	  Version.m         \
+	  UI.m              \
+	  DbgApp.m          \
+	  DbgInfoPanel.m
 
 OTHERSRCS = Makefile.preamble Makefile Makefile.postamble
 

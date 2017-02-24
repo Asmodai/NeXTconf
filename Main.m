@@ -51,7 +51,8 @@
 #import "Architecture.h"
 #import "Platform.h"
 #import "Utils.h"
-
+#import "DbgApp.h"
+#import "version.h"
 
 extern int yyparse(void *);
 
@@ -62,6 +63,21 @@ usage(void)
 {
   fprintf(stderr,
           "usage: %s [-ivh] <file>\n",
+          progname);
+  exit(EXIT_FAILURE);
+}
+
+void
+start_debugger(void)
+{
+  DbgApp *dbg = [[DbgApp alloc] init];
+
+  if (dbg != nil) {
+    [dbg start];
+  }
+
+  fprintf(stderr,
+          "%s: No debugger available for this platform!",
           progname);
   exit(EXIT_FAILURE);
 }
@@ -89,8 +105,19 @@ main(int argc, char **argv)
   progname = argv[0];
   yyin     = NULL;
 
-  while ((ch = getopt(argc, argv, "citosvhf:")) != EOF) {
+  /* Special case for Workspace launching. */
+  if (argc > 1) {
+    if (strcasecmp(argv[1], "-MachLaunch") == 0) {
+      start_debugger();
+    }
+  }
+
+  while ((ch = getopt(argc, argv, "dcitosvhf:")) != EOF) {
     switch (ch) {
+      case 'd':
+        start_debugger();
+        break;
+        
       case 'c':
         cFlag = YES;
         break;

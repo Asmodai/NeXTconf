@@ -37,6 +37,7 @@
 #import "PropertyManager.h"
 
 /* So we can run `strings' on the binary. */
+const char COPYRIGHT[]       = __Copyright;
 const char VERSIONSTR[]      = __VersionStr;
 const char VERSIONSHORTSTR[] = __VersionShortStr;
 const char BUILDSTR[]        = __BuildStr;
@@ -45,6 +46,11 @@ const char BUILDDATE[]       = __BuildDate;
 const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
 
 @implementation Version
+
++ (const char *)copyright
+{
+  return COPYRIGHT;
+}
 
 + (const char *)versionString
 {
@@ -76,18 +82,34 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
   return BUILTBY;
 }
 
++ (void)printToBuffer:(char *)buf
+             withSize:(size_t)size
+{
+  snprintf(buf,
+           size,
+           "This is %s\n\n"
+           "Build:        %s\n"
+           "Built on:     %s\n"
+           "Built by:     %s\n"
+           "Build system: %s\n\n",
+           VERSIONSHORTSTR,
+           BUILDSTR,
+           BUILDDATE,
+           BUILTBY,
+           BUILDSYSFULL);
+}
+
 + (void)print
 {
-  printf("This is %s\n\n"
-         "Build:        %s\n"
-         "Built on:     %s\n"
-         "Built by:     %s\n"
-         "Build system: %s\n\n",
-         VERSIONSHORTSTR,
-         BUILDSTR,
-         BUILDDATE,
-         BUILTBY,
-         BUILDSYSFULL);
+  char *buf = NULL;
+
+  buf = xmalloc(sizeof *buf * 512);
+
+  [Version printToBuffer:buf
+                withSize:511];
+  printf("%s", buf);
+
+  xfree(buf);
 }
 
 - (id)init
