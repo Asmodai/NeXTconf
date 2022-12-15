@@ -98,6 +98,7 @@ xzonemalloc(NXZone *zone, size_t size)
     perror("xzonemalloc");
     exit(EXIT_FAILURE);
   }
+  bzero(p, size);
 
   return p;
 }
@@ -112,6 +113,7 @@ xzonerealloc(NXZone *zone, void *ptr, size_t n)
     perror("xzonerealloc");
     exit(EXIT_FAILURE);
   }
+  bzero(ptr, n);
 
   return ptr;
 }
@@ -154,6 +156,7 @@ xmalloc(size_t n)
     perror("xmalloc");
     exit(EXIT_FAILURE);
   }
+  bzero(p, n);
 
   return p;
 
@@ -176,6 +179,7 @@ xrealloc(void *ptr, size_t n)
     perror("xrealloc");
     exit(EXIT_FAILURE);
   }
+  bzero(ptr, n);
 
   return ptr;
 

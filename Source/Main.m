@@ -51,7 +51,6 @@
 #import "Architecture.h"
 #import "Platform.h"
 #import "Utils.h"
-#import "DbgApp.h"
 #import "version.h"
 
 extern int yyparse(void *);
@@ -62,26 +61,49 @@ void
 usage(void)
 {
   fprintf(stderr,
-          "usage: %s [-ivh] <file>\n",
-          progname);
+          "usage: %s [-ivhctos] [-f <file>]\n"
+          "  -f <file>   The NeXTconf script to execute.\n"
+          "  -v          Display the tool's version.\n"
+          "  -i          Display information about the installed system.\n"
+          "  -h          Display this help message.\n"
+#ifdef DEBUG
+          "\n"
+          "  -c          [debug] Show opcode for script.\n"
+          "  -t          [debug] Show token tree for script. *SLOW*\n"
+          "  -s          [debug] Show symbol table for script.\n"
+#endif
+          ,progname);
   exit(EXIT_FAILURE);
 }
 
 void
-start_debugger(void)
+show_info(void)
 {
-  DbgApp *dbg = [[DbgApp alloc] init];
+  String       *name = nil;
+  Architecture *arch = nil;
+  Platform     *plat = nil;
 
-  if (dbg != nil) {
-    [dbg start];
+  name = [[String alloc] initWithString:"Architecture"];
+  arch = [[PropertyManager sharedInstance] findInstance:name];
+  if (arch) {
+    [arch print];
   }
+  xfree(name);
 
-  fprintf(stderr,
-          "%s: No debugger available for this platform!",
-          progname);
-  exit(EXIT_FAILURE);
+  name = [[String alloc] initWithString:"Platform"];
+  plat = [[PropertyManager sharedInstance] findInstance:name];
+  if (plat) {
+    [plat print];
+  }
+  xfree(name);          
 }
 
+/*
+ * TODO:
+ *
+ *   Could we abuse the fact that `-MachLaunch' is an argument when an app or
+ *   tool is launched from Workspace Manager for something?
+ */
 int
 main(int argc, char **argv)
 {
@@ -95,15 +117,8 @@ main(int argc, char **argv)
   BOOL            sFlag   = NO;
   int i = 0;
 
-  //extern int   optind;
   extern char *optarg;
-
-  printf("Args:\n");
-  for (i = 0; i < argc; i++) {
-    printf("[%d] %s\n", i, argv[i]);
-  }
               
-
   [[PropertyManager sharedInstance] instantiateAllClasses];
 
   syntree = [[SyntaxTree alloc] init];
@@ -112,19 +127,8 @@ main(int argc, char **argv)
   progname = argv[0];
   yyin     = NULL;
 
-  /* Special case for Workspace launching. */
-  if (argc > 1) {
-    if (strcasecmp(argv[1], "-MachLaunch") == 0) {
-      start_debugger();
-    }
-  }
-
-  while ((ch = getopt(argc, argv, "dcitosvhf:")) != EOF) {
+  while ((ch = getopt(argc, argv, "citosvhf:")) != EOF) {
     switch (ch) {
-      case 'd':
-        start_debugger();
-        break;
-        
       case 'c':
         cFlag = YES;
         break;
@@ -134,25 +138,7 @@ main(int argc, char **argv)
         break;
 
       case 'i':
-        {
-          String       *name = nil;
-          Architecture *arch = nil;
-          Platform     *plat = nil;
-
-          name = [[String alloc] initWithString:"Architecture"];
-          arch = [[PropertyManager sharedInstance] findInstance:name];
-          if (arch) {
-            [arch print];
-          }
-          xfree(name);
-          
-          name = [[String alloc] initWithString:"Platform"];
-          plat = [[PropertyManager sharedInstance] findInstance:name];
-          if (plat) {
-            [plat print];
-          }
-          xfree(name);          
-        }
+        show_info();
         break;
 
       case 'o':
@@ -212,6 +198,7 @@ main(int argc, char **argv)
 
   code = [IntInstr generate:syntree];
   [code number:1];
+  [syntree free];
 
   if (cFlag) {
     [code printDebug:"Intermediate code"];

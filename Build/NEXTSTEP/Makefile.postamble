@@ -66,16 +66,16 @@
 #MAKEFILES = Makefile 
 
 # Optimization flag passed to compiler:
-#OPTIMIZATION_CFLAG = -O
+OPTIMIZATION_CFLAG = -O2
 
 # Flags always passed to compiler:
-#COMMON_CFLAGS = $(PROJECT_SPECIFIC_CFLAGS) -g -Wall  
+COMMON_CFLAGS = $(PROJECT_SPECIFIC_CFLAGS) -Wall  
 
 # Flags passed to compiler in normal 'app' compiles:
-#NORMAL_CFLAGS = $(COMMON_CFLAGS) $(OPTIMIZATION_CFLAG)
+NORMAL_CFLAGS = $(COMMON_CFLAGS) $(OPTIMIZATION_CFLAG) -pipe
 
 # Flags passed to compiler in 'debug' compiles:
-#DEBUG_CFLAGS = $(COMMON_CFLAGS) -DDEBUG
+DEBUG_CFLAGS = $(COMMON_CFLAGS) -DDEBUG -g2
 
 # Flags passed to compiler in 'profile' compiles
 #PROFILE_CFLAGS = $(COMMON_CFLAGS) -pg $(OPTIMIZATION_CFLAG) -DPROFILE

@@ -36,7 +36,7 @@
 
 for test in `ls Test-*`;
 do
-    ../nextconf -f ${test}
+    ../nxconf -f ${test}
 done
 
 # perform.sh ends here

@@ -54,7 +54,7 @@ fi
 
 #
 # Location of the version header.
-_header_file="../version.h"
+_header_file="../Source/version.h"
 
 #
 # Files containing version information.

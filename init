@@ -48,14 +48,16 @@ usage() {
 
 copy_makefiles()
 {
+    _pwd=`pwd`
     if [ -z ${PLATFORM} ]
     then
         echo "No platform.  Cannot copy makefiles."
         exit 3
     fi
 
-    rm Makefile* 2>/dev/null
-    ln -s Build/${PLATFORM}/Makefile* . 2>/dev/null
+    # Pay attention and don't delete Makefile.[hm]!
+    rm ${_pwd}/Source/Makefile.p* 2>/dev/null
+    ln -s ${_pwd}/Build/${PLATFORM}/Makefile.* ${_pwd}/Source/ 2>/dev/null
 
     echo "Done."
 }

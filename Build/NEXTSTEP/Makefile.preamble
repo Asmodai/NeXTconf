@@ -16,7 +16,7 @@
 ## (e.g. change -O to -O2), see Makefile.postamble.
 
 # Flags passed to compiler (in addition to -g, -O, etc)
-OTHER_CFLAGS = -O2 -pipe
+OTHER_CFLAGS = 
 # Flags passed to ld (in addition to -ObjC, etc.)
 OTHER_LDFLAGS =
 BUNDLELDFLAGS =            # use iff project is a bundle
@@ -105,8 +105,3 @@ OTHER_HELP_DIRS =
 
 # Don't add more rules here unless you want the first one to be the default
 # target for make!  Put all your targets in Makefile.postamble.
-
-all:: version tool
-
-version::
-	@(cd Build ; sh make-version.sh)

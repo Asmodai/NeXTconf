@@ -111,9 +111,9 @@
   buf = xzonemalloc([self zone], 256 * sizeof *buf);
   
   if (GET_TYPE(_number) == Integer) {
-    snprintf(buf, 256, "%lu", GET_INT(_number));
+    snprintf(buf, 256, "%lu\0", GET_INT(_number));
   } else {
-    snprintf(buf, 256, "%f", GET_FLOAT(_number));
+    snprintf(buf, 256, "%f\0", GET_FLOAT(_number));
   }
 
   return (const char *)buf;
