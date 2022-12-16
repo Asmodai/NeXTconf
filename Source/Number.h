@@ -1,7 +1,7 @@
 /*
  * Number.h  --- Numeric data type interface.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -40,7 +40,8 @@
  */
 @interface Number : Object
 {
-  number_t   _number;           // The number.
+  number_t  _number;            // The number.
+  char     *_cache;             // Cached C-string representation.
 }
 
 /*
@@ -55,6 +56,12 @@
  * Destruction methods.
  */
 - (id)free;
+
+/*
+ * Utility methods.
+ */
+- (BOOL)isBound;
+- (size_t)length;
 
 /*
  * Accessor methods.

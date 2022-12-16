@@ -1,7 +1,7 @@
 /*
  * Symbol.m  --- Symbol implementation.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -56,14 +56,14 @@ static const char *symbol_type_names[] = {
 /*
  * Default symbol type name.
  */
-static const char default_symbol_type[] = "<invalid>";
+static const char *default_symbol_type = "<invalid>";
 
 /*
  * Default symbol name.
  */
-static const char default_symbol_name[] = "<unnamed>";
+static const char *default_symbol_name = "<unnamed>";
 
-static const char nil_symbol_value[] = "nil";
+static const char *nil_symbol_value = "nil";
 
 static 
 const char *
@@ -173,7 +173,9 @@ name_for_symbol_type(SymbolType type)
 {
   if ((self = [super init]) != nil) {
     _data = data;
-    _name = [[String alloc] initWithString:name];
+    _name = (name == NULL)
+              ? [[String alloc] init]
+              : [[String alloc] initWithString:name];
     _type = type;
   }
 
@@ -198,6 +200,11 @@ name_for_symbol_type(SymbolType type)
 - (id)data
 {
   return _data;
+}
+
+- (BOOL)isBound
+{
+  return !(_data == nil);
 }
 
 - (void)setType:(SymbolType)aType
@@ -269,7 +276,7 @@ name_for_symbol_type(SymbolType type)
 - (void)_printDebugInfo:(int)indent
 {
   if (_name) {
-    debug_print(indent, "name      = [%s]\n", [_name stringValue]);
+    debug_print(indent, "Name      = [%s]\n", [_name stringValue]);
   }
 
   debug_print(indent, "Type      = %s\n", [self typeName]);

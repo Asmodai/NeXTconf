@@ -1,4 +1,4 @@
-Release 0.93  Copyleft (c)2017 by Paul Ward.  All Rights Reserved.
+Release 0.93  Copyleft (c)2017-2022 by Paul Ward.  All Rights Reserved.
 
 # Opcode
 ## Virtual machine

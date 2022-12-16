@@ -1,7 +1,7 @@
 /*
  * Platform.m  --- Platform detection implementation.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -61,8 +61,6 @@ static int _minor_version = 0;
 /* OS version string.*/
 static String *_version_string = nil;
 
-
-
 /*
  * Platform information structure.
  */
@@ -115,6 +113,17 @@ static const platform_t known_platforms[] = {
   }
 };
 
+/* Fun times! */
+#if defined(NeXT)
+# if defined(__MACH__)
+#  include "OS_Mach.i"
+# else
+#  error Not supported yet
+# endif
+#else
+# error Not supported
+#endif
+
 /*
  * Attempt to match the given platform using the software version's
  * codename.
@@ -131,7 +140,6 @@ codename_match(const platform_t *platform)
   }
 
   line = (char *)xmalloc(DETECT_MAX_LINE * sizeof *line);
-
 
   if (platform->versionFile == NULL) {
     return NO;
@@ -211,47 +219,7 @@ static
 BOOL
 get_os_version(void)
 {
-  kern_return_t    kret                        = 0;
-  kernel_version_t kver                        = "";
-  size_t           idx                         = 0;
-  size_t           len                         = 0;
-  char             version[KERNEL_VERSION_MAX] = { 0 };
-
-  kret = host_kernel_version(host_self(),kver);
-  if (kret != KERN_SUCCESS) {
-    mach_error("host_kernel_version() failed.", kret);
-    return NO;
-  }
-
-  strncpy(version, kver, KERNEL_VERSION_MAX);
-  len = strlen(version);
-
-  if (version[len - 1] == '\n') {
-    version[len - 1] = '\0';
-  }
-
-  for (idx = 0; idx < len; idx++) {
-    /* version \d.\d: */
-    if (isdigit(version[idx])     && version[idx + 1] == '.' &&
-        isdigit(version[idx + 2]) && version[idx + 3] == ':')
-    {
-      _major_version = version[idx] - '0';
-      _minor_version = version[idx + 2] - '0';
-      break;
-    }
-
-    /* version \d.\d.\d: */
-    if (isdigit(version[idx])     && version[idx + 1] == '.' &&
-        isdigit(version[idx + 2]) && version[idx + 3] == '.' &&
-        isdigit(version[idx + 4]) && version[idx + 5] == ':')
-    {
-      _major_version = version[idx] - '0';
-      _minor_version = version[idx + 2] - '0';
-      break;
-    }
-  }
-
-  return YES;
+  return impl__get_os_version();
 }
 
 @implementation Platform
@@ -348,9 +316,9 @@ get_os_version(void)
   fprintf(stdout, "Platform Information\n");
   fprintf(stdout, "\tMajor version: %lu\n", [_major intValue]);
   fprintf(stdout, "\tMinor version: %lu\n", [_minor intValue]);
-  fprintf(stdout, "\tProduct name:  %s\n", [_product stringValue]);
-  fprintf(stdout, "\tPlatform name: %s\n", [_platform stringValue]);
-  fprintf(stdout, "\tIs OpenStep:   %s\n", [_OpenStep stringValue]);
+  fprintf(stdout, "\tProduct name:  %s\n",  [_product stringValue]);
+  fprintf(stdout, "\tPlatform name: %s\n",  [_platform stringValue]);
+  fprintf(stdout, "\tIs OpenStep:   %s\n",  [_OpenStep stringValue]);
   fprintf(stdout, "\n");
 }
 

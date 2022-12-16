@@ -1,7 +1,7 @@
 /*
  * PropertyManager.m  --- Property manager implementation.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -35,6 +35,7 @@
 #import "Utils.h"
 #import "List+Debug.h"
 #import "Property.h"
+#import "Utils.h"
 
 #import <objc/Object.h>
 #import <objc/Protocol.h>
@@ -225,6 +226,7 @@
       }
     }
   }
+
 
   if (_methods) {
     state = [_methods initState];

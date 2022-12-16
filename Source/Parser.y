@@ -1,7 +1,7 @@
 /*
  * Grammar.y  --- Yacc grammar.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -54,6 +54,7 @@ const char *make_immediate_name(void);
 Symbol     *make_method_call(const char *, const char *, BOOL);
 
 extern int yylex();
+extern int lineno;
 
 /* We want debugging. */
 #define YYDEBUG 100

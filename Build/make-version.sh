@@ -3,7 +3,7 @@
 #
 # version.sh --- Builds version information.
 #
-# Copyright (c) 2013-2015 Paul Ward <asmodai@gmail.com>
+# Copyright (c) 2012-2022 Paul Ward <asmodai@gmail.com>
 #
 # Time-stamp: <15/11/07 23:56:09 asmodai>
 # Revision:   11

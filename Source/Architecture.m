@@ -1,7 +1,7 @@
 /*
  * Architecture.m  --- Architecture detection implementation.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -81,6 +81,9 @@ have_arch(const char *arch)
   return NO;
 }
 
+/*
+ * Calls out to Mach to get basic host information.
+ */
 void
 detect_hardware(String *machine, String *processor)
 {
@@ -147,22 +150,15 @@ detect_hardware(String *machine, String *processor)
 
 - (id)free
 {
-  if (_processor) {
-    [_processor free];
-    _processor = nil;
-  }
+  MAYBE_FREE(_processor);
+  MAYBE_FREE(_machine);
 
-  if (_machine) {
-    [_machine free];
-    _machine = nil;
-  }
-
-  [_hasIX86 free];
-  [_hasM68K free];
-  [_hasSPARC free];
-  [_hasHPPA free];
-  [_hasPPC free];
-  [_hasDeveloper free];
+  MAYBE_FREE(_hasIX86);
+  MAYBE_FREE(_hasM68K);
+  MAYBE_FREE(_hasSPARC);
+  MAYBE_FREE(_hasHPPA);
+  MAYBE_FREE(_hasPPC);
+  MAYBE_FREE(_hasDeveloper);
 
   return [super free];
 }

@@ -1,7 +1,7 @@
 /*
  * Boolean.h  --- Boolean data type interface.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -56,6 +56,7 @@
 /*
  * Accessor methods.
  */
+- (BOOL)isBound;
 - (BOOL)boolValue;
 - (const char *)stringValue;
 - (long_t)intValue;

@@ -1,7 +1,7 @@
 /*
  * Types.h  --- Some title
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

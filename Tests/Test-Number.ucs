@@ -1,7 +1,7 @@
 /*
  * Test-Number.ucs  --- Number class tests.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -35,8 +35,6 @@ print "";
 print "Number class tests";
 print "";
 
-include "Common.ucs";
-
 Integer = 5;
 Float   = 1.2;
 
@@ -55,7 +53,7 @@ DivIntAndInt    = Integer / Integer;
 DivIntAndFloat  = Integer / 0.5;     /* Precision :( */
 
 Total = Total + 1;
-print "Does integer equality work? " . Integer . " == 5";
+print "  Does integer equality work? " . Integer . " == 5";
 if (Integer == 5) {
   print Yes;
   Passed = Passed + 1;
@@ -64,7 +62,7 @@ if (Integer == 5) {
 }
 
 Total = Total + 1;
-print "Does float equality work? " . Float . " == 1.2";
+print "  Does float equality work? " . Float . " == 1.2";
 if (Float == 1.2) {
   print Yes;
   Passed = Passed + 1;
@@ -73,7 +71,7 @@ if (Float == 1.2) {
 }
 
 Total = Total + 1;
-print "Does float RHS equality work? " . Integer . " == 5.0";
+print "  Does float RHS equality work? " . Integer . " == 5.0";
 if (Integer == 5.0) {
   print Yes;
   Passed = Passed + 1;
@@ -82,7 +80,7 @@ if (Integer == 5.0) {
 }
 
 Total = Total + 1;
-print "Does float LHS equality work? " . "5.0 == " . Integer;
+print "  Does float LHS equality work? " . "5.0 == " . Integer;
 if (5.0 == Integer) {
   print Yes;
   Passed = Passed + 1;
@@ -91,7 +89,7 @@ if (5.0 == Integer) {
 }
 
 Total = Total + 1;
-print "Does Int-to-Float addition work? " . AddIntToFloat . " == 6.2";
+print "  Does Int-to-Float addition work? " . AddIntToFloat . " == 6.2";
 if (AddIntToFloat == 6.2) {
   print Yes;
   Passed = Passed + 1;
@@ -100,7 +98,7 @@ if (AddIntToFloat == 6.2) {
 }
 
 Total = Total + 1;
-print "Does Int-to-Int addition work? " . AddIntToInt . " == 10";;
+print "  Does Int-to-Int addition work? " . AddIntToInt . " == 10";;
 if (AddIntToInt == 10) {
   print Yes;
   Passed = Passed + 1;
@@ -109,7 +107,7 @@ if (AddIntToInt == 10) {
 }
 
 Total = Total + 1;
-print "Does Float-to-Int addition work? " . AddFloatToInt . " == 6.2";
+print "  Does Float-to-Int addition work? " . AddFloatToInt . " == 6.2";
 if (AddFloatToInt == 6.2) {
   print Yes;
   Passed = Passed + 1;
@@ -118,7 +116,7 @@ if (AddFloatToInt == 6.2) {
 }
 
 Total = Total + 1;
-print "Does Float-to-Float addition work? " . AddFloatToFloat . " == 2.4";
+print "  Does Float-to-Float addition work? " . AddFloatToFloat . " == 2.4";
 if (AddFloatToFloat == 2.4) {
   print Yes;
   Passed = Passed + 1;
@@ -127,7 +125,7 @@ if (AddFloatToFloat == 2.4) {
 }
 
 Total = Total + 1;
-print "Does Int-and-Int subtraction work? " . SubIntAndInt . " == 0";
+print "  Does Int-and-Int subtraction work? " . SubIntAndInt . " == 0";
 if (SubIntAndInt == 0) {
   print Yes;
   Passed = Passed + 1;
@@ -137,7 +135,7 @@ if (SubIntAndInt == 0) {
 
 
 Total = Total + 1;
-print "Does Int-and-Float subtraction work? " . SubIntAndFloat . " == 3.8";
+print "  Does Int-and-Float subtraction work? " . SubIntAndFloat . " == 3.8";
 if (SubIntAndFloat == 3.8) {
   print Yes;
   Passed = Passed + 1;
@@ -146,7 +144,7 @@ if (SubIntAndFloat == 3.8) {
 }
 
 Total = Total + 1;
-print "Does Int-and-Int multiplication work? " . MulIntAndInt . " == 25";
+print "  Does Int-and-Int multiplication work? " . MulIntAndInt . " == 25";
 if (MulIntAndInt == 25) {
   print Yes;
   Passed = Passed + 1;
@@ -155,7 +153,7 @@ if (MulIntAndInt == 25) {
 }
 
 Total = Total + 1;
-print "Does Int-and-Float multiplication work? " . MulIntAndFloat . " == 6.0";
+print "  Does Int-and-Float multiplication work? " . MulIntAndFloat . " == 6.0";
 if (MulIntAndFloat == 6) {
   print Yes;
   Passed = Passed + 1;
@@ -164,7 +162,7 @@ if (MulIntAndFloat == 6) {
 }
 
 Total = Total + 1;
-print "Does Int-and-Int division work? " . DivIntAndInt . " == 1.0";
+print "  Does Int-and-Int division work? " . DivIntAndInt . " == 1.0";
 if (DivIntAndInt == 1) {
   print Yes;
   Passed = Passed + 1;
@@ -173,15 +171,13 @@ if (DivIntAndInt == 1) {
 }
 
 Total = Total + 1;
-print "Does Int-and-Float division work? " . DivIntAndFloat . " == 10";
+print "  Does Int-and-Float division work? " . DivIntAndFloat . " == 10";
 if (DivIntAndFloat == 10) {
   print Yes;
   Passed = Passed + 1;
 } else {
   print No;
 }
-
-include "Finish.ucs";
 
 /* Test-Number.ucs ends here */
 /*

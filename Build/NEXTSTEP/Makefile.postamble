@@ -75,7 +75,7 @@ COMMON_CFLAGS = $(PROJECT_SPECIFIC_CFLAGS) -Wall
 NORMAL_CFLAGS = $(COMMON_CFLAGS) $(OPTIMIZATION_CFLAG) -pipe
 
 # Flags passed to compiler in 'debug' compiles:
-DEBUG_CFLAGS = $(COMMON_CFLAGS) -DDEBUG -g2
+DEBUG_CFLAGS = $(COMMON_CFLAGS) -DDEBUG -g2 -lMallocDebug
 
 # Flags passed to compiler in 'profile' compiles
 #PROFILE_CFLAGS = $(COMMON_CFLAGS) -pg $(OPTIMIZATION_CFLAG) -DPROFILE

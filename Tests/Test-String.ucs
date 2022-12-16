@@ -1,7 +1,7 @@
 /*
  * Test-String.ucs  --- String class tests.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -35,14 +35,12 @@ print "";
 print "String class tests";
 print "";
 
-include "Common.ucs";
-
 String1 = "foobar";
 String2 = "barfoo";
 String3 = "foobar";
 
 Total = Total + 1;
-print "Does string equality work?";
+print "  Does string equality work?";
 if (String1 == String3) {
   print Yes;
   Passed = Passed + 1;
@@ -51,15 +49,13 @@ if (String1 == String3) {
 }
 
 Total = Total + 1;
-print "Does string inequality work?";
+print "  Does string inequality work?";
 if (String1 != String2) {
   print Yes;
   Passed = Passed + 1;
 } else {
   print No;
 }
-
-include "Finish.ucs";
 
 /* Test-String.ucs ends here */
 /*

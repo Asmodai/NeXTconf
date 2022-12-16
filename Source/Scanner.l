@@ -1,7 +1,7 @@
 /*
  * Scanner.l  --- Lex tokeniser.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -53,7 +53,9 @@ void make_float_constant(YYSTYPE *, char *);
 void make_boolean_constant(YYSTYPE *, char *);
 void eat_comment(void);
 
-#define YY_USER_ACTION    yylloc->first_line = yylloc->last_line = yylineno;
+int lineno;
+
+#define YY_USER_ACTION    yylloc->first_line = yylloc->last_line = lineno;
 
 %}
 
@@ -107,7 +109,7 @@ END_STMT  ;
 {DIGIT}    { make_integer_constant(yylval, yytext); return INTEGER;   }
 {FPNUM}    { make_float_constant(yylval, yytext); return FLOAT;       }
 "//"       { eat_comment();                                           }
-\n         { lineno = yylineno;                                       }
+\n         { ++lineno;                                                }
 {WSPACE}   {                                                          }
 .          { return ERROR_TOKEN;                                      }
 

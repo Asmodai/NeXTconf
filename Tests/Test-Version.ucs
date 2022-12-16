@@ -1,7 +1,7 @@
 /*
  * Test-Version.ucs  --- Version property class tests.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -35,8 +35,6 @@ print "";
 print "Version class tests";
 print "";
 
-include "Common.ucs";
-
 Version = [Version version];
 Major   = [Version major];
 Minor   = [Version minor];
@@ -51,7 +49,7 @@ TestVer = Version - 1000;
  */
 
 Total = Total + 1;
-print "Does isGreaterThan: work? " . Version . " > " . TestVer;
+print "  Does isGreaterThan: work? " . Version . " > " . TestVer;
 if ([Version isGreaterThan:TestVer] == true) {
   print Yes;
   Passed = Passed + 1;
@@ -60,15 +58,13 @@ if ([Version isGreaterThan:TestVer] == true) {
 }
 
 Total = Total + 1;
-print "Does isGreaterThanOrEqualTo: work? " . Version . " >= " .TestVer;
+print "  Does isGreaterThanOrEqualTo: work? " . Version . " >= " .TestVer;
 if ([Version isGreaterThanOrEqualTo:TestVer] == true) {
   print Yes;
   Passed = Passed + 1;
 } else {
   print No;
 }
-
-include "Finish.ucs";
 
 /* Test-Version.ucs ends here */
 /*

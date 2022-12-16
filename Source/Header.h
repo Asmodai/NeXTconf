@@ -1,7 +1,7 @@
 /*
  * Header.h  --- Header generator interface.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -33,11 +33,18 @@
 
 #import <objc/Object.h>
 #import "Object+Debug.h"
+#import "List+Debug.h"
 
 #import "Property.h"
 #import "String.h"
 #import "Number.h"
 #import "Boolean.h"
+
+struct header_symbol {
+  String *name;
+  BOOL    enabled;
+};
+typedef struct header_symbol header_symbol_t;
 
 /*
  * This class defines an object that stores various flags
@@ -45,6 +52,7 @@
  */
 @interface Header : Property
 {
+  List *_symbols;
 }
 
 /*
@@ -57,6 +65,8 @@
  * Accessors.
  */
 - (void)addSymbol:(String *)aSymbol;
+- (void)enableSymbol:(String *)aSymbol;
+- (void)disableSymbol:(String *)aSymbol;
 
 /*
  * Predicates.
@@ -73,6 +83,12 @@
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // Header (Debug)
+
+@interface Header (Generator)
+
+- (void)generate:(String *)aPath;
+
+@end				// Header (Generator)
 
 /* Header.h ends here */
 /*

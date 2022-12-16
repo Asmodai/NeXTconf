@@ -2,12 +2,14 @@
 # Makefile for NEXTSTEP.
 #
 
-MAKEFILEDIR = /NextDeveloper/Makefiles/app
-MAKEFILE = tool.make
-INSTALLDIR = $(HOME)/bin
+MAKEFILEDIR  = /NextDeveloper/Makefiles/app
+MAKEFILE     = tool.make
+INSTALLDIR   = $(HOME)/bin
 INSTALLFLAGS = -c -s -m 755
-SOURCEMODE = 444
+SOURCEMODE   = 444
 
-LIBS = -lNeXT_s
+LIBS       = -lNeXT_s
 DEBUG_LIBS = $(LIBS)
-PROF_LIBS = $(LIBS)
+PROF_LIBS  = $(LIBS)
+
+TARGET_ARCHS = m68k i386 hppa sparc

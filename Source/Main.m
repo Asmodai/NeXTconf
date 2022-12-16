@@ -1,7 +1,7 @@
 /*
  * Main.m  --- The Glue.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -50,6 +50,9 @@
 #import "PropertyManager.h"
 #import "Architecture.h"
 #import "Platform.h"
+#import "Settings.h"
+#import "MakeFile.h"
+#import "Header.h"
 #import "Utils.h"
 #import "version.h"
 
@@ -57,26 +60,33 @@ extern int yyparse(void *);
 
 char *progname = NULL;
 
-void
+void /* noreturn */
 usage(void)
 {
   fprintf(stderr,
-          "usage: %s [-ivhctos] [-f <file>]\n"
+          "usage: %s [-hiv"
+#ifdef DEBUG
+          "COPST"
+#endif
+          "] -f <file>\n"
           "  -f <file>   The NeXTconf script to execute.\n"
-          "  -v          Display the tool's version.\n"
-          "  -i          Display information about the installed system.\n"
           "  -h          Display this help message.\n"
+          "  -i          Display information about the installed system.\n"
+          "  -v          Display the tool's version.\n"
 #ifdef DEBUG
           "\n"
-          "  -c          [debug] Show opcode for script.\n"
-          "  -t          [debug] Show token tree for script. *SLOW*\n"
-          "  -s          [debug] Show symbol table for script.\n"
+          "  -C          [debug] Show opcode for script.\n"
+          "  -O          [debug] Show runtime objects.\n"
+          "  -S          [debug] Show symbol table for script.\n"
+          "  -T          [debug] Show token tree for script. *SLOW*\n"
+          "  -P          [debug] Add an infinite loop for profiling.\n"
 #endif
           ,progname);
+
   exit(EXIT_FAILURE);
 }
 
-void
+void /* noreturn */
 show_info(void)
 {
   String       *name = nil;
@@ -85,17 +95,71 @@ show_info(void)
 
   name = [[String alloc] initWithString:"Architecture"];
   arch = [[PropertyManager sharedInstance] findInstance:name];
+  [name free];
   if (arch) {
     [arch print];
   }
-  xfree(name);
 
   name = [[String alloc] initWithString:"Platform"];
   plat = [[PropertyManager sharedInstance] findInstance:name];
+  [name free];
   if (plat) {
     [plat print];
   }
-  xfree(name);          
+
+  exit(EXIT_SUCCESS);
+}
+
+void /* noreturn */
+show_version(void)
+{
+  [Version print];
+
+  exit(EXIT_SUCCESS);
+}
+
+void
+generate(void)
+{
+  String   *name     = nil;
+  Settings *settings = nil;
+  MakeFile *makefile = nil;
+  Header   *header   = nil;
+
+  name     = [[String alloc] initWithString:"Settings"];
+  settings = [[PropertyManager sharedInstance] findInstance:name];
+  [name free];
+
+  name     = [[String alloc] initWithString:"MakeFile"];
+  makefile = [[PropertyManager sharedInstance] findInstance:name];
+  [name free];
+
+  name   = [[String alloc] initWithString:"Header"];
+  header = [[PropertyManager sharedInstance] findInstance:name];
+  [name free];
+
+  if (!makefile) {
+    fprintf(stderr, "Error when trying to find our 'makefile' instance!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  if (!header) {
+    fprintf(stderr, "Error when trying to find our 'header' instance!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  if (!settings) {
+    fprintf(stderr, "Error when trying to find our 'settings' instance!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  if ([[settings generateMakefile] boolValue] == YES) {
+    [makefile generate:[settings makefileLocation]];
+  }
+
+  if ([[settings generateHeader] boolValue] == YES) {
+    [header generate:[settings headerLocation]];
+  }
 }
 
 /*
@@ -112,10 +176,14 @@ main(int argc, char **argv)
   IntInstr       *code    = nil;
   VirtualMachine *vm      = nil;
   SyntaxTree     *syntree = nil;
-  BOOL            cFlag   = NO;
-  BOOL            tFlag   = NO;
-  BOOL            sFlag   = NO;
-  int i = 0;
+
+#ifdef DEBUG
+  BOOL cFlag = NO;
+  BOOL tFlag = NO;
+  BOOL sFlag = NO;
+  BOOL oFlag = NO;
+  BOOL pFlag = NO;
+#endif
 
   extern char *optarg;
               
@@ -127,45 +195,70 @@ main(int argc, char **argv)
   progname = argv[0];
   yyin     = NULL;
 
-  while ((ch = getopt(argc, argv, "citosvhf:")) != EOF) {
+#ifdef DEBUG
+# define OPTS "hviCOPSTf:"
+#else
+# define OPTS "hvif:"
+#endif
+
+  while ((ch = getopt(argc, argv, OPTS)) != EOF) {
     switch (ch) {
-      case 'c':
-        cFlag = YES;
+      case 'h':
+        usage();
         break;
 
       case 'v':
-        [Version print];
+        show_version();
         break;
 
       case 'i':
         show_info();
         break;
 
-      case 'o':
-        [[PropertyManager sharedInstance] printDebug:"Managed objects"];
-        break;
-
-      case 's':
-        sFlag = YES;
-        break;
-
-      case 't':
-        tFlag = YES;
-        break;
-
-      case 'h':
-        usage();
-        break;
-
       case 'f':
         fname = optarg;
         break;
+
+#ifdef DEBUG
+
+      case 'C':
+        cFlag = YES;
+        break;
+
+      case 'O':
+        oFlag = YES;
+        break;
+
+      case 'P':
+        pFlag = YES;
+        break;
+
+      case 'S':
+        sFlag = YES;
+        break;
+
+      case 'T':
+        tFlag = YES;
+        break;
+
+#endif
+
+      default:
+        usage();
     }
   }
 
   if (!fname) {
+    fprintf(stderr, "No NeXTconf script provided!\n");
     exit(EXIT_FAILURE);
   }
+
+#ifdef DEBUG
+  if (pFlag) {
+    printf("Press any key when ready to profile.\n");
+    getchar();
+  }
+#endif
 
   if ((yyin = fopen(fname, "r")) == NULL) {
     fprintf(stderr, "%s: Could not open '%s': %s.\n",
@@ -181,33 +274,55 @@ main(int argc, char **argv)
 
   yyparse(syntree);
 
+#ifdef DEBUG
   if (tFlag) {
+    putchar('\n');
     [syntree printDebug:"Parsed tokens"];
     putchar('\n');
   }
+#endif
 
   if (errors > 0) {
     error_summary();
     exit(EXIT_FAILURE);
   }
 
-  if (sFlag) {
-    [[SymbolTable sharedInstance] printDebug:"Symbols"];
-    putchar('\n');
-  }
-
   code = [IntInstr generate:syntree];
   [code number:1];
   [syntree free];
 
+#ifdef DEBUG
   if (cFlag) {
+    putchar('\n');
     [code printDebug:"Intermediate code"];
     putchar('\n');
   }
+#endif
 
   [vm reset];
   [vm read:code];
   [vm execute];
+
+#ifdef DEBUG
+  if (sFlag) {
+    putchar('\n');
+    [[SymbolTable sharedInstance] printDebug:"Symbols"];
+    putchar('\n');
+  }
+
+  if (oFlag) {
+    putchar('\n');
+    [[PropertyManager sharedInstance] printDebug:"Managed objects"];
+    putchar('\n');
+  }
+
+  if (pFlag) {
+    printf("Press any key when ready to end execution.\n");
+    getchar();
+  }
+#endif
+
+  generate();
 
   return errors ? 1 : 0;
 }

@@ -1,7 +1,7 @@
 /*
  * VM.m  --- Virtual machine implementation.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -47,6 +47,14 @@ resolveSymbol(id symb, id argSymb)
   register id  arg    = argSymb;
   register int type   = -1;
 
+  if (![symb isBound]) {
+    runtime_errorf(
+      0,
+      "Symbol `%s' is not bound to a value.",
+      [[symb symbolName] stringValue]
+    );
+  }
+
   if ([symb respondsTo:@selector(data)]) {
     result = [symb data];
     type   = [symb type];
@@ -57,6 +65,9 @@ resolveSymbol(id symb, id argSymb)
       arg = [argSymb data];
     }
   }
+
+  //[result _printDebugInfo:5];
+  //printf("\n\n");
 
   switch (type) {
     case SymbolObject:

@@ -1,7 +1,7 @@
 /*
  * Symbol.h  --- Symbol class interface.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -106,6 +106,7 @@ typedef enum {
  */
 - (void)setData:(id)object;
 - (id)data;
+- (BOOL)isBound;
 - (void)setType:(SymbolType)aType;
 - (SymbolType)type;
 - (void)setReadOnly:(BOOL)aFlag;

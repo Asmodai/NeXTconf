@@ -34,10 +34,7 @@
 #
 # }}}
 
-for test in `ls Test-*`;
-do
-    ../nxconf -f ${test}
-done
+../nxconf -f Test.ucs
 
 # perform.sh ends here
 # Local Variables: ***

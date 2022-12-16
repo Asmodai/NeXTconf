@@ -1,7 +1,7 @@
 /*
  * Number.m  --- Numeric data type Implementation
  *
- * Copyright (c) 2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -47,16 +47,41 @@
 #define SET_TYPE(__a, __b)   (__a).type = (__b)
 #define GET_TYPE(__a)        (__a).type
 
+#define FREE_CACHE()                \
+  if (_cache != NULL) {             \
+    xzonefree([self zone], _cache); \
+    _cache = NULL;                  \
+  }
+
+#define MAX_NUMBER_LEN  64
+
+inline
+size_t
+integer_size(long_t num)
+{
+  size_t len = 0;
+  
+  do {
+    num /= 10;
+    len++;
+  } while (num > 0);
+
+  return len;
+}
+
 @implementation Number
 
 - (id)init
 {
+  _cache = NULL;
+
   return [self initWithInt:0];
 }
 
 - (id)initWithInt:(long_t)value
 {
   if ((self = [super init]) != nil) {
+    _cache = NULL;
     SET_INT(_number, value);
   }
 
@@ -66,6 +91,7 @@
 - (id)initWithFloat:(float_t)value
 {
   if ((self = [super init]) != nil) {
+    _cache = NULL;
     SET_FLOAT(_number, value);
   }
 
@@ -75,6 +101,7 @@
 - (id)initWithString:(const char *)string
 {
   if ((self = [super init]) != nil) {
+    _cache = NULL;
     [self setValueFromString:string];
   }
 
@@ -83,7 +110,36 @@
 
 - (id)free
 {
+  if (_cache != NULL) {
+    xzonefree([self zone], _cache);
+    _cache = NULL;
+  }
+
   return [super free];
+}
+
+/*
+ * Numerical immediates should always be bound.
+ */
+- (BOOL)isBound
+{
+  return YES;
+}
+
+/*
+ * Oh this is a hack.
+ */
+- (size_t)length
+{
+  size_t len = 0;
+  long_t n   = 0;
+  
+  switch (GET_TYPE(_number)) {
+    case Float: n   = (long_t)GET_FLOAT(_number); len += 3;
+    default:    len += integer_size(GET_INT(_number));
+  }
+
+  return len;
 }
 
 - (long_t)intValue
@@ -106,33 +162,37 @@
 
 - (const char *)stringValue
 {
-  char *buf = NULL;
+  if (_cache == NULL) {
+    _cache = xzonemalloc([self zone], MAX_NUMBER_LEN * sizeof *_cache);
+    
+    switch (GET_TYPE(_number)) {
+      case Float: snprintf(_cache, MAX_NUMBER_LEN, "%0.2f", GET_FLOAT(_number)); break;
+      default:    snprintf(_cache, MAX_NUMBER_LEN, "%lu",   GET_INT(_number));   break;
+    }
 
-  buf = xzonemalloc([self zone], 256 * sizeof *buf);
-  
-  if (GET_TYPE(_number) == Integer) {
-    snprintf(buf, 256, "%lu\0", GET_INT(_number));
-  } else {
-    snprintf(buf, 256, "%f\0", GET_FLOAT(_number));
+    _cache[MAX_NUMBER_LEN] = '\0';
   }
-
-  return (const char *)buf;
+  
+  return (const char *)_cache;
 }
 
 - (void)setValueFromInt:(long_t)value
 {
   SET_INT(_number, value);
+  FREE_CACHE();
 }
 
 - (void)setValueFromFloat:(float_t)value
 {
   SET_FLOAT(_number, value);
+  FREE_CACHE();
 }
 
 - (void)setValueFromString:(const char *)string
 {
   if (!string) {
     SET_INT(_number, 0);
+    FREE_CACHE();
     return;
   }
 
@@ -141,6 +201,8 @@
   } else {
     SET_INT(_number, (long_t)atoi(string));
   }
+
+  FREE_CACHE();
 }
 
 - (number_t)internalValue
@@ -174,6 +236,8 @@
     ret = [[Number alloc] initWithInt:GET_INT(result)];
   }
 
+  FREE_CACHE();
+
   return ret;
 }
 
@@ -202,6 +266,8 @@
   } else {
     ret = [[Number alloc] initWithInt:GET_INT(result)];
   }
+
+  FREE_CACHE();
 
   return ret;
 }
@@ -233,6 +299,8 @@
     ret = [[Number alloc] initWithInt:GET_INT(result)];
   }
 
+  FREE_CACHE();
+
   return ret;
 }
 
@@ -262,6 +330,8 @@
   } else {
     ret = [[Number alloc] initWithInt:GET_INT(result)];
   }
+
+  FREE_CACHE();
 
   return ret;
 }

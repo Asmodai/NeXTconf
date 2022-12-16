@@ -1,11 +1,11 @@
 /*
- * Pointer.h  --- Pointer container.
+ * Settings.h  --- NeXTconf runtime settings.
  *
- * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Tue,  3 Nov 2015 18:37:45 +0000 (GMT)
+ * Created:    Fri,  16 Dec 2022 02:33:55 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -32,43 +32,59 @@
 /* }}} */
 
 #import <objc/Object.h>
+#import <objc/List.h>
 #import "Object+Debug.h"
+#import "List+Debug.h"
 
-/*
- * This class implements a pointer container.
- */
-@interface Pointer : Object
+#import "Property.h"
+#import "String.h"
+#import "Boolean.h"
+
+@interface Settings : Property
 {
-  void *_ptr;                   // The pointer.
+  String  *_headerLocation;     // Location to generated header(s).
+  String  *_makefileLocation;   // Location to generated makefiles.
+  Boolean *_generateHeader;     // Should we generate a header?
+  Boolean *_generateMakefile;   // Should we generate a makefile? 
 }
 
 /*
- * Initialisation.
+ * Initialisation and destruction.
  */
 - (id)init;
-- (id)initWithPointer:(void *)ptr;
-
-/*
- * Destruction.
- */
 - (id)free;
 
 /*
  * Accessors.
  */
-- (void)setPointer:(void *)ptr;
-- (void *)pointer;
-- (void)invalidate;
+- (String *)headerLocation;
+- (String *)makefileLocation;
 
-@end                            // Pointer
+- (void)setHeaderLocation:(String *)aString;
+- (void)setMakefileLocation:(String *)aString;
 
-@interface Pointer (Debug)
+- (void)setGenerateHeader:(Boolean *)aBool;
+- (void)setGenerateMakefile:(Boolean *)aBool;
 
+/*
+ * Predicates.
+ */
+- (Boolean *)generateMakefile;
+- (Boolean *)generateHeader;
+
+@end
+
+@interface Settings (Debug)
+
+/*
+ * Debugging.
+ */
 - (void)_printDebugInfo:(int)indent;
 
-@end                            // Pointer (Debug)
+@end
 
-/* Pointer.h ends here */
+
+/* Settings.h ends here */
 /*
  * Local Variables: ***
  * mode: objc ***

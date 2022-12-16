@@ -1,7 +1,7 @@
 /*
  * String.m  --- String implementation.
  *
- * Copyright (c) 2015-2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -142,8 +142,7 @@
 
   _capacity     = size + 1;
   _buffer       = (char *)xzonemalloc(zone, _capacity);
-  _buffer[0]    = '\0';
-  _buffer[size] = '\0';
+  bzero(_buffer, _capacity);
 
   return self;
 }

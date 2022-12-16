@@ -1,7 +1,7 @@
 /*
  * Stack.m  --- Stack implementation.
  *
- * Copyright (c) 2015-2015 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>

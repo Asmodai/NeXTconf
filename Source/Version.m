@@ -1,7 +1,7 @@
 /*
  * Version.m  --- Program version implementation.
  *
- * Copyright (c) 2015-2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -107,6 +107,7 @@ const char BUILTBY[]         = __BuiltBy "@" __BuildHost;
 
   [Version printToBuffer:buf
                 withSize:511];
+
   printf("%s", buf);
 
   xfree(buf);

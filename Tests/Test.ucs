@@ -1,11 +1,11 @@
 /*
- * Pointer.h  --- Pointer container.
+ * Common.ucs  --- Common things for tests.
  *
- * Copyright (c) 2015-2022 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
- * Created:    Tue,  3 Nov 2015 18:37:45 +0000 (GMT)
+ * Created:    Sun, 19 Feb 2017 23:46:50 +0000 (GMT)
  * Keywords:   
  * URL:        Not distributed yet.
  */
@@ -31,47 +31,18 @@
  */
 /* }}} */
 
-#import <objc/Object.h>
-#import "Object+Debug.h"
+include "Common.ucs"
 
-/*
- * This class implements a pointer container.
- */
-@interface Pointer : Object
-{
-  void *_ptr;                   // The pointer.
-}
+include "Test-Number.ucs"
+include "Test-String.ucs"
+include "Test-Version.ucs"
 
-/*
- * Initialisation.
- */
-- (id)init;
-- (id)initWithPointer:(void *)ptr;
+include "Finish.ucs"
 
-/*
- * Destruction.
- */
-- (id)free;
-
-/*
- * Accessors.
- */
-- (void)setPointer:(void *)ptr;
-- (void *)pointer;
-- (void)invalidate;
-
-@end                            // Pointer
-
-@interface Pointer (Debug)
-
-- (void)_printDebugInfo:(int)indent;
-
-@end                            // Pointer (Debug)
-
-/* Pointer.h ends here */
+/* Common.ucs ends here */
 /*
  * Local Variables: ***
- * mode: objc ***
  * indent-tabs-mode: nil ***
+ * mode: objc ***
  * End: ***
  */

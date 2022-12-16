@@ -6,23 +6,23 @@
 #define _version_h_
 
 #ifndef NeXTconf_VERSION_DEFINED
-# define __Copyright       "Copyright (c) 2015-2017 Paul Ward.  All rights reserved."
-# define __Version          94001404
-# define __VersionStr      "NeXTconf 0.94 (build 1404, Thu Feb 23 02:49:21 GMT 2017)"
-# define __VersionShortStr "NeXTconf 0.94"
+# define __Copyright       "Copyright (c) 2015-2022 Paul Ward.  All rights reserved."
+# define __Version          96001642
+# define __VersionStr      "NeXTconf 0.96 (build 1642, Fri Dec 16 19:49:59 GMT 2022)"
+# define __VersionShortStr "NeXTconf 0.96"
 # define __VersionMajor     0
-# define __VersionMinor     94
-# define __VersionBuild     1404
-# define __BuildStr        "1404"
-# define __BuildSys        "Rhapsody"
-# define __BuildSysFull    "Rhapsody 5.1 i386"
+# define __VersionMinor     96
+# define __VersionBuild     1642
+# define __BuildStr        "1642"
+# define __BuildSys        "NEXTSTEP"
+# define __BuildSysFull    "NEXTSTEP 3.3 I386"
 # define __BuildArch       "i386"
-# define __BuildDate       "Thu Feb 23 02:49:21 GMT 2017"
-# define __BuildHost       "saratoga"
-# define __BuiltBy         "asmodai"
+# define __BuildDate       "Fri Dec 16 19:49:59 GMT 2022"
+# define __BuildHost       "dauntless"
+# define __BuiltBy         "lasmodai"
 # define NeXTconf_VERSION_DEFINED
 
-#define PLATFORM_Rhapsody
+#define PLATFORM_NEXTSTEP
 #endif
 
 #endif /* !_version_h_ */

@@ -1,7 +1,7 @@
 /*
  * MakeFile.h  --- Makefile generator interface.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -33,6 +33,7 @@
 
 #import <objc/Object.h>
 #import "Object+Debug.h"
+#import "List+Debug.h"
 
 #import "Property.h"
 #import "String.h"
@@ -45,6 +46,8 @@
  */
 @interface MakeFile : Property
 {
+  List *_libraries;
+  List *_paths;
 }
 
 /*
@@ -73,6 +76,12 @@
 - (void)_printDebugInfo:(int)indent;
 
 @end                            // MakeFile (Debug)
+
+@interface MakeFile (Generator)
+
+- (void)generate:(String *)aPath;
+
+@end				// MakeFile (Generator)
 
 /* MakeFile.h ends here */
 /*

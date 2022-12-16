@@ -1,7 +1,7 @@
 /*
  * MakeFile.m  --- Makefile generator implementation.
  *
- * Copyright (c) 2017 Paul Ward <asmodai@gmail.com>
+ * Copyright (c) 2017-2022 Paul Ward <asmodai@gmail.com>
  *
  * Author:     Paul Ward <asmodai@gmail.com>
  * Maintainer: Paul Ward <asmodai@gmail.com>
@@ -40,6 +40,9 @@
 - (id)init
 {
   if ((self = [super init]) != nil) {
+    _libraries = [[List alloc] init];
+    _paths     = [[List alloc] init];
+
     ADD_PROPERTY_METHOD("addLibrary:");
     ADD_PROPERTY_METHOD("addLibraryPath:");
   }
@@ -49,15 +52,20 @@
 
 - (id)free
 {
+  [_libraries free];
+  [_paths free];
+
   return [super free];
 }
 
 - (void)addLibrary:(String *)aLibrary
 {
+  [_libraries addObjectIfAbsent:aLibrary];
 }
 
 - (void)addLibraryPath:(String *)aPath
 {
+  [_paths addObjectIfAbsent:aPath];
 }
 
 @end                            // MakeFile
@@ -66,7 +74,25 @@
 
 - (void)_printDebugInfo:(int)indent
 {
-  debug_print(indent, "Object does nothing yet.\n");
+  unsigned  lcount = [_libraries count];
+  unsigned  pcount = [_paths count];
+  unsigned  i      = 0;
+
+  debug_print(indent, "type          = makefile definitions\n");
+  debug_print(indent, "library count = %d\n", lcount);
+  debug_print(indent, "path count    = %d\n", pcount);
+
+  if (lcount > 0) {
+    for (i = 0; i < lcount; ++i) {
+      debug_print(indent, "library %03d   = %s\n", i, [[_libraries objectAt:i] stringValue]);
+    }
+  }
+
+  if (pcount > 0) {
+    for (i = 0; i < pcount; ++i) {
+      debug_print(indent, "path %03d      = %s\n", i, [[_paths objectAt:i] stringValue]);
+    }
+  }
 }
 
 @end                            // MakeFile (Debug)
